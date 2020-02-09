@@ -1,12 +1,12 @@
 from models import Base
-from sqlalchemy import Column, Integer, UniqueConstraint, DateTime
+from sqlalchemy import Column, Integer, PrimaryKeyConstraint, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
 
 class Notification(Base):
     __tablename__ = 'notifications'
     __table_args__ = (
-        UniqueConstraint('comment_id', 'user_id', name='_notification_uc'),
+        PrimaryKeyConstraint('comment_id', 'user_id', name='_notification_uc'),
     )
     
     comment_id = Column(Integer, ForeignKey('comments.id'))

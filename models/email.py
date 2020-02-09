@@ -1,12 +1,12 @@
 from models import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, ARRAY
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, ARRAY, DateTime
 
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import EmailType
 
 
 import os
-from cStringIO import StringIO
+from io import StringIO
 import uuid
 import magic
 

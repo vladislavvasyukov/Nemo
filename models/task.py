@@ -1,5 +1,5 @@
 from models import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float, UniqueConstraint, Text 
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float, Text , PrimaryKeyConstraint
 
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy_utils import ChoiceType
@@ -63,7 +63,7 @@ class Task(Base):
 class TaskMember(Base):
     __tablename__ = 'task_members'
     __table_args__ = (
-        UniqueConstraint('task_id', 'member_id', name='_member_task_uc'),
+        PrimaryKeyConstraint('task_id', 'member_id', name='_member_task_uc'),
     )
 
     task_id = Column(Integer, ForeignKey('tasks.id'), nullable=False)
@@ -77,7 +77,7 @@ class TaskTag(Base):
     __tablename__ = 'task_tags'
 
     __table_args__ = (
-        UniqueConstraint('task_id', 'tag_id', name='_tag_task_uc'),
+        PrimaryKeyConstraint('task_id', 'tag_id', name='_tag_task_uc'),
     )
 
     task_id = Column(Integer, ForeignKey('tasks.id'), nullable=False)
