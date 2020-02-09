@@ -1,7 +1,8 @@
 from models import Base
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, ARRAY
 
 from sqlalchemy.orm import relationship
+from sqlalchemy_utils import EmailType
 
 
 import os
@@ -16,6 +17,14 @@ class Email(Base):
     __tablename__ = 'emails'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    body = Column(Text)
+    subject = Column(String(255))
+    sender = Column(EmailType)
+    error = Column(Text)
+    send_date = Column(DateTime)
+    bcc = Column(ARRAY(EmailType))
+    to = Column(ARRAY(EmailType))
+    cc = Column(ARRAY(EmailType))
 
 
 class EmailAttachment(Base):

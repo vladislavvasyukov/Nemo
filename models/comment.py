@@ -1,5 +1,5 @@
 from models import Base
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
 
@@ -8,6 +8,7 @@ class Comment(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     text = Column(String(128), nullable=False)
+    date = Column(DateTime(timezone=True))
 
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship("User", back_populates="comments")
