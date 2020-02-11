@@ -27,7 +27,7 @@ class Task(Base):
     __tablename__ = 'tasks'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    title = name = Column(String(128), nullable=False)
+    title = Column(String(128), nullable=False)
     description = Column(Text)
     status = Column(ChoiceType(TaskStatus, impl=Integer()))
     deadline = Column(DateTime(timezone=True))

@@ -7,6 +7,8 @@ Create Date: 2020-02-09 22:24:45.884665
 """
 from alembic import op
 import sqlalchemy as sa
+import sqlalchemy_utils
+from models.task import TaskStatus
 
 
 # revision identifiers, used by Alembic.
@@ -57,7 +59,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('title', sa.String(length=128), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
-    sa.Column('status', sqlalchemy_utils.types.choice.ChoiceType(), nullable=True),
+    sa.Column('status', sqlalchemy_utils.types.choice.ChoiceType(TaskStatus, impl=sa.Integer()), nullable=True),
     sa.Column('deadline', sa.DateTime(timezone=True), nullable=True),
     sa.Column('work_hours', sa.Float(), nullable=True),
     sa.Column('executor_id', sa.Integer(), nullable=True),
