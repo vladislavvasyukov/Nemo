@@ -5,11 +5,11 @@ Revises: bb50cba07fdd
 Create Date: 2020-02-09 22:24:45.884665
 
 """
-from alembic import op
 import sqlalchemy as sa
 import sqlalchemy_utils
-from models.task import TaskStatus
+from alembic import op
 
+from models.task import TaskStatus
 
 # revision identifiers, used by Alembic.
 revision = '89ac6255e480'

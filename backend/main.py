@@ -5,7 +5,7 @@ app = Sanic()
 
 app.static('/', './frontend')
 
+
 @app.route("/")
 async def index(request):
-    print('in index')
     return await file('frontend/index.html')

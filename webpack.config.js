@@ -37,8 +37,12 @@ rmDir = function (dirPath) {
 };
 
 console.log(colors.yellow('Find entries'));
-glob.sync(path.join(__dirname, 'frontend/js/app.js')).forEach(fillEntries);
-glob.sync("/frontend/**/app.js", {
+glob.sync("frontend/*/app.js", {
+    cwd: path.resolve(__dirname)
+})
+    .forEach(fillEntries);
+
+glob.sync("frontend/*/app.js", {
     cwd: path.resolve(__dirname)
 })
     .forEach(fillEntries);

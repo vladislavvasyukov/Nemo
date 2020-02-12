@@ -1,9 +1,10 @@
-from models import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float, Text , PrimaryKeyConstraint
+import enum
 
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float, Text, PrimaryKeyConstraint
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy_utils import ChoiceType
-import enum
+
+from models import Base
 
 
 class TaskStatus(enum.Enum):
@@ -27,7 +28,7 @@ class Task(Base):
     __tablename__ = 'tasks'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    title = Column(String(128), nullable=False)
+    title = name = Column(String(128), nullable=False)
     description = Column(Text)
     status = Column(ChoiceType(TaskStatus, impl=Integer()))
     deadline = Column(DateTime(timezone=True))

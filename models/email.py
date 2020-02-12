@@ -1,16 +1,14 @@
-from models import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, ARRAY, DateTime
+import os
+import uuid
+from io import StringIO
 
+import magic
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, ARRAY, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import EmailType
 
-
-import os
-from io import StringIO
-import uuid
-import magic
-
 import settings
+from models import Base
 
 
 class Email(Base):

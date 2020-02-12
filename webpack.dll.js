@@ -12,7 +12,8 @@ module.exports = {
     output: {
         path: path.join(__dirname, "frontend", "vendor", "build", 'vendor'),
         filename: "dll.[name].js",
-        library: "[name]"
+        library: "[name]",
+        pathinfo: true,
     },
     optimization: {
         minimizer: [new TerserJSPlugin({sourceMap: true,}), new OptimizeCSSAssetsPlugin({})]
@@ -37,7 +38,8 @@ module.exports = {
         }),
         new webpack.DllPlugin({
             path: path.join(__dirname, "frontend", "vendor", "build", "[name]-manifest.json"),
-            name: "[name]"
+            name: "[name]",
+            context: path.resolve(__dirname, "frontend", "js"),
         }),
     ],
     module: {
