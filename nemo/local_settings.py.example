@@ -1,0 +1,17 @@
+from .settings import *
+
+DEBUG = True
+TEMPLATE_DEBUG = True
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'nemo',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': 5432,
+    }
+}
+
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']

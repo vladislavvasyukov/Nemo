@@ -1,4 +1,4 @@
 *.pyc
 .idea
-settings.py
+local_settings.py
 node_modules/
