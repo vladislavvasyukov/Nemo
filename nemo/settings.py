@@ -11,9 +11,13 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
+LOCK_DIR = os.path.join(BASE_DIR, 'locks')
 
 
 # Quick-start development settings - unsuitable for production
@@ -37,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -49,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'Nemo.urls'
+ROOT_URLCONF = 'nemo.urls'
 
 TEMPLATES = [
     {
@@ -99,6 +104,91 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'core.User'
+
+PROJECT_DISPLAY_NAME = 'Nemo'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['console'],
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s  %(asctime)s  %(module)s '
+                      '%(process)d  %(thread)d  %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'ERROR',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+        '': {
+            'level': 'INFO',
+            'handlers': ['console'],
+            'propagate': False,
+        },
+    },
+}
+
+# daemon's logging configuration
+MANAGEMENT_LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'default': {
+            'format': '%(asctime)s - %(levelname)s - %(message)s'
+        },
+        'default_thread': {
+            'format': '%(asctime)s -  %(threadName)s - %(levelname)s - %(message)s'
+        },
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'default',
+            'stream': sys.stdout
+        }
+    }
+}
+
+for file_name in os.listdir(os.path.join(BASE_DIR, 'core/management/commands')):
+    if file_name.endswith('.py') and file_name != '__init__.py':
+        command_name = file_name.split('.py')[0]
+        MANAGEMENT_LOGGING.setdefault('handlers', {})
+        MANAGEMENT_LOGGING['handlers'][command_name] = {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, '{0}.log'.format(command_name)),
+            'maxBytes': 100000000,
+            'backupCount': 5,
+            'formatter': 'default',
+            'encoding': 'utf-8',
+        }
+        MANAGEMENT_LOGGING.setdefault('loggers', {})
+        MANAGEMENT_LOGGING['loggers']['django.{0}'.format(command_name)] = {
+            'handlers': ['console', command_name],
+            'level': 'INFO',
+            'propagate': False,
+            'encoding': 'utf-8',
+        }
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -118,3 +208,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
