@@ -72,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Nemo.wsgi.application'
+WSGI_APPLICATION = 'nemo.wsgi.application'
 
 
 # Database
