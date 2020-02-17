@@ -1,0 +1,50 @@
+{
+  "name": "nemo",
+  "version": "1.0.0",
+  "description": "The project management platform",
+  "main": "index.js",
+  "scripts": {
+    "watch": "node_modules/webpack/bin/webpack.js --progress --colors",
+    "build": "NODE_ENV=1 PLATFORM=web node_modules/webpack/bin/webpack.js --progress --colors -p --bail",
+    "build:dll": "NODE_ENV=1 PLATFORM=web node_modules/webpack/bin/webpack.js --progress --colors --config=webpack.dll.js --bail",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vladislavvasyukov/Nemo.git"
+  },
+  "author": "vladislavvasyukov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vladislavvasyukov/Nemo/issues"
+  },
+  "homepage": "https://github.com/vladislavvasyukov/Nemo#readme",
+  "dependencies": {
+    "es6-promise": "^4.2.8",
+    "history": "^4.10.1",
+    "immutability-helper": "^3.0.1",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-react": "^7.8.3",
+    "babel-loader": "^8.0.6",
+    "babel-preset-react-optimize": "^1.0.1",
+    "colors": "^1.4.0",
+    "css-loader": "^3.4.2",
+    "file-loader": "^5.0.2",
+    "less": "^3.11.1",
+    "less-loader": "^5.0.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "terser-webpack-plugin": "^2.3.5",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
+  }
+}
