@@ -25,7 +25,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(_('Персонал'), default=False)
     is_active = models.BooleanField(_('Активный'), default=True)
     date_joined = models.DateTimeField(_('Дата регистрации'), default=timezone.now)
-    company = models.ForeignKey('core.Company', verbose_name=_('Компания пользователя'), on_delete=models.CASCADE)
+    company = models.ForeignKey(
+        'core.Company', 
+        verbose_name=_('Компания пользователя'), 
+        on_delete=models.CASCADE,
+        null=True, 
+        blank=True,
+    )
 
     objects = UserManager()
 
