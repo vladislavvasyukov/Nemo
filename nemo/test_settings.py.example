@@ -1,8 +1,6 @@
 from .local_settings import *
 
 
-print('asdfasdfasdf')
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

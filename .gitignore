@@ -3,3 +3,5 @@
 local_settings.py
 test_settings.py
 node_modules/
+.coverage
+htmlcov
