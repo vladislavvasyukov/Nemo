@@ -1,9 +1,16 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from core.models import Task
 
 User = get_user_model()
+
+
+class TaskSerializerShort(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ('id', 'title', 'description',)
 
 
 class CreateUserSerializer(serializers.ModelSerializer):

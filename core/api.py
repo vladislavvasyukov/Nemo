@@ -1,9 +1,9 @@
-from rest_framework import permissions, generics
+from knox.models import AuthToken
+from rest_framework import permissions, generics, viewsets
 from rest_framework.response import Response
 
-from knox.models import AuthToken
-
-from core.serializers import CreateUserSerializer, UserSerializer, LoginUserSerializer
+from core.models import Task
+from core.serializers import CreateUserSerializer, UserSerializer, LoginUserSerializer, TaskSerializerShort
 
 
 class RegistrationAPI(generics.GenericAPIView):
@@ -38,3 +38,11 @@ class UserAPI(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class TaskViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = TaskSerializerShort
+
+    def get_queryset(self):
+        return self.request.user.tasks_to_execute.filter(status__in=Task.WORK_STATUSES)

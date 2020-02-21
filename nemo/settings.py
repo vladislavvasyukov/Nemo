@@ -19,6 +19,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG_DIR = os.path.join(BASE_DIR, 'logs')
 LOCK_DIR = os.path.join(BASE_DIR, 'locks')
 
+SITE_DOMAIN = '127.0.0.1:8000'
+SITE_PROTOCOL = 'http'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/

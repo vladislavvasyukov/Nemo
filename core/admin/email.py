@@ -1,7 +1,8 @@
 from django.contrib import admin
-from core.models import Email, EmailAttachment
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
+
+from core.models import Email, EmailAttachment
 
 
 class EmailAttachmentInline(admin.TabularInline):

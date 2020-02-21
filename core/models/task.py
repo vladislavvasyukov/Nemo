@@ -17,6 +17,8 @@ class Task(TimeStampedModel):
         canceled = ChoiceItem(value=6, label=_('отменена'))
         pending = ChoiceItem(value=7, label=_('приостановлена'))
 
+    WORK_STATUSES = [Status.enqueued, Status.in_progress]
+
     title = models.CharField(max_length=255, verbose_name=_('Заголовок'))
     description = models.TextField(_('Описание'))
     status = models.PositiveSmallIntegerField(_("Статус"), choices=Status, default=Status.enqueued)
