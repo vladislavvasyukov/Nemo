@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from core.utils import management_lock
 
-logging.config.dictConfig(settings.MANAGEMENT_LOGGING)
+# logging.config.dictConfig(settings.MANAGEMENT_LOGGING)
 
 
 class CoreCommandError(CommandError):
