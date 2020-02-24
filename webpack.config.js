@@ -37,11 +37,11 @@ rmDir = function (dirPath) {
 };
 
 console.log(colors.yellow('Find entries'));
-glob.sync("*/static/**/app.jsx", {
+glob.sync("*/static/**/main.jsx", {
     cwd: path.resolve(__dirname)
 })
     .forEach(fillEntries);
-glob.sync("*/static/**/app.js", {
+glob.sync("*/static/**/main.js", {
     cwd: path.resolve(__dirname)
 })
     .forEach(fillEntries);

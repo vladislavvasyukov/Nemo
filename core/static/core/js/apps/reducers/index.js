@@ -3,7 +3,7 @@ import nemo from "./nemo";
 import auth from "./auth";
 
 
-const annotationApp = combineReducers({
+const nemoApp = combineReducers({
     nemo, auth,
 })
 

@@ -9,14 +9,14 @@ import Menu from './Menu';
 class SignInForm extends Component {
 
     state = {
-        username: "",
+        email: "",
         password: "",
     }
 
 
     onLogin = (event) => {
         event.preventDefault();
-        this.props.login(this.state.username, this.state.password);
+        this.props.login(this.state.email, this.state.password);
     }
 
     render() {
@@ -28,34 +28,58 @@ class SignInForm extends Component {
         return (
             <div>
                 <Menu />
-                <div className="login">
-                    <h1>Вход</h1>
-                    <form method="post" onSubmit={this.onLogin}>
-                        {this.props.errors.length > 0 && (
-                            <ul>
-                                {this.props.errors.map(error => (
-                                    <li key={error.field}>{error.message}</li>
-                                ))}
-                            </ul>
-                        )}
-                        <input
-                            type="text"
-                            name="username"
-                            placeholder="Логин"
-                            title="Пожалуйста, заполните это поле"
-                            required="required"
-                            onChange={e => this.setState({username: e.target.value})}
-                        />
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Пароль"
-                            title="Пожалуйста, заполните это поле"
-                            required="required"
-                            onChange={e => this.setState({password: e.target.value})}
-                        />
-                      <button type="submit" className="btn btn-primary btn-block btn-large">Войти</button>
-                    </form>
+                <div className="container">
+                    <div className="row justify-content-center">
+                        <div className="col-xl-4 col-lg-5 col-md-6 col-sm-8">
+                            <form method="post" onSubmit={this.onLogin}>
+                                <legend>Вход</legend>
+                                {this.props.errors.length > 0 && (
+                                    <ul>
+                                        {this.props.errors.map(error => (
+                                            <li key={error.field}>{error.message}</li>
+                                        ))}
+                                    </ul>
+                                )}
+                                <div className="form-group">
+                                    <label className="col-form-label required" for="email">Email</label>
+                                    <input 
+                                        type="email" 
+                                        id="email" 
+                                        name="email" 
+                                        required="required" 
+                                        placeholder="e-mail"
+                                        title="Пожалуйста, заполните это поле"
+                                        className="form-control-plaintext" 
+                                        onChange={e => this.setState({email: e.target.value})}/>
+                                </div>
+                                <div className="form-group">
+                                    <div className="col-form-label" style={{float: "right"}}>
+                                        <a href="/recover">Забыли пароль?</a>
+                                    </div>
+                                    <label className="col-form-label required" for="password">Пароль</label>
+                                    <input 
+                                        type="password" 
+                                        id="password" 
+                                        name="password" 
+                                        placeholder="Пароль"
+                                        title="Пожалуйста, заполните это поле"
+                                        onChange={e => this.setState({password: e.target.value})}
+                                        required="required" 
+                                        className="form-control-plaintext" />
+                                </div>
+                                <div className="form-group row mb-0">
+                                    <div className="col-sm-6 pl-sm-0"></div>
+                                    <div className="col-sm-6 pl-sm-1">
+                                        <input 
+                                            type="submit" 
+                                            className="btn-blue" 
+                                            id="auth-sbm" 
+                                            value="Войти" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -77,7 +101,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        login: (username, password) => { return dispatch(auth.login(username, password)); },
+        login: (email, password) => { return dispatch(auth.login(email, password)); },
     };
 }
 

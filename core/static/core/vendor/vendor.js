@@ -5,3 +5,7 @@ import 'moment';
 import 'react';
 import 'react-dom';
 import 'history';
+import 'react-redux';
+import 'redux';
+import 'redux-thunk';
+import 'react-bootstrap';
