@@ -3,19 +3,20 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { auth } from '../actions';
 import { Redirect } from "react-router-dom";
+import {FormGroup, Form} from 'react-bootstrap'
 import Menu from './Menu';
 
 class SignUpForm extends Component {
 
     state = {
-        username: "",
+        name: "",
         password: "",
         email: "",
     }
 
     onRegister = (event) => {
         event.preventDefault();
-        this.props.register(this.state.username, this.state.email, this.state.password);
+        this.props.register(this.state.name, this.state.email, this.state.password);
     }
 
     render() {
@@ -30,8 +31,8 @@ class SignUpForm extends Component {
                 <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-xl-4 col-lg-5 col-md-6 col-sm-8">
-                            <form method="post">
-                                <legend>Регистрация</legend>
+                            <Form method="post" onSubmit={this.onRegister}>
+                                <legend>Регистрация пользователя</legend>
                                 {this.props.errors.length > 0 && (
                                     <ul>
                                         {this.props.errors.map(error => (
@@ -39,42 +40,89 @@ class SignUpForm extends Component {
                                         ))}
                                     </ul>
                                 )}
-                                <input
-                                    type="text"
-                                    name="username"
-                                    placeholder="Никнейм"
-                                    title="Пожалуйста, заполните это поле"
-                                    required="required"
-                                    onChange={e => this.setState({username: e.target.value})}
-                                />
-                                <input
-                                    type="password"
-                                    name="password"
-                                    placeholder="Пароль"
-                                    title="Пожалуйста, заполните это поле"
-                                    required="required"
-                                    onChange={e => this.setState({password: e.target.value})}
-                                />
-                                <div className="form-group">
+                                <FormGroup>
+                                    <label className="col-form-label required" for="name">Ваше имя</label>
+                                    <input 
+                                        type="text" 
+                                        id="name" 
+                                        autocomplete="off" 
+                                        name="name" 
+                                        required="required" 
+                                        className="form-control-plaintext"
+                                        onChange={e => this.setState({name: e.target.value})} />
+                                </FormGroup>
+                                <FormGroup>
                                     <label className="col-form-label required" for="email">Email</label>
                                     <input 
                                         type="email" 
                                         id="email" 
+                                        autocomplete="off" 
                                         name="email" 
                                         required="required" 
-                                        placeholder="e-mail"
-                                        title="Пожалуйста, заполните это поле"
-                                        className="form-control-plaintext" 
+                                        className="form-control-plaintext"
                                         onChange={e => this.setState({email: e.target.value})}/>
+                                </FormGroup>
+                                <FormGroup>
+                                    <label className="col-form-label required" for="register_plainPassword1">
+                                        Пароль
+                                    </label>
+                                    <input 
+                                        type="password" 
+                                        autocomplete="off" 
+                                        id="register_plainPassword1" 
+                                        name="password" 
+                                        required="required" 
+                                        className="form-control-plaintext"
+                                        onChange={e => this.setState({password: e.target.value})} />
+                                </FormGroup>
+                                <FormGroup>
+                                    <label className="col-form-label required" for="register_plainPassword2">
+                                        Повтор пароля
+                                    </label>
+                                    <input 
+                                        type="password" 
+                                        autocomplete="off" 
+                                        id="register_plainPassword2" 
+                                        name="password2" 
+                                        required="required" 
+                                        className="form-control-plaintext" />
+                                </FormGroup>
+                                <FormGroup>
+                                    <label className="col-form-label" for="register_registrationData_phone">
+                                        Телефон
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="register_registrationData_phone" 
+                                        name="phone" 
+                                        required="required" 
+                                        placeholder="+79160000000" 
+                                        className="form-control-plaintext phone" />
+                                </FormGroup>
+                                <FormGroup>
+                                    <label class="col-form-label" for="register_registrationData_skype">Skype</label>
+                                    <input 
+                                        type="text" 
+                                        id="register_registrationData_skype" 
+                                        name="skype" 
+                                        className="form-control-plaintext skype" />
+                                </FormGroup>
+                                <FormGroup>
+                                    <label className="col-form-label" for="register_registrationData_telegram">
+                                        Telegram
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="register_registrationData_telegram" 
+                                        name="telegram" 
+                                        className="form-control-plaintext telegram" />
+                                </FormGroup>
+                                <div className="form-group row mb-0 justify-content-center">
+                                    <div className="col-sm-6 pl-sm-1">
+                                        <input type="submit" className="btn-blue" value="Регистрация" />
+                                    </div>
                                 </div>
-                                <button 
-                                    type="submit" 
-                                    onClick={this.onRegister} 
-                                    className="btn btn-primary btn-block btn-large"
-                                >
-                                    Зарегистрироваться
-                                </button>
-                            </form>
+                            </Form>
                         </div>
                     </div>
                 </div>
@@ -98,7 +146,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        register: (username, email, password) => dispatch(auth.register(username, email, password))
+        register: (name, email, password) => dispatch(auth.register(name, email, password))
     };
 }
 

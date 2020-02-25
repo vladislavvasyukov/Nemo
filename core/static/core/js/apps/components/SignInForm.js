@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { auth } from '../actions';
+import {FormGroup, Form} from 'react-bootstrap'
 import { Redirect } from "react-router-dom";
 import Menu from './Menu';
 
@@ -31,7 +32,7 @@ class SignInForm extends Component {
                 <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-xl-4 col-lg-5 col-md-6 col-sm-8">
-                            <form method="post" onSubmit={this.onLogin}>
+                            <Form method="post" onSubmit={this.onLogin}>
                                 <legend>Вход</legend>
                                 {this.props.errors.length > 0 && (
                                     <ul>
@@ -40,7 +41,7 @@ class SignInForm extends Component {
                                         ))}
                                     </ul>
                                 )}
-                                <div className="form-group">
+                                <FormGroup>
                                     <label className="col-form-label required" for="email">Email</label>
                                     <input 
                                         type="email" 
@@ -51,8 +52,8 @@ class SignInForm extends Component {
                                         title="Пожалуйста, заполните это поле"
                                         className="form-control-plaintext" 
                                         onChange={e => this.setState({email: e.target.value})}/>
-                                </div>
-                                <div className="form-group">
+                                </FormGroup>
+                                <FormGroup>
                                     <div className="col-form-label" style={{float: "right"}}>
                                         <a href="/recover">Забыли пароль?</a>
                                     </div>
@@ -66,9 +67,8 @@ class SignInForm extends Component {
                                         onChange={e => this.setState({password: e.target.value})}
                                         required="required" 
                                         className="form-control-plaintext" />
-                                </div>
-                                <div className="form-group row mb-0">
-                                    <div className="col-sm-6 pl-sm-0"></div>
+                                </FormGroup>
+                                <div className="form-group row mb-0 justify-content-center">
                                     <div className="col-sm-6 pl-sm-1">
                                         <input 
                                             type="submit" 
@@ -77,7 +77,7 @@ class SignInForm extends Component {
                                             value="Войти" />
                                     </div>
                                 </div>
-                            </form>
+                            </Form>
                         </div>
                     </div>
                 </div>
