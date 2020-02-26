@@ -10,8 +10,8 @@ class SignUpForm extends Component {
 
     state = {
         name: "",
-        password: "",
         email: "",
+        password: "",
     }
 
     onRegister = (event) => {
@@ -86,18 +86,6 @@ class SignUpForm extends Component {
                                         name="password2" 
                                         required="required" 
                                         className="form-control-plaintext" />
-                                </FormGroup>
-                                <FormGroup>
-                                    <label className="col-form-label" for="register_registrationData_phone">
-                                        Телефон
-                                    </label>
-                                    <input 
-                                        type="text" 
-                                        id="register_registrationData_phone" 
-                                        name="phone" 
-                                        required="required" 
-                                        placeholder="+79160000000" 
-                                        className="form-control-plaintext phone" />
                                 </FormGroup>
                                 <FormGroup>
                                     <label class="col-form-label" for="register_registrationData_skype">Skype</label>

@@ -13,12 +13,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     name = models.CharField(_('имя'), max_length=64)
     email = models.EmailField('Email', blank=False, unique=True)
-    phone = models.CharField(max_length=12, verbose_name=_(u'Телефон'), validators=[
-        RegexValidator(
-            regex='^7[\d]{10}$',
-            message=_(u'Телефон должен начинаться с 7 и состоять из 11 цифр'),
-        )
-    ])
     telegram = models.CharField(_('Telegram'), max_length=255, blank=True, null=True)
     skype = models.CharField(_('Skype'), max_length=255, blank=True, null=True)
 

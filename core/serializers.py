@@ -55,6 +55,7 @@ class LoginUserSerializer(serializers.Serializer):
 
     def validate(self, data):
         user = authenticate(**data)
+        print(user, user.is_active if hasattr(user, 'is_active') else '--------------')
         if user and user.is_active:
             return user
         raise serializers.ValidationError("Unable to log in with provided credentials.")
