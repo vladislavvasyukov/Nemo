@@ -5,6 +5,7 @@ import { auth } from '../actions';
 import { Redirect } from "react-router-dom";
 import {FormGroup, Form} from 'react-bootstrap'
 import Menu from './Menu';
+import { validate } from 'indicative/validator'
 
 class SignUpForm extends Component {
 
@@ -12,11 +13,42 @@ class SignUpForm extends Component {
         name: "",
         email: "",
         password: "",
+        password_confirmation: "",
+        skype: "",
+        telegram: "",
     }
 
     onRegister = (event) => {
         event.preventDefault();
-        this.props.register(this.state.name, this.state.email, this.state.password);
+
+        const data = this.state;
+        console.log(data)
+        const rules = {
+            name: "required|string",
+            email: "required|email",
+            password: "required|email|min:6|confirmed",
+        }
+        const messages = {
+            required: 'Это поле {{ field }} обязятельно',
+            'email.email': 'Невалидный email',
+            'password.confirmation': 'Пароли не совпадают',
+        }
+
+        validate(data, rules, messages)
+            .then(() => {
+                this.props.register(
+                    this.state.name, this.state.email, this.state.password, this.state.skype, this.state.telegram,
+                );
+            })
+            .catch(errors => {
+                console.log(errors)
+        })
+    }
+
+    handleInputChange = (event) => {
+        this.setState({
+            [event.target.name]: event.target.value
+        });
     }
 
     render() {
@@ -30,7 +62,7 @@ class SignUpForm extends Component {
                 <Menu />
                 <div className="container">
                     <div className="row justify-content-center">
-                        <div className="col-xl-4 col-lg-5 col-md-6 col-sm-8">
+                        <div className="col-xl-4 col-lg-5 col-md-6 col-sm-8 card authentication">
                             <Form method="post" onSubmit={this.onRegister}>
                                 <legend>Регистрация пользователя</legend>
                                 {this.props.errors.length > 0 && (
@@ -48,8 +80,8 @@ class SignUpForm extends Component {
                                         autocomplete="off" 
                                         name="name" 
                                         required="required" 
-                                        className="form-control-plaintext"
-                                        onChange={e => this.setState({name: e.target.value})} />
+                                        className="form-control"
+                                        onChange={this.handleInputChange} />
                                 </FormGroup>
                                 <FormGroup>
                                     <label className="col-form-label required" for="email">Email</label>
@@ -59,8 +91,8 @@ class SignUpForm extends Component {
                                         autocomplete="off" 
                                         name="email" 
                                         required="required" 
-                                        className="form-control-plaintext"
-                                        onChange={e => this.setState({email: e.target.value})}/>
+                                        className="form-control"
+                                        onChange={this.handleInputChange}/>
                                 </FormGroup>
                                 <FormGroup>
                                     <label className="col-form-label required" for="register_plainPassword1">
@@ -72,8 +104,8 @@ class SignUpForm extends Component {
                                         id="register_plainPassword1" 
                                         name="password" 
                                         required="required" 
-                                        className="form-control-plaintext"
-                                        onChange={e => this.setState({password: e.target.value})} />
+                                        className="form-control"
+                                        onChange={this.handleInputChange} />
                                 </FormGroup>
                                 <FormGroup>
                                     <label className="col-form-label required" for="register_plainPassword2">
@@ -83,9 +115,10 @@ class SignUpForm extends Component {
                                         type="password" 
                                         autocomplete="off" 
                                         id="register_plainPassword2" 
-                                        name="password2" 
+                                        name="password_confirmation"
                                         required="required" 
-                                        className="form-control-plaintext" />
+                                        className="form-control"
+                                        onChange={this.handleInputChange} />
                                 </FormGroup>
                                 <FormGroup>
                                     <label class="col-form-label" for="register_registrationData_skype">Skype</label>
@@ -93,7 +126,8 @@ class SignUpForm extends Component {
                                         type="text" 
                                         id="register_registrationData_skype" 
                                         name="skype" 
-                                        className="form-control-plaintext skype" />
+                                        className="form-control skype"
+                                        onChange={this.handleInputChange}/>
                                 </FormGroup>
                                 <FormGroup>
                                     <label className="col-form-label" for="register_registrationData_telegram">
@@ -103,7 +137,8 @@ class SignUpForm extends Component {
                                         type="text" 
                                         id="register_registrationData_telegram" 
                                         name="telegram" 
-                                        className="form-control-plaintext telegram" />
+                                        className="form-control telegram"
+                                        onChange={this.handleInputChange} />
                                 </FormGroup>
                                 <div className="form-group row mb-0 justify-content-center">
                                     <div className="col-sm-6 pl-sm-1">
@@ -134,7 +169,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        register: (name, email, password) => dispatch(auth.register(name, email, password))
+        register: (name, email, password, skype, telegram) => dispatch(
+            auth.register(name, email, password, skype, telegram)
+        )
     };
 }
 

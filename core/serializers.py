@@ -16,7 +16,7 @@ class TaskSerializerShort(serializers.ModelSerializer):
 class CreateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'name', 'password', 'email')
+        fields = ('id', 'name', 'password', 'email', 'skype', 'telegram')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -24,6 +24,8 @@ class CreateUserSerializer(serializers.ModelSerializer):
             name=validated_data['name'],
             email=validated_data['email'],
             password=validated_data['password'],
+            skype=validated_data['skype'],
+            telegram=validated_data['telegram'],
         )
         return user
 

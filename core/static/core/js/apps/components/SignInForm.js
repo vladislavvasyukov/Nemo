@@ -31,7 +31,7 @@ class SignInForm extends Component {
                 <Menu />
                 <div className="container">
                     <div className="row justify-content-center">
-                        <div className="col-xl-4 col-lg-5 col-md-6 col-sm-8">
+                        <div className="col-xl-4 col-lg-5 col-md-6 col-sm-8 card authentication">
                             <Form method="post" onSubmit={this.onLogin}>
                                 <legend>Вход</legend>
                                 {this.props.errors.length > 0 && (
@@ -50,7 +50,7 @@ class SignInForm extends Component {
                                         required="required" 
                                         placeholder="e-mail"
                                         title="Пожалуйста, заполните это поле"
-                                        className="form-control-plaintext" 
+                                        className="form-control"
                                         onChange={e => this.setState({email: e.target.value})}/>
                                 </FormGroup>
                                 <FormGroup>
@@ -66,7 +66,7 @@ class SignInForm extends Component {
                                         title="Пожалуйста, заполните это поле"
                                         onChange={e => this.setState({password: e.target.value})}
                                         required="required" 
-                                        className="form-control-plaintext" />
+                                        className="form-control" />
                                 </FormGroup>
                                 <div className="form-group row mb-0 justify-content-center">
                                     <div className="col-sm-6 pl-sm-1">

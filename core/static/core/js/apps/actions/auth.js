@@ -26,6 +26,8 @@ export const loadUser = () => {
                 if (res.status === 200) {
                     dispatch({type: C.USER_LOADED, user: res.data });
                     return res.data;
+                } else if (res.status >= 400 && res.status < 500) {
+                    dispatch({type: C.AUTHENTICATION_ERROR, data: {}});
                 }
             })
     }
@@ -62,10 +64,10 @@ export const login = (email, password) => {
     }
 }
 
-export const register = (username, email, password) => {
+export const register = (name, email, password, skype, telegram) => {
     return (dispatch, getState) => {
         let headers = {"Content-Type": "application/json"};
-        let body = JSON.stringify({username, email, password});
+        let body = JSON.stringify({name, email, password, skype, telegram});
 
         return fetch("/api/auth/register/", {headers, body, method: "POST"})
             .then(res => {
