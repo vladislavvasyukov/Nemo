@@ -9,11 +9,13 @@ import Menu from './Menu';
 
 class SignInForm extends Component {
 
-    state = {
-        email: "",
-        password: "",
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: "",
+            password: "",
+        };
     }
-
 
     onLogin = (event) => {
         event.preventDefault();
@@ -34,9 +36,9 @@ class SignInForm extends Component {
                         <div className="col-xl-4 col-lg-5 col-md-6 col-sm-8 card authentication">
                             <Form method="post" onSubmit={this.onLogin}>
                                 <legend>Вход</legend>
-                                {this.props.errors.length > 0 && (
+                                {this.props.login_errors.length > 0 && (
                                     <ul>
-                                        {this.props.errors.map(error => (
+                                        {this.props.login_errors.map(error => (
                                             <li key={error.field}>{error.message}</li>
                                         ))}
                                     </ul>
@@ -87,14 +89,14 @@ class SignInForm extends Component {
 }
 
 const mapStateToProps = state => {
-    let errors = [];
-    if (state.auth.errors) {
-        errors = Object.keys(state.auth.errors).map(field => {
-            return {field, message: state.auth.errors[field]};
+    let login_errors = [];
+    if (state.auth.login_errors) {
+        login_errors = Object.keys(state.auth.login_errors).map(field => {
+            return {field, message: state.auth.login_errors[field]};
         });
     }
     return {
-        errors,
+        login_errors,
         isAuthenticated: state.auth.isAuthenticated
     };
 }

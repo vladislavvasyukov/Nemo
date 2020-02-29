@@ -9,13 +9,16 @@ import { validate } from 'indicative/validator'
 
 class SignUpForm extends Component {
 
-    state = {
-        name: "",
-        email: "",
-        password: "",
-        password_confirmation: "",
-        skype: "",
-        telegram: "",
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: "",
+            email: "",
+            password: "",
+            password_confirmation: "",
+            skype: "",
+            telegram: "",
+        };
     }
 
     onRegister = (event) => {
@@ -42,7 +45,7 @@ class SignUpForm extends Component {
             })
             .catch(errors => {
                 console.log(errors)
-        })
+            })
     }
 
     handleInputChange = (event) => {
@@ -65,9 +68,9 @@ class SignUpForm extends Component {
                         <div className="col-xl-4 col-lg-5 col-md-6 col-sm-8 card authentication">
                             <Form method="post" onSubmit={this.onRegister}>
                                 <legend>Регистрация пользователя</legend>
-                                {this.props.errors.length > 0 && (
+                                {this.props.register_errors.length > 0 && (
                                     <ul>
-                                        {this.props.errors.map(error => (
+                                        {this.props.register_errors.map(error => (
                                             <li key={error.field}>{error.message}</li>
                                         ))}
                                     </ul>
@@ -155,14 +158,14 @@ class SignUpForm extends Component {
 }
 
 const mapStateToProps = state => {
-    let errors = [];
-    if (state.auth.errors) {
-        errors = Object.keys(state.auth.errors).map(field => {
+    let register_errors = [];
+    if (state.auth.register_errors) {
+        register_errors = Object.keys(state.auth.register_errors).map(field => {
             return {field, message: state.auth.errors[field]};
         });
     }
     return {
-        errors,
+        register_errors,
         isAuthenticated: state.auth.isAuthenticated
     };
 }

@@ -6,7 +6,8 @@ const initialState = {
     isAuthenticated: false,
     isLoading: true,
     user: null,
-    errors: {},
+    login_errors: {},
+    register_errors: {},
 };
 
 
@@ -35,7 +36,9 @@ export default function auth(state=initialState, action) {
                 ...state, 
                 ...action.data, 
                 isAuthenticated: true, 
-                isLoading: false, errors: null
+                isLoading: false, 
+                login_errors: null,
+                register_errors: null,
             };
 
         case C.AUTHENTICATION_ERROR:
@@ -45,7 +48,7 @@ export default function auth(state=initialState, action) {
             localStorage.removeItem("token");
             return {
                 ...state, 
-                errors: action.data, 
+                ...action.data, 
                 token: null, 
                 user: null,
                 isAuthenticated: false, 

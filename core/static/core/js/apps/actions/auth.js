@@ -54,10 +54,10 @@ export const login = (email, password) => {
                     dispatch({type: C.LOGIN_SUCCESSFUL, data: res.data });
                     return res.data;
                 } else if (res.status === 403 || res.status === 401) {
-                    dispatch({type: C.AUTHENTICATION_ERROR, data: res.data});
+                    dispatch({type: C.AUTHENTICATION_ERROR, data: { login_errors: res.data }});
                     throw res.data;
                 } else {
-                    dispatch({type: C.LOGIN_FAILED, data: res.data});
+                    dispatch({type: C.LOGIN_FAILED, data: { login_errors: res.data }});
                     throw res.data;
                 }
             })
@@ -85,10 +85,10 @@ export const register = (name, email, password, skype, telegram) => {
                     dispatch({type: C.REGISTRATION_SUCCESSFUL, data: res.data });
                     return res.data;
                 } else if (res.status === 403 || res.status === 401) {
-                    dispatch({type: C.AUTHENTICATION_ERROR, data: res.data});
+                    dispatch({type: C.AUTHENTICATION_ERROR, data: { register_errors: res.data }});
                     throw res.data;
                 } else {
-                    dispatch({type: C.REGISTRATION_FAILED, data: res.data});
+                    dispatch({type: C.REGISTRATION_FAILED, data: { register_errors: res.data }});
                     throw res.data;
                 }
             })
@@ -117,10 +117,10 @@ export const logout = () => {
                     dispatch({type: C.LOGOUT_SUCCESSFUL});
                     return res.data;
                 } else if (res.status === 403 || res.status === 401) {
-                    dispatch({type: C.AUTHENTICATION_ERROR, data: res.data});
+                    dispatch({type: C.AUTHENTICATION_ERROR, data: {}});
                     throw res.data;
                 } else {
-                    dispatch({type: C.LOGOUT_FAILED, data: res.data});
+                    dispatch({type: C.LOGOUT_FAILED, data: {}});
                     throw res.data;
                 }
             })
