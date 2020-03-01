@@ -7,7 +7,7 @@ const initialState = {
     isLoading: true,
     user: null,
     login_errors: {},
-    register_errors: {},
+    register_errors: [],
 };
 
 
@@ -53,6 +53,12 @@ export default function auth(state=initialState, action) {
                 user: null,
                 isAuthenticated: false, 
                 isLoading: false
+            };
+
+        case C.SET_REGISTER_ERRORS:
+            return {
+                ...state,
+                ...action.data,
             };
 
         default:

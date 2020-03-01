@@ -21,20 +21,24 @@ class SignUpForm extends Component {
         };
     }
 
+    componentWillUnmount() {
+        this.props.setErrors({register_errors: []});
+    }
+
     onRegister = (event) => {
         event.preventDefault();
 
         const data = this.state;
-        console.log(data)
         const rules = {
             name: "required|string",
             email: "required|email",
-            password: "required|email|min:6|confirmed",
+            password: "required|min:6|confirmed",
         }
         const messages = {
             required: 'Это поле {{ field }} обязятельно',
             'email.email': 'Невалидный email',
-            'password.confirmation': 'Пароли не совпадают',
+            'password.confirmed': 'Пароли не совпадают',
+            'password.min': 'Слишком короткий пароль',
         }
 
         validate(data, rules, messages)
@@ -44,7 +48,7 @@ class SignUpForm extends Component {
                 );
             })
             .catch(errors => {
-                console.log(errors)
+                this.props.setErrors({register_errors: errors});
             })
     }
 
@@ -60,6 +64,8 @@ class SignUpForm extends Component {
             return <Redirect to="/" />
         }
 
+        const {register_errors} = this.props;
+
         return (
             <div>
                 <Menu />
@@ -68,10 +74,10 @@ class SignUpForm extends Component {
                         <div className="col-xl-4 col-lg-5 col-md-6 col-sm-8 card authentication">
                             <Form method="post" onSubmit={this.onRegister}>
                                 <legend>Регистрация пользователя</legend>
-                                {this.props.register_errors.length > 0 && (
+                                {(
                                     <ul>
-                                        {this.props.register_errors.map(error => (
-                                            <li key={error.field}>{error.message}</li>
+                                        {register_errors.map(error => (
+                                            <li key={error.field} className="error">{error.message}</li>
                                         ))}
                                     </ul>
                                 )}
@@ -158,14 +164,8 @@ class SignUpForm extends Component {
 }
 
 const mapStateToProps = state => {
-    let register_errors = [];
-    if (state.auth.register_errors) {
-        register_errors = Object.keys(state.auth.register_errors).map(field => {
-            return {field, message: state.auth.errors[field]};
-        });
-    }
     return {
-        register_errors,
+        register_errors: state.auth.register_errors,
         isAuthenticated: state.auth.isAuthenticated
     };
 }
@@ -174,7 +174,8 @@ const mapDispatchToProps = dispatch => {
     return {
         register: (name, email, password, skype, telegram) => dispatch(
             auth.register(name, email, password, skype, telegram)
-        )
+        ),
+        setErrors: (errors) => dispatch(auth.setErrors(errors))
     };
 }
 

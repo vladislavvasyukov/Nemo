@@ -81,6 +81,7 @@ export const register = (name, email, password, skype, telegram) => {
                 }
             })
             .then(res => {
+                console.log(res)
                 if (res.status === 200) {
                     dispatch({type: C.REGISTRATION_SUCCESSFUL, data: res.data });
                     return res.data;
@@ -88,10 +89,23 @@ export const register = (name, email, password, skype, telegram) => {
                     dispatch({type: C.AUTHENTICATION_ERROR, data: { register_errors: res.data }});
                     throw res.data;
                 } else {
-                    dispatch({type: C.REGISTRATION_FAILED, data: { register_errors: res.data }});
+                    let register_errors = [];
+                    for (let key in res.data) {
+                        register_errors.push({
+                            field: key,
+                            message: res.data[key][0],
+                        });
+                    }
+                    dispatch({type: C.REGISTRATION_FAILED, data: { register_errors: register_errors }});
                     throw res.data;
                 }
             })
+    }
+}
+
+export const setErrors = (errors) => {
+    return (dispatch, getState) => {
+        dispatch({type: C.SET_REGISTER_ERRORS, data: errors})
     }
 }
 

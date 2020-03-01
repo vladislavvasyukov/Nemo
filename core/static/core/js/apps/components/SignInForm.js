@@ -17,6 +17,10 @@ class SignInForm extends Component {
         };
     }
 
+    componentWillUnmount() {
+        this.props.setErrors({login_errors: []});
+    }
+
     onLogin = (event) => {
         event.preventDefault();
         this.props.login(this.state.email, this.state.password);
@@ -39,7 +43,7 @@ class SignInForm extends Component {
                                 {this.props.login_errors.length > 0 && (
                                     <ul>
                                         {this.props.login_errors.map(error => (
-                                            <li key={error.field}>{error.message}</li>
+                                            <li key={error.field} className="error">{error.message}</li>
                                         ))}
                                     </ul>
                                 )}
@@ -103,7 +107,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        login: (email, password) => { return dispatch(auth.login(email, password)); },
+        login: (email, password) => dispatch(auth.login(email, password)),
+        setErrors: (errors) => dispatch(auth.setErrors(errors))
     };
 }
 
