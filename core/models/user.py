@@ -19,16 +19,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(_('Персонал'), default=False)
     is_active = models.BooleanField(_('Активный'), default=True)
     date_joined = models.DateTimeField(_('Дата регистрации'), default=timezone.now)
-    company = models.ForeignKey(
+
+    companies = models.ManyToManyField(
         'core.Company', 
-        verbose_name=_('Компания пользователя'), 
-        on_delete=models.CASCADE,
-        null=True, 
-        blank=True,
+        related_name='users', 
+        verbose_name=_('Компании'), 
+        through='core.CompanyUser',
     )
 
     objects = UserManager()
 
     class Meta(AbstractBaseUser.Meta):
-        verbose_name = _('Пользователь')
-        verbose_name_plural = _('Пользователи')
+        verbose_name = _('Сотрудник')
+        verbose_name_plural = _('Сотрудники')

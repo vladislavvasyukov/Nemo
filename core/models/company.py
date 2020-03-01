@@ -12,3 +12,15 @@ class Company(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+
+class CompanyUser(TimeStampedModel):
+    user = models.ForeignKey('core.User', models.CASCADE, verbose_name=_('Сотрудник'), db_index=False)
+    company = models.ForeignKey('core.Company', models.CASCADE, verbose_name=_('Компания'),  db_index=False)
+
+    class Meta:
+        verbose_name = _('Сотрудник компании')
+        verbose_name_plural = _('Сотрудники компаний')
+        constraints = (
+            models.UniqueConstraint(fields=['user', 'company'], name='unique_company_user'),
+        )

@@ -7,7 +7,7 @@ from core.models import User
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ('id', 'name', 'is_staff', 'is_superuser', 'last_login', 'is_active', 'company')
+    list_display = ('id', 'name', 'is_staff', 'is_superuser', 'last_login', 'is_active',)
     ordering = ('id',)
     fieldsets = (
         (None, {'fields': ('password',)}),
