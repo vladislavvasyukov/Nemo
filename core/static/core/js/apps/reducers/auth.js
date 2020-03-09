@@ -3,7 +3,7 @@ import C from '../constants';
 
 const initialState = {
     token: localStorage.getItem("token"),
-    isAuthenticated: false,
+    isAuthenticated: false || Boolean(localStorage.getItem("token")),
     isLoading: true,
     user: null,
     login_errors: {},

@@ -3,6 +3,7 @@ import NotFound from "./NotFound";
 import SignInForm from "./SignInForm";
 import SignUpForm from "./SignUpForm";
 import MainPage from "./MainPage";
+import TeamBase from "./TeamBase";
 
 
 export {
@@ -10,5 +11,6 @@ export {
     SignInForm, 
     SignUpForm, 
     NotFound, 
-    MainPage, 
+    MainPage,
+    TeamBase,
 }
