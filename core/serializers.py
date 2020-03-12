@@ -22,11 +22,11 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(
-            name=validated_data['name'],
-            email=validated_data['email'],
-            password=validated_data['password'],
-            skype=validated_data['skype'],
-            telegram=validated_data['telegram'],
+            name=validated_data.get('name'),
+            email=validated_data.get('email'),
+            password=validated_data.get('password'),
+            skype=validated_data.get('skype'),
+            telegram=validated_data.get('telegram'),
         )
         return user
 

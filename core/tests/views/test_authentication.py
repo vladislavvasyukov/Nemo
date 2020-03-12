@@ -1,5 +1,7 @@
 import pytest
-from django.conf import settings
+from django.urls import reverse
+
+from core.tests.factories import UserFactory
 
 
 @pytest.mark.django_db
@@ -9,8 +11,25 @@ def test_registration(client):
     """
 
     data = {
-        "username": "user1",
-        "password": "hunter2"
+        "name": "user1",
+        "email": "temp@yandex.ru",
+        "password": "hunter2",
     }
 
-    response = client.post(f'{settings.SITE_PROTOCOL}://{settings.SITE_DOMAIN}/api/auth/register/', data=data)
+    response = client.post(reverse('register'), data=data)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_login(client):
+    """
+    Тест аутентификации пользователя
+    """
+
+    data = {
+        'email': 'temp@yandex.ru',
+        'password': '1234',
+    }
+    UserFactory(email=data['email'], password=data['password'])
+    response = client.post(reverse('login'), data=data)
+    assert response.status_code == 200

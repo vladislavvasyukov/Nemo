@@ -5,4 +5,4 @@ from core.models import Tag
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ('title', )

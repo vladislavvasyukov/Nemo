@@ -21,6 +21,7 @@ LOCK_DIR = os.path.join(BASE_DIR, 'locks')
 
 SITE_DOMAIN = '127.0.0.1:8000'
 SITE_PROTOCOL = 'http'
+SITE_IS_WWW = True
 
 
 # Quick-start development settings - unsuitable for production
