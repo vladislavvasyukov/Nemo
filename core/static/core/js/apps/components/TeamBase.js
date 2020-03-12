@@ -22,59 +22,43 @@ class TeamBase extends Component {
         }
 
         return (
-            <Container style={{ margin: 20 }}>
-                <Header as="h3">This example is powered by Semantic UI React 😊</Header>
-                <List bulleted>
-                    <List.Item
-                        as="a"
-                        content="💌 Official documentation"
-                        href="https://react.semantic-ui.com/"
-                        target="_blank"
-                    />
-                    <List.Item
-                        as="a"
-                        content="💡 StackOverflow"
-                        href="https://stackoverflow.com/questions/tagged/semantic-ui-react?sort=frequent"
-                        target="_blank"
-                    />
-                </List>
-                <button onClick={() => this.setState({visible: true})}>Show</button>
-
+            <div className='sdasdfasdf'>
                 <Sidebar.Pushable as={Segment}>
-                <Sidebar
-                    as={Menu}
-                    animation='overlay'
-                    icon='labeled'
-                    inverted
-                    onHide={() => this.setState({visible: false})}
-                    vertical
-                    visible={this.state.visible}
-                    width='thin'
-                >
-                    <Menu.Item as='a'>
-                        <Icon name='home' />
-                        Home
-                    </Menu.Item>
-                    <Menu.Item as='a'>
-                        <Icon name='gamepad' />
-                        Games
-                    </Menu.Item>
-                    <Menu.Item as='a'>
-                        <Icon name='camera' />
-                        Channels
-                    </Menu.Item>
-                </Sidebar>
+                    <Sidebar
+                        as={Menu}
+                        animation='push'
+                        icon='labeled'
+                        inverted
+                        onHide={() => this.setState({visible: false})}
+                        vertical
+                        visible={this.state.visible}
+                        width='thin'
+                    >
+                        <Menu.Item as='a'>
+                            <Icon name='home' />
+                            Home
+                        </Menu.Item>
+                        <Menu.Item as='a'>
+                            <Icon name='gamepad' />
+                            Games
+                        </Menu.Item>
+                        <Menu.Item as='a'>
+                            <Icon name='camera' />
+                            Channels
+                        </Menu.Item>
+                    </Sidebar>
 
-                <Sidebar.Pusher dimmed={this.state.visible}>
-                    <Segment basic>
-                        <Header as='h3'>Application Content</Header>
-                        <div>
-                            something content
-                        </div>
-                    </Segment>
-                </Sidebar.Pusher>
-            </Sidebar.Pushable>
-            </Container>
+                    <Sidebar.Pusher dimmed={this.state.visible}>
+                        <Segment basic>
+                            <Header as='h3'>Application Content</Header>
+                            <button onClick={() => this.setState({visible: true})}>Show</button>
+                            <div style={{ minHeight: '600px'}}>
+                                CONTENT
+                            </div>
+                        </Segment>
+                    </Sidebar.Pusher>
+                </Sidebar.Pushable>
+            </div>
         );
     }
 }

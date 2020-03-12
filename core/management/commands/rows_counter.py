@@ -1,6 +1,8 @@
 import os
 from collections import defaultdict
+
 from django.conf import settings
+
 from core.management.commands import CoreCommandLocked
 
 
@@ -10,16 +12,18 @@ class Command(CoreCommandLocked):
     """
 
     EXCLUDE_PARTS = (
-        'node_modules', 
-        '/.git/', 
-        'migrations', 
-        '__pycache__', 
-        'package-lock.json',
-        'app.build.js',
-        'vendor-manifest.json',
-        'dll.vendor.js.LICENSE.txt',
-        'dll.vendor.js',
+        'Nemo/Nemo/.idea/',
+        'Nemo/Nemo/.git/',
+        'Nemo/Nemo/.pytest_cache',
+        'Nemo/Nemo/node_modules/',
+        'Nemo/Nemo/htmlcov/',
+        'Nemo/Nemo/package-lock.json',
+        'Nemo/Nemo/core/migrations/',
+        'Nemo/Nemo/core/static/core/js/apps/build/',
+        'Nemo/Nemo/core/static/core/vendor/build/',
     )
+
+    EXCLUDE_EXTENSIONS = ('coverage', 'pyc', 'lock', 'log')
 
     def run(self, *args, **options):
 
@@ -28,10 +32,11 @@ class Command(CoreCommandLocked):
         for root, dirs, files in os.walk(settings.BASE_DIR):
             all_files = [os.path.join(root, name) for name in files]
             for filename in all_files:
-                if all([part not in filename for part in self.EXCLUDE_PARTS]):
+                if self.valid(filename):
                     ext = filename.split('.')[-1]
                     files_dict[ext]['files'].add(filename)
                     with open(filename) as fi:
+                        print(filename)
                         files_dict[ext]['count'] += len(fi.readlines())
 
         total_count = 0
@@ -42,3 +47,9 @@ class Command(CoreCommandLocked):
                 print(f'          {f}')
 
         print(f'\n\n{"="*100}\n\nTOTAL COUNT ROWS = {total_count}')
+
+    def valid(self, filename):
+        cause_one = all([part not in filename for part in self.EXCLUDE_PARTS])
+        cause_two = all([ext != filename.split('.')[-1] for ext in self.EXCLUDE_EXTENSIONS])
+
+        return cause_one and cause_two
