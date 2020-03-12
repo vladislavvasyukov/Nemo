@@ -4,6 +4,8 @@ import SignInForm from "./SignInForm";
 import SignUpForm from "./SignUpForm";
 import MainPage from "./MainPage";
 import TeamBase from "./TeamBase";
+import AddTask from "./AddTask";
+import Field from "./Field";
 
 
 export {
@@ -13,4 +15,5 @@ export {
     NotFound, 
     MainPage,
     TeamBase,
+    AddTask,
 }

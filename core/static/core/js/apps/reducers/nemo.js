@@ -2,18 +2,22 @@ import C from '../constants';
 
 
 const initialState = {
-
+    showModalAddTask: false,
 };
 
 
 export default function nemo(state=initialState, action) {
-
     switch (action.type) {
-
-        case C.GET_NOTES:
+        case C.ADD_TASK_SHOW_MODAL:
             return {
-                ...state, 
-                isLoading: true
+                ...state,
+                showModalAddTask: true,
+            };
+
+        case C.ADD_TASK_HIDE_MODAL:
+            return {
+                ...state,
+                showModalAddTask: false,
             };
 
         default:

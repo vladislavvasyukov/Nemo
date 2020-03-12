@@ -1,6 +1,5 @@
 import React from 'react';
 import Menu from './Menu';
-import { NavLink } from 'react-router-dom';
 
 
 export default class MainPage extends React.Component {

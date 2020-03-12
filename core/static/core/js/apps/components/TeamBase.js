@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { auth } from '../actions';
+import { task } from '../actions';
+import AddTask from './AddTask';
 import { Redirect } from "react-router-dom";
-import { Container, List, Header, Icon, Image, Menu, Segment, Sidebar } from 'semantic-ui-react'
+import { Container, List, Header, Icon, Image, Menu, Segment, Sidebar, Button } from 'semantic-ui-react'
 
 
 class TeamBase extends Component {
@@ -12,6 +13,7 @@ class TeamBase extends Component {
         super(props);
         this.state = {
             visible: true,
+            show: false,
         };
     }
 
@@ -35,8 +37,7 @@ class TeamBase extends Component {
                         width='thin'
                     >
                         <Menu.Item as='a'>
-                            <Icon name='home' />
-                            Home
+                            <AddTask />
                         </Menu.Item>
                         <Menu.Item as='a'>
                             <Icon name='gamepad' />
@@ -51,7 +52,7 @@ class TeamBase extends Component {
                     <Sidebar.Pusher dimmed={this.state.visible}>
                         <Segment basic>
                             <Header as='h3'>Application Content</Header>
-                            <button onClick={() => this.setState({visible: true})}>Show</button>
+                            <button onClick={() => this.setState({visible: true, show: true})}>Show</button>
                             <div style={{ minHeight: '600px'}}>
                                 CONTENT
                             </div>
