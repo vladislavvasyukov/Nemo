@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
-from core.models import Task
+from core.models import Task, Tag
 
 User = get_user_model()
 
@@ -12,6 +12,12 @@ class TaskSerializerShort(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ('id', 'title', 'description',)
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('id', 'title')
 
 
 class CreateUserSerializer(serializers.ModelSerializer):

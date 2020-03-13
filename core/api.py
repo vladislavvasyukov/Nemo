@@ -1,9 +1,11 @@
+from django.db.models import Q
 from knox.models import AuthToken
 from rest_framework import permissions, generics, viewsets
 from rest_framework.response import Response
 
-from core.models import Task
-from core.serializers import CreateUserSerializer, UserSerializer, LoginUserSerializer, TaskSerializerShort
+from core.models import Task, Tag
+from core.serializers import CreateUserSerializer, UserSerializer, LoginUserSerializer, TaskSerializerShort, \
+    TagSerializer
 
 
 class RegistrationAPI(generics.GenericAPIView):
@@ -46,3 +48,14 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return self.request.user.tasks_to_execute.filter(status__in=Task.WORK_STATUSES)
+
+
+class TagListApi(generics.ListAPIView):
+    permissions_classes = [permissions.IsAuthenticated, ]
+    serializer_class = TagSerializer
+
+    def get_queryset(self):
+        q = self.request.query_params.get('q', '')
+        filters = Q(title__icontains=q)
+
+        return Tag.objects.filter(filters)

@@ -12,4 +12,5 @@ urlpatterns = [
     path("auth/register/", api.RegistrationAPI.as_view(), name='register'),
     path("auth/login/", api.LoginAPI.as_view(), name='login'),
     path("auth/user/", api.UserAPI.as_view(), name='user'),
+    path("tags/", api.TagListApi.as_view())
 ]

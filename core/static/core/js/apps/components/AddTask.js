@@ -2,9 +2,18 @@ import React from 'react';
 import { Button, Header, Icon, Image, Modal } from 'semantic-ui-react';
 import {Form, FormGroup} from 'react-bootstrap';
 import Field from './Field';
+import {getTagOptions} from '../utils';
+import AsyncSelect from 'react-select/async';
 
 
 export default class AddTask extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            tags: {}
+        }
+    }
 
     render() {
 
@@ -19,6 +28,15 @@ export default class AddTask extends React.Component {
                                     className='textinput textInput form-control'
                                     maxLength='256'
                                     type='text'
+                                />
+                            </Field>
+                            <Field title='Теги' name='tags'>
+                                <AsyncSelect
+                                    isMulti
+                                    cacheOptions
+                                    defaultOptions
+                                    loadOptions={getTagOptions}
+                                    onInputChange={(tags) => this.setState({tags})}
                                 />
                             </Field>
                         </Form>
