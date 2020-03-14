@@ -57,5 +57,8 @@ class TagListApi(generics.ListAPIView):
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
         filters = Q(title__icontains=q)
-
-        return Tag.objects.filter(filters)
+        print(q)
+        print(filters)
+        tags = Tag.objects.all()
+        print(tags)
+        return tags
