@@ -15,3 +15,7 @@ export function addTaskHideModal() {
         });
     }
 }
+
+export function addTask() {
+    console.log('add task')
+}

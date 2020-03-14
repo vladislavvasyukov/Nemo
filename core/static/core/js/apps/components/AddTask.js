@@ -1,39 +1,8 @@
 import React from 'react';
-import { Button, Header, Icon, Image, Modal } from 'semantic-ui-react';
-import {Form, FormGroup} from 'react-bootstrap';
+import { Button, Header, Icon, Image, Modal, Dropdown, TextArea } from 'semantic-ui-react';
+import {Form, FormGroup, Col} from 'react-bootstrap';
 import Field from './Field';
 import {getTagOptions} from '../utils';
-import { Dropdown } from 'semantic-ui-react'
-
-const tags = [
-  { key: 'English', text: 'English', value: 'English' },
-  { key: 'French', text: 'French', value: 'French' },
-  { key: 'Spanish', text: 'Spanish', value: 'Spanish' },
-  { key: 'German', text: 'German', value: 'German' },
-  { key: 'Chinese', text: 'Chinese', value: 'Chinese' },
-]
-
-class DropdownExampleAllowAdditions extends React.Component {
-
-
-  render() {
-    const { currentValues } = this.state
-
-    return (
-      <Dropdown
-        options={this.state.options}
-        search
-        selection
-        fluid
-        multiple
-        allowAdditions
-        value={currentValues}
-        onAddItem={this.handleAddition}
-        onChange={this.handleChange}
-      />
-    )
-  }
-}
 
 
 export default class AddTask extends React.Component {
@@ -41,8 +10,9 @@ export default class AddTask extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            tags: tags,
-            currentValues: {},
+            tags: [],
+            currentValues: [],
+            description: '',
         }
     }
 
@@ -53,11 +23,10 @@ export default class AddTask extends React.Component {
     }
 
     componentDidMount() {
-        fetch('/api/tags/?q="ед"', {credentials: 'same-origin'})
+        fetch('/api/tags/', {credentials: 'same-origin'})
         .then((response) => {
             return response.json()
         }).then((json) => {
-            console.log(json)
             let tags = []
             for (let j of json){
                 tags.push({
@@ -74,10 +43,16 @@ export default class AddTask extends React.Component {
     handleChange = (e, { value }) => this.setState({ currentValues: value })
 
     render() {
-        const { currentValues, tags } = this.state
+        const { currentValues, tags, description } = this.state;
+        const { addTaskShowModal, addTaskHideModal, showModalAddTask, addTask } = this.props;
 
         return (
-            <Modal trigger={<Button>Создать задачу</Button>} style={{position: 'relative', margin: 'relative'}}>
+            <Modal
+                trigger={<Button onClick={addTaskShowModal}>Создать задачу</Button>}
+                style={{position: 'relative', margin: 'relative'}}
+                open={showModalAddTask}
+                onClose={addTaskHideModal}
+            >
                 <Modal.Header>Создание задачи</Modal.Header>
                 <Modal.Content scrolling>
                     <Modal.Description>
@@ -100,16 +75,24 @@ export default class AddTask extends React.Component {
                                     value={currentValues}
                                     onAddItem={this.handleAddition}
                                     onChange={this.handleChange}
+                                    onSearchChange={this.onSearchChange}
                                  />
+                            </Field>
+                            <Field title='Описание' name='description'>
+                                <TextArea
+                                    placeholder='...'
+                                    style={{ minHeight: 300, width: '100%' }}
+                                    value={description}
+                                    onChange={(e, {value}) => this.setState({description: value}) }
+                                />
                             </Field>
                         </Form>
 
                     </Modal.Description>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button primary>
-                        Proceed <Icon name='chevron right' />
-                    </Button>
+                    <Button content='Добавить' onClick={addTask} primary />
+                    <Button content='Закрыть' onClick={addTaskHideModal} secondary />
                 </Modal.Actions>
              </Modal>
         )

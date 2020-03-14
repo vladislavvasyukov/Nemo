@@ -18,8 +18,9 @@ class TeamBase extends Component {
     }
 
     render() {
+        const { isAuthenticated, addTaskShowModal, addTaskHideModal, showModalAddTask, addTask } = this.props;
 
-        if (!this.props.isAuthenticated) {
+        if (!isAuthenticated) {
             return <Redirect to="/login" />
         }
 
@@ -37,7 +38,12 @@ class TeamBase extends Component {
                         width='thin'
                     >
                         <Menu.Item as='a'>
-                            <AddTask />
+                            <AddTask
+                                addTaskShowModal={addTaskShowModal}
+                                addTaskHideModal={addTaskHideModal}
+                                showModalAddTask={showModalAddTask}
+                                addTask={addTask}
+                            />
                         </Menu.Item>
                         <Menu.Item as='a'>
                             <Icon name='gamepad' />
@@ -66,13 +72,16 @@ class TeamBase extends Component {
 
 const mapStateToProps = state => {
     return {
-        isAuthenticated: state.auth.isAuthenticated
+        isAuthenticated: state.auth.isAuthenticated,
+        showModalAddTask: state.nemo.showModalAddTask,
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        setErrors: (errors) => dispatch(auth.setErrors(errors))
+        addTaskShowModal: () => dispatch(task.addTaskShowModal()),
+        addTaskHideModal: () => dispatch(task.addTaskHideModal()),
+        addTask: () => dispatch(task.addTask()),
     };
 }
 
