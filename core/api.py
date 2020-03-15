@@ -3,9 +3,9 @@ from knox.models import AuthToken
 from rest_framework import permissions, generics, viewsets
 from rest_framework.response import Response
 
-from core.models import Task, Tag
+from core.models import Task, Tag, Project
 from core.serializers import CreateUserSerializer, UserSerializer, LoginUserSerializer, TaskSerializerShort, \
-    TagSerializer
+    TagSerializer, ProjectSerializer
 
 
 class RegistrationAPI(generics.GenericAPIView):
@@ -57,4 +57,14 @@ class TagListApi(generics.ListAPIView):
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
         filters = Q(title__icontains=q)
-        return Tag.objects.filter(filters)
+        return Tag.objects.filter(filters)[:20]
+
+
+class ProjectListApi(generics.ListAPIView):
+    permissions_classes = [permissions.IsAuthenticated, ]
+    serializer_class = ProjectSerializer
+
+    def get_queryset(self):
+        q = self.request.query_params.get('q', '')
+        filters = Q(name__icontains=q)
+        return Project.objects.filter(filters)[:20]

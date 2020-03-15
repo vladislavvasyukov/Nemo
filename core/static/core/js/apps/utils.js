@@ -1,10 +1,11 @@
-function getOptions(input, href, additional) {
-    return fetch(`${href}?q=${input}${additional ? '&' + additional : ''}`, {credentials: 'same-origin'})
+function getOptions(input, href, callback) {
+    return fetch(`${href}?q=${input}`, {credentials: 'same-origin'})
         .then((response) => {
             return response.json()
         }).then((json) => {
-            return {options: json}
+            callback(json);
         });
 }
 
-export const getTagOptions = (input) => getOptions(input, '/api/tags/');
+export const getTagOptions = (input, callback) => getOptions(input, '/api/tags/', callback);
+export const getProjectOptions = (input, callback) => getOptions(input, '/api/projects/', callback);
