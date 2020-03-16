@@ -81,7 +81,7 @@ const mapDispatchToProps = dispatch => {
     return {
         addTaskShowModal: () => dispatch(task.addTaskShowModal()),
         addTaskHideModal: () => dispatch(task.addTaskHideModal()),
-        addTask: () => dispatch(task.addTask()),
+        addTask: (data) => dispatch(task.addTask(data)),
     };
 }
 

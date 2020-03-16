@@ -45,6 +45,15 @@ class CreateUserSerializer(serializers.ModelSerializer):
         return password
 
 
+class CreateTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = (
+            'pk', 'title', 'description', 'project', 'executor', 'manager', 'author', 'deadline', 'planned_work_hours',
+            'participants', 'tags',
+        )
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User

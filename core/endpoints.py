@@ -15,4 +15,5 @@ urlpatterns = [
     path("tags/", api.TagListApi.as_view()),
     path("projects/", api.ProjectListApi.as_view()),
     path("users/", api.UserListApi.as_view()),
+    path("create_task/", api.CreateTaskApi.as_view()),
 ]

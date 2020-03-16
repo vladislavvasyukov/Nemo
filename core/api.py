@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from core.models import Task, Tag, Project, User
 from core.serializers import CreateUserSerializer, UserSerializer, LoginUserSerializer, TaskSerializerShort, \
-    TagSelectSerializer, ProjectSelectSerializer, UserSelectSerializer
+    TagSelectSerializer, ProjectSelectSerializer, UserSelectSerializer, CreateTaskSerializer
 
 
 class RegistrationAPI(generics.GenericAPIView):
@@ -17,6 +17,20 @@ class RegistrationAPI(generics.GenericAPIView):
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
             "token": AuthToken.objects.create(user)[1]
+        })
+
+
+class CreateTaskApi(generics.GenericAPIView):
+    serializer_class = CreateTaskSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        data['author'] = request.user.pk
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        task = serializer.save()
+        return Response({
+            "task": TaskSerializerShort(task, context=self.get_serializer_context()).data,
         })
 
 
