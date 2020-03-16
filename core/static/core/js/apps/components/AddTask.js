@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Header, Icon, Image, Modal, Dropdown, TextArea } from 'semantic-ui-react';
 import {Form, FormGroup, Col} from 'react-bootstrap';
 import Field from './Field';
-import {getTagOptions, getProjectOptions} from '../utils';
+import {getTagOptions, getProjectOptions, getUserOptions} from '../utils';
 
 
 export default class AddTask extends React.Component {
@@ -12,8 +12,11 @@ export default class AddTask extends React.Component {
         this.state = {
             tags: [],
             projects: [],
+            executor_users: [],
+
             currentTags: [],
-            currentProject: {},
+            currentProject: null,
+            executor: null,
             description: '',
         }
     }
@@ -21,19 +24,11 @@ export default class AddTask extends React.Component {
     componentDidMount() {
         this.getTags();
         this.getProjects();
+        this.getExecutorUsers();
     }
 
     getTags(q='') {
-        getTagOptions(q, (json) => {
-            let tags = [];
-            for (let j of json){
-                tags.push({
-                    key: j.key,
-                    value: j.key,
-                    text: j.text,
-                })
-            }
-
+        getTagOptions(q, (tags) => {
             let fake_tags = [];
             this.state.currentTags.forEach((value) => {
                 if (tags.every(tag => tag.value != value)) {
@@ -46,29 +41,6 @@ export default class AddTask extends React.Component {
         });
     }
 
-    getProjects(q='') {
-        getProjectOptions(q, (json) => {
-            let tags = [];
-            for (let j of json){
-                tags.push({
-                    key: j.key,
-                    value: j.key,
-                    text: j.text,
-                })
-            }
-
-//            let fake_tags = [];
-//            this.state.currentTags.forEach((value) => {
-//                if (tags.every(tag => tag.value != value)) {
-//                    let prev = this.state.tags.find(tag => tag.value == value);
-//                    fake_tags.push(prev);
-//                }
-//            });
-
-            this.setState({projects: tags})
-        });
-    }
-
     handleAdditionTag = (e, { value }) => {
         this.setState((prevState) => ({
             tags: [{ text: value, value:value, key:value }, ...prevState.tags],
@@ -76,19 +48,31 @@ export default class AddTask extends React.Component {
     }
 
     handleChangeTags = (e, { value }) => {
-        this.setState({ currentTags: value }, () => this.getTags())
+        this.setState({ currentTags: value }, () => this.getTags());
     }
 
-    handleAdditionProject = (e, value ) => {
-        console.log(value)
+    getProjects(q='') {
+        getProjectOptions(q, (projects) => {
+            this.setState({projects: projects});
+        });
     }
 
-    handleChangeProject = (e, value) => {
-        console.log(value)
+    handleChangeProject = (e, { value }) => {
+        this.setState({ currentProject: value }, () => this.getProjects());
+    }
+
+    getExecutorUsers(q='') {
+        getUserOptions(q, (users) => {
+            this.setState({ executor_users: users });
+        });
+    }
+
+    handleChangeExecutor = (e, { value }) => {
+        this.setState({ executor: value }, () => this.getExecutorUsers());
     }
 
     render() {
-        const { currentTags, tags, currentProject, projects, description } = this.state;
+        const { currentTags, tags, currentProject, projects, executor, executor_users, description } = this.state;
         const { addTaskShowModal, addTaskHideModal, showModalAddTask, addTask } = this.props;
 
         return (
@@ -116,15 +100,22 @@ export default class AddTask extends React.Component {
                                     search
                                     selection
                                     fluid
-                                    allowAdditions={true}
                                     value={currentProject}
-                                    onAddItem={this.handleAdditionProject}
                                     onChange={this.handleChangeProject}
                                     onSearchChange={(e, {searchQuery}) => this.getProjects(searchQuery)}
                                  />
                             </Field>
 
                             <Field title='Исполнитель' name='executor'>
+                                <Dropdown
+                                    options={executor_users}
+                                    search
+                                    selection
+                                    fluid
+                                    value={executor}
+                                    onChange={this.handleChangeExecutor}
+                                    onSearchChange={(e, {searchQuery}) => this.getExecutorUsers(searchQuery)}
+                                 />
                             </Field>
 
                             <Field title='Приемщик' name='manager'>

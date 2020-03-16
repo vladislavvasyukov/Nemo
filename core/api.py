@@ -1,11 +1,10 @@
-from django.db.models import Q
 from knox.models import AuthToken
 from rest_framework import permissions, generics, viewsets
 from rest_framework.response import Response
 
-from core.models import Task, Tag, Project
+from core.models import Task, Tag, Project, User
 from core.serializers import CreateUserSerializer, UserSerializer, LoginUserSerializer, TaskSerializerShort, \
-    TagSerializer, ProjectSerializer
+    TagSelectSerializer, ProjectSelectSerializer, UserSelectSerializer
 
 
 class RegistrationAPI(generics.GenericAPIView):
@@ -51,20 +50,27 @@ class TaskViewSet(viewsets.ModelViewSet):
 
 
 class TagListApi(generics.ListAPIView):
-    permissions_classes = [permissions.IsAuthenticated, ]
-    serializer_class = TagSerializer
+
+    serializer_class = TagSelectSerializer
 
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
-        filters = Q(title__icontains=q)
-        return Tag.objects.filter(filters)[:20]
+        return Tag.objects.filter(title__icontains=q)[:20]
 
 
 class ProjectListApi(generics.ListAPIView):
     permissions_classes = [permissions.IsAuthenticated, ]
-    serializer_class = ProjectSerializer
+    serializer_class = ProjectSelectSerializer
 
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
-        filters = Q(name__icontains=q)
-        return Project.objects.filter(filters)[:20]
+        return Project.objects.filter(name__icontains=q)[:20]
+
+
+class UserListApi(generics.ListAPIView):
+    permissions_classes = [permissions.IsAuthenticated]
+    serializer_class = UserSelectSerializer
+
+    def get_queryset(self):
+        q = self.request.query_params.get('q', '')
+        return User.objects.filter(name__icontains=q)[:20]

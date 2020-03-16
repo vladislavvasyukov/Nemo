@@ -1,5 +1,4 @@
-from django.contrib.auth import authenticate
-from django.contrib.auth import get_user_model
+from django.contrib.auth import authenticate, get_user_model
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
@@ -12,40 +11,6 @@ class TaskSerializerShort(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ('id', 'title', 'description',)
-
-
-class TagSerializer(serializers.ModelSerializer):
-    key = serializers.SerializerMethodField()
-    text = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Tag
-        fields = ('key', 'text')
-
-    @staticmethod
-    def get_key(obj):
-        return obj.pk
-
-    @staticmethod
-    def get_text(obj):
-        return obj.title
-
-
-class ProjectSerializer(serializers.ModelSerializer):
-    key = serializers.SerializerMethodField()
-    text = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Project
-        fields = ('key', 'text')
-
-    @staticmethod
-    def get_key(obj):
-        return obj.pk
-
-    @staticmethod
-    def get_text(obj):
-        return obj.name
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -95,3 +60,45 @@ class LoginUserSerializer(serializers.Serializer):
         if user and user.is_active:
             return user
         raise serializers.ValidationError(_("Неверно указан email или пароль"))
+
+
+class BaseSelectSerializer(serializers.ModelSerializer):
+    key = serializers.SerializerMethodField()
+    text = serializers.SerializerMethodField()
+
+    @staticmethod
+    def get_key(obj):
+        return obj.pk
+
+
+class TagSelectSerializer(BaseSelectSerializer):
+
+    class Meta:
+        model = Tag
+        fields = ('key', 'text')
+
+    @staticmethod
+    def get_text(obj):
+        return obj.title
+
+
+class ProjectSelectSerializer(BaseSelectSerializer):
+
+    class Meta:
+        model = Project
+        fields = ('key', 'text')
+
+    @staticmethod
+    def get_text(obj):
+        return obj.name
+
+
+class UserSelectSerializer(BaseSelectSerializer):
+
+    class Meta:
+        model = User
+        fields = ('key', 'text')
+
+    @staticmethod
+    def get_text(obj):
+        return obj.name

@@ -14,4 +14,5 @@ urlpatterns = [
     path("auth/user/", api.UserAPI.as_view(), name='user'),
     path("tags/", api.TagListApi.as_view()),
     path("projects/", api.ProjectListApi.as_view()),
+    path("users/", api.UserListApi.as_view()),
 ]
