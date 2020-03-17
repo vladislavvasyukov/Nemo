@@ -135,18 +135,19 @@ export default class AddTask extends React.Component {
                 <Modal.Header>Создание задачи</Modal.Header>
                 <Modal.Content scrolling style={{maxHeight: '80vh'}}>
                     <Modal.Description>
-                        <Form>
+                        <Form onSubmit={this.addTask.bind(this)}>
                             <Field title='Заголовок' required={true} name='title'>
                                 <input
                                     className='textinput textInput form-control'
                                     maxLength='256'
                                     type='text'
                                     defaultValue={title}
+                                    required
                                     onChange={(e) => this.setState({title: e.target.value})}
                                 />
                             </Field>
 
-                            <Field title='Проект' name='project'>
+                            <Field title='Проект' name='project' required={true}>
                                 <Dropdown
                                     options={project_options}
                                     search
@@ -158,7 +159,7 @@ export default class AddTask extends React.Component {
                                  />
                             </Field>
 
-                            <Field title='Описание' name='description'>
+                            <Field title='Описание' name='description' required={true}>
                                 <TextArea
                                     placeholder='...'
                                     style={{ minHeight: 300, width: '100%' }}
@@ -167,7 +168,7 @@ export default class AddTask extends React.Component {
                                 />
                             </Field>
 
-                            <Field title='Исполнитель' name='executor'>
+                            <Field title='Исполнитель' name='executor' required={true}>
                                 <Dropdown
                                     options={executor_options}
                                     search
@@ -179,7 +180,7 @@ export default class AddTask extends React.Component {
                                  />
                             </Field>
 
-                            <Field title='Приемщик' name='manager'>
+                            <Field title='Приемщик' name='manager' required={true}>
                                  <Dropdown
                                     options={manager_options}
                                     search
@@ -191,7 +192,7 @@ export default class AddTask extends React.Component {
                                  />
                             </Field>
 
-                            <Field title='Участники задачи' name='participants'>
+                            <Field title='Участники задачи' name='participants' required={true}>
                                 <Dropdown
                                     options={participants_options}
                                     search
@@ -204,7 +205,7 @@ export default class AddTask extends React.Component {
                                 />
                             </Field>
 
-                            <Field title='Дедлайн' name='deadline'>
+                            <Field title='Дедлайн' name='deadline' required={true}>
                                 <DatePicker
                                     className="my-picker"
                                     selected={deadline}
@@ -213,7 +214,7 @@ export default class AddTask extends React.Component {
                                 />
                             </Field>
 
-                            <Field title='Теги' name='tags'>
+                            <Field title='Теги' name='tags' required={true}>
                                 <Dropdown
                                     options={tags_options}
                                     search
@@ -238,15 +239,16 @@ export default class AddTask extends React.Component {
                                     onChange={(e) => this.setState({planned_work_hours: e.target.value})}
                                 />
                             </Field>
+                            <FormGroup>
+                                <Button content='Добавить' type='submit' primary />
+                                <Button content='Закрыть' onClick={addTaskHideModal} secondary />
+                            </FormGroup>
 
                         </Form>
 
                     </Modal.Description>
                 </Modal.Content>
-                <Modal.Actions>
-                    <Button content='Добавить' onClick={this.addTask.bind(this)} primary />
-                    <Button content='Закрыть' onClick={addTaskHideModal} secondary />
-                </Modal.Actions>
+
              </Modal>
         )
     }

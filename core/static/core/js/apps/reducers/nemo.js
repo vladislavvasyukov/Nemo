@@ -20,6 +20,18 @@ export default function nemo(state=initialState, action) {
                 showModalAddTask: false,
             };
 
+        case C.ADD_TASK_SUCCESSFUL:
+            return {
+                ...state,
+                ...action.data,
+            }
+
+        case C.ADD_TASK_FAILED:
+            return {
+                ...state,
+                ...action.data,
+            }
+
         default:
             return state;
     }

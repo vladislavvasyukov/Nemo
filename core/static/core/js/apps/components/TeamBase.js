@@ -25,16 +25,15 @@ class TeamBase extends Component {
         }
 
         return (
-            <div className='sdasdfasdf'>
+            <div>
                 <Sidebar.Pushable as={Segment}>
                     <Sidebar
                         as={Menu}
-                        animation='push'
+                        animation='overlay'
                         icon='labeled'
                         inverted
-                        onHide={() => this.setState({visible: false})}
                         vertical
-                        visible={this.state.visible}
+                        visible
                         width='thin'
                     >
                         <Menu.Item as='a'>
@@ -46,8 +45,7 @@ class TeamBase extends Component {
                             />
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <Icon name='gamepad' />
-                            Games
+                            <Button>Мои задачи</Button>
                         </Menu.Item>
                         <Menu.Item as='a'>
                             <Icon name='camera' />
@@ -55,11 +53,9 @@ class TeamBase extends Component {
                         </Menu.Item>
                     </Sidebar>
 
-                    <Sidebar.Pusher dimmed={this.state.visible}>
+                    <Sidebar.Pusher>
                         <Segment basic>
-                            <Header as='h3'>Application Content</Header>
-                            <button onClick={() => this.setState({visible: true, show: true})}>Show</button>
-                            <div style={{ minHeight: '600px'}}>
+                            <div style={{ minHeight: '80vh'}}>
                                 CONTENT
                             </div>
                         </Segment>

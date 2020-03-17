@@ -5,3 +5,4 @@ from .task import TaskFactory
 from .comment import CommentFactory
 from .notification import NotificationFactory
 from .email import EmailFactory, EmailAttachmentFactory
+from .tag import TagFactory
