@@ -6,6 +6,8 @@ import MainPage from "./MainPage";
 import TeamBase from "./TeamBase";
 import AddTask from "./AddTask";
 import Field from "./Field";
+import TaskList from "./TaskList";
+import UserProfile from "./UserProfile";
 
 
 export {
@@ -16,4 +18,6 @@ export {
     MainPage,
     TeamBase,
     AddTask,
+    TaskList,
+    UserProfile,
 }

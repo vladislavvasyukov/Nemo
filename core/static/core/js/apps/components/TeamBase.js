@@ -3,8 +3,10 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { task } from '../actions';
 import AddTask from './AddTask';
+import TaskList from './TaskList';
+import UserProfile from './UserProfile';
 import { Redirect } from "react-router-dom";
-import { Container, List, Header, Icon, Image, Menu, Segment, Sidebar, Button } from 'semantic-ui-react'
+import { Icon, Image, Menu, Segment, Sidebar, Button } from 'semantic-ui-react';
 
 
 class TeamBase extends Component {
@@ -12,13 +14,17 @@ class TeamBase extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            visible: true,
-            show: false,
+            component: UserProfile,
         };
     }
 
+    CurrentComponent = ({component: ChildComponent, ...props}) => {
+        return <ChildComponent {...props} />
+    }
+
     render() {
-        const { isAuthenticated, addTaskShowModal, addTaskHideModal, showModalAddTask, addTask } = this.props;
+        const { isAuthenticated, addTaskShowModal, addTaskHideModal, showModalAddTask, addTask, user } = this.props;
+        let { CurrentComponent } = this;
 
         if (!isAuthenticated) {
             return <Redirect to="/login" />
@@ -35,7 +41,19 @@ class TeamBase extends Component {
                         vertical
                         visible
                         width='thin'
+                        style={{ width: '170px' }}
                     >
+                        <Menu.Item as='a'>
+                            <span style={{ fontSize: '18px'}}>
+                                {user && user.name}
+                                <Icon
+                                    name='setting'
+                                    className='icon-profile'
+                                    title='Настройки'
+                                     onClick={() => this.setState({component: UserProfile})}
+                                />
+                            </span>
+                        </Menu.Item>
                         <Menu.Item as='a'>
                             <AddTask
                                 addTaskShowModal={addTaskShowModal}
@@ -45,18 +63,14 @@ class TeamBase extends Component {
                             />
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <Button>Мои задачи</Button>
-                        </Menu.Item>
-                        <Menu.Item as='a'>
-                            <Icon name='camera' />
-                            Channels
+                            <Button onClick={() => this.setState({component: TaskList})}>Мои задачи</Button>
                         </Menu.Item>
                     </Sidebar>
 
                     <Sidebar.Pusher>
-                        <Segment basic>
-                            <div style={{ minHeight: '80vh'}}>
-                                CONTENT
+                        <Segment basic style={{ minHeight: '80vh', marginLeft: '170px' }}>
+                            <div>
+                                <CurrentComponent component={this.state.component} />
                             </div>
                         </Segment>
                     </Sidebar.Pusher>
@@ -69,6 +83,7 @@ class TeamBase extends Component {
 const mapStateToProps = state => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
+        user: state.auth.user,
         showModalAddTask: state.nemo.showModalAddTask,
     };
 }
