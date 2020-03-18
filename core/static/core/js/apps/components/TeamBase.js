@@ -14,7 +14,10 @@ class TeamBase extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            component: UserProfile,
+            component: TaskList,
+            child_props: {
+                token: props.token,
+            }
         };
     }
 
@@ -50,7 +53,7 @@ class TeamBase extends Component {
                                     name='setting'
                                     className='icon-profile'
                                     title='Настройки'
-                                     onClick={() => this.setState({component: UserProfile})}
+                                    onClick={() => this.setState({component: UserProfile, child_props: {}})}
                                 />
                             </span>
                         </Menu.Item>
@@ -63,14 +66,16 @@ class TeamBase extends Component {
                             />
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <Button onClick={() => this.setState({component: TaskList})}>Мои задачи</Button>
+                            <Button onClick={() => this.setState({component: TaskList, child_props: {token: this.props.token}})}>
+                                Мои задачи
+                            </Button>
                         </Menu.Item>
                     </Sidebar>
 
                     <Sidebar.Pusher>
-                        <Segment basic style={{ minHeight: '80vh', marginLeft: '170px' }}>
+                        <Segment basic style={{ minHeight: '100vh', marginLeft: '170px' }}>
                             <div>
-                                <CurrentComponent component={this.state.component} />
+                                <CurrentComponent component={this.state.component} {...this.state.child_props} />
                             </div>
                         </Segment>
                     </Sidebar.Pusher>
@@ -83,6 +88,7 @@ class TeamBase extends Component {
 const mapStateToProps = state => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
+        token: state.auth.token,
         user: state.auth.user,
         showModalAddTask: state.nemo.showModalAddTask,
     };

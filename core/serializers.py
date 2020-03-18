@@ -2,15 +2,61 @@ from django.contrib.auth import authenticate, get_user_model
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
-from core.models import Task, Tag, Project
+from core.models import Task, Tag, Project, Comment
 
 User = get_user_model()
 
 
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ('pk', 'name')
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('pk', 'title')
+
+
+class UserSerializerShort(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'name')
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    user = UserSerializerShort()
+
+    class Meta:
+        model = Comment
+        fields = ('pk', 'timestamp', 'text', 'user')
+
+
 class TaskSerializerShort(serializers.ModelSerializer):
+    executor = UserSerializerShort()
+    tags = TagSerializer(many=True)
+
     class Meta:
         model = Task
-        fields = ('id', 'title', 'description',)
+        fields = ('id', 'title', 'executor', 'deadline', 'tags')
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    project = ProjectSerializer()
+    executor = UserSerializerShort()
+    manager = UserSerializerShort()
+    author = UserSerializerShort()
+    participants = UserSerializerShort(many=True)
+    tags = TagSerializer(many=True)
+    comments = CommentSerializer(many=True)
+
+    class Meta:
+        model = Task
+        fields = (
+            'pk', 'title', 'description', 'project', 'executor', 'manager', 'author', 'deadline',
+            'planned_work_hours', 'participants', 'tags', 'status', 'work_hours', 'comments',
+        )
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
@@ -52,12 +98,6 @@ class CreateTaskSerializer(serializers.ModelSerializer):
             'pk', 'title', 'description', 'project', 'executor', 'manager', 'author', 'deadline', 'planned_work_hours',
             'participants', 'tags',
         )
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'name')
 
 
 class LoginUserSerializer(serializers.Serializer):
