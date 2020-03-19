@@ -15,18 +15,18 @@ class TeamBase extends Component {
         super(props);
         this.state = {
             component: TaskList,
-            child_props: {
-                token: props.token,
-            }
         };
     }
 
-    CurrentComponent = ({component: ChildComponent, ...props}) => {
-        return <ChildComponent {...props} />
+    CurrentComponent = ({component: ChildComponent}) => {
+        return <ChildComponent />
     }
 
     render() {
-        const { isAuthenticated, addTaskShowModal, addTaskHideModal, showModalAddTask, addTask, user } = this.props;
+        const {
+            isAuthenticated, addTaskShowModal, addTaskHideModal, showModalAddTask, addTask, user,
+            getTasksToExecute,
+        } = this.props;
         let { CurrentComponent } = this;
 
         if (!isAuthenticated) {
@@ -53,7 +53,7 @@ class TeamBase extends Component {
                                     name='setting'
                                     className='icon-profile'
                                     title='Настройки'
-                                    onClick={() => this.setState({component: UserProfile, child_props: {}})}
+                                    onClick={() => this.setState({component: UserProfile})}
                                 />
                             </span>
                         </Menu.Item>
@@ -66,7 +66,7 @@ class TeamBase extends Component {
                             />
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <Button onClick={() => this.setState({component: TaskList, child_props: {token: this.props.token}})}>
+                            <Button onClick={() => this.setState({ component: TaskList })}>
                                 Мои задачи
                             </Button>
                         </Menu.Item>
@@ -75,7 +75,7 @@ class TeamBase extends Component {
                     <Sidebar.Pusher>
                         <Segment basic style={{ minHeight: '100vh', marginLeft: '170px' }}>
                             <div>
-                                <CurrentComponent component={this.state.component} {...this.state.child_props} />
+                                <CurrentComponent component={this.state.component} />
                             </div>
                         </Segment>
                     </Sidebar.Pusher>
@@ -88,7 +88,6 @@ class TeamBase extends Component {
 const mapStateToProps = state => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        token: state.auth.token,
         user: state.auth.user,
         showModalAddTask: state.nemo.showModalAddTask,
     };
@@ -99,6 +98,7 @@ const mapDispatchToProps = dispatch => {
         addTaskShowModal: () => dispatch(task.addTaskShowModal()),
         addTaskHideModal: () => dispatch(task.addTaskHideModal()),
         addTask: (data) => dispatch(task.addTask(data)),
+        getTasksToExecute: () => dispatch(task.getTasksToExecute()),
     };
 }
 

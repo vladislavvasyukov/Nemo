@@ -30,7 +30,7 @@ class CreateTaskApi(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         task = serializer.save()
         return Response({
-            "task": serializers.TaskSerializer(task, context=self.get_serializer_context()).data,
+            "task": serializers.TaskSerializerShort(task, context=self.get_serializer_context()).data,
         })
 
 

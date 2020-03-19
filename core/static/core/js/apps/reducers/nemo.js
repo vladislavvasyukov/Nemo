@@ -3,6 +3,7 @@ import C from '../constants';
 
 const initialState = {
     showModalAddTask: false,
+    tasks_to_execute: [],
 };
 
 
@@ -27,6 +28,18 @@ export default function nemo(state=initialState, action) {
             }
 
         case C.ADD_TASK_FAILED:
+            return {
+                ...state,
+                ...action.data,
+            }
+
+        case C.GET_TASKS_TO_EXECUTE_SUCCESSFUL:
+            return {
+                ...state,
+                ...action.data,
+            }
+
+        case C.GET_TASKS_TO_EXECUTE_FAILED:
             return {
                 ...state,
                 ...action.data,

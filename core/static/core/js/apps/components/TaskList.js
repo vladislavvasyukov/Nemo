@@ -1,34 +1,24 @@
 import React, { Component } from 'react';
-import { Tab, Button, Icon, Image, Item, Label } from 'semantic-ui-react'
+import { task } from '../actions';
+import { connect } from 'react-redux';
+import { Tab, Icon, Image, Item, Label } from 'semantic-ui-react'
 
-export default class TaskList extends Component {
+class TaskList extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
-            tasks: [],
+            activeIndex: 0,
         }
     }
 
     componentDidMount() {
-        if (this.props.token) {
-            let headers = {
-                "Content-Type": "application/json",
-                "Authorization": `Token ${this.props.token}`,
-            };
-
-            fetch(`/api/tasks/`, {headers})
-                .then((response) => {
-                    return response.json()
-                }).then((tasks) => {
-                    console.log(tasks)
-                    this.setState({tasks})
-                });
-        }
+        this.props.getTasksToExecute();
     }
 
     render () {
         let items = [];
-        this.state.tasks.forEach((task) => {
+        this.props.tasks_to_execute.forEach((task) => {
             items.push(
                 <Item>
                     <Item.Content>
@@ -62,6 +52,30 @@ export default class TaskList extends Component {
             },
         ]
 
-        return <Tab style={{ width: '50%' }} menu={{ pointing: true }} panes={panes} />
+        return (
+            <div>
+                <Icon name='refresh' title='Обновить' onClick={() => console.log(this.state.activeIndex)} />
+                <Tab
+                    panes={panes}
+                    style={{ width: '50%' }}
+                    menu={{ pointing: true }}
+                    onTabChange={(e, {activeIndex}) => this.setState({activeIndex})}o
+                />
+            </div>
+        );
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        tasks_to_execute: state.nemo.tasks_to_execute,
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        getTasksToExecute: () => dispatch(task.getTasksToExecute()),
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TaskList);

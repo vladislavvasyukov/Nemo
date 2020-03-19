@@ -50,16 +50,48 @@ export const addTask = (data) => {
                     dispatch({type: C.ADD_TASK_FAILED, data: res.data});
                     throw res.data;
                 } else {
-                    let register_errors = [];
-                    for (let key in res.data) {
-                        register_errors.push({
-                            field: key,
-                            message: res.data[key][0],
-                        });
-                    }
                     dispatch({type: C.ADD_TASK_FAILED, data: res.data});
                     throw res.data;
                 }
             })
+    }
+}
+
+export const getTasksToExecute = () => {
+    return (dispatch, getState) => {
+        let headers = {
+            "Content-Type": "application/json",
+        };
+        const token = getState().auth.token;
+
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+
+        return fetch(`/api/tasks/`, {headers})
+            .then((res) => {
+                if (res.status < 500) {
+                    return res.json().then(data => {
+                        return {status: res.status, data};
+                    });
+                } else {
+                    console.log(res)
+                }
+            })
+            .then(res => {
+                if (res.status == 200) {
+                    let data = {
+                        tasks_to_execute: res.data
+                    }
+                    dispatch({type: C.GET_TASKS_TO_EXECUTE_SUCCESSFUL, data});
+                    return res.data;
+                } else if (res.status == 403 || res.status == 401) {
+                    dispatch({type: C.GET_TASKS_TO_EXECUTE_FAILED, data: res.data});
+                    throw res.data;
+                } else {
+                    dispatch({type: C.GET_TASKS_TO_EXECUTE_FAILED, data: res.data});
+                    throw res.data;
+                }
+            });
     }
 }
