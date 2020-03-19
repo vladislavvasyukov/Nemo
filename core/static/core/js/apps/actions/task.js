@@ -57,8 +57,9 @@ export const addTask = (data) => {
     }
 }
 
-export const getTasksToExecute = () => {
+export const getTaskList = (to_execute) => {
     return (dispatch, getState) => {
+        dispatch({type: C.GET_TASKS_REQUEST});
         let headers = {
             "Content-Type": "application/json",
         };
@@ -68,7 +69,9 @@ export const getTasksToExecute = () => {
             headers["Authorization"] = `Token ${token}`;
         }
 
-        return fetch(`/api/tasks/`, {headers})
+        let param = to_execute ? '?to_execute' : '';
+
+        return fetch(`/api/tasks/${param}`, {headers})
             .then((res) => {
                 if (res.status < 500) {
                     return res.json().then(data => {
@@ -80,16 +83,19 @@ export const getTasksToExecute = () => {
             })
             .then(res => {
                 if (res.status == 200) {
-                    let data = {
-                        tasks_to_execute: res.data
+                    let data = {};
+                    if (to_execute) {
+                        data.tasks_to_execute = res.data;
+                    } else {
+                        data.manager_tasks = res.data;
                     }
-                    dispatch({type: C.GET_TASKS_TO_EXECUTE_SUCCESSFUL, data});
+                    dispatch({type: C.GET_TASKS_SUCCESSFUL, data});
                     return res.data;
                 } else if (res.status == 403 || res.status == 401) {
-                    dispatch({type: C.GET_TASKS_TO_EXECUTE_FAILED, data: res.data});
+                    dispatch({type: C.GET_TASKS_FAILED, data: res.data});
                     throw res.data;
                 } else {
-                    dispatch({type: C.GET_TASKS_TO_EXECUTE_FAILED, data: res.data});
+                    dispatch({type: C.GET_TASKS_FAILED, data: res.data});
                     throw res.data;
                 }
             });

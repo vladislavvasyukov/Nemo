@@ -4,6 +4,8 @@ import C from '../constants';
 const initialState = {
     showModalAddTask: false,
     tasks_to_execute: [],
+    manager_tasks: [],
+    isLoading: false,
 };
 
 
@@ -33,16 +35,24 @@ export default function nemo(state=initialState, action) {
                 ...action.data,
             }
 
-        case C.GET_TASKS_TO_EXECUTE_SUCCESSFUL:
+        case C.GET_TASKS_REQUEST:
             return {
                 ...state,
-                ...action.data,
+                isLoading: true,
             }
 
-        case C.GET_TASKS_TO_EXECUTE_FAILED:
+        case C.GET_TASKS_SUCCESSFUL:
             return {
                 ...state,
                 ...action.data,
+                isLoading: false,
+            }
+
+        case C.GET_TASKS_FAILED:
+            return {
+                ...state,
+                ...action.data,
+                isLoading: false,
             }
 
         default:

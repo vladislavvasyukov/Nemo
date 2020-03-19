@@ -6,7 +6,7 @@ import AddTask from './AddTask';
 import TaskList from './TaskList';
 import UserProfile from './UserProfile';
 import { Redirect } from "react-router-dom";
-import { Icon, Image, Menu, Segment, Sidebar, Button } from 'semantic-ui-react';
+import { Icon, Image, Menu, Segment, Sidebar, Button, Dimmer, Loader } from 'semantic-ui-react';
 
 
 class TeamBase extends Component {
@@ -25,13 +25,14 @@ class TeamBase extends Component {
     render() {
         const {
             isAuthenticated, addTaskShowModal, addTaskHideModal, showModalAddTask, addTask, user,
-            getTasksToExecute,
+            getTasksToExecute, isLoading
         } = this.props;
         let { CurrentComponent } = this;
 
         if (!isAuthenticated) {
             return <Redirect to="/login" />
         }
+        console.log(isLoading)
 
         return (
             <div>
@@ -88,6 +89,7 @@ class TeamBase extends Component {
 const mapStateToProps = state => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
+        isLoading: state.nemo.isLoading,
         user: state.auth.user,
         showModalAddTask: state.nemo.showModalAddTask,
     };

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { task } from '../actions';
 import { connect } from 'react-redux';
-import { Tab, Icon, Image, Item, Label } from 'semantic-ui-react'
+import { Button, Tab, Icon, Image, Item, Label, Dimmer, Loader } from 'semantic-ui-react'
 
 class TaskList extends Component {
 
@@ -13,12 +13,21 @@ class TaskList extends Component {
     }
 
     componentDidMount() {
-        this.props.getTasksToExecute();
+        this.props.getTaskList(true);
+        this.props.getTaskList(false);
     }
 
-    render () {
+    refresh = () => {
+        if (this.state.activeIndex == 0) {
+            this.props.getTaskList(true);
+        } else {
+            this.props.getTaskList(false);
+        }
+    }
+
+    getItems = (tasks) => {
         let items = [];
-        this.props.tasks_to_execute.forEach((task) => {
+        tasks.forEach((task) => {
             items.push(
                 <Item>
                     <Item.Content>
@@ -35,29 +44,48 @@ class TaskList extends Component {
             )
         });
 
+        return items;
+    }
+
+    render () {
         let panes = [
             {
                 menuItem: 'Задачи на мне',
                 render: () => (
                     <Tab.Pane attached={false}>
                         <Item.Group divided>
-                            {items.map(item => item)}
+                            {this.getItems(this.props.tasks_to_execute).map(item => item)}
                         </Item.Group>
                     </Tab.Pane>
                 ),
             },
             {
                 menuItem: 'Задачи, порученные мной',
-                render: () => <Tab.Pane attached={false}>Ещё один список задач</Tab.Pane>,
+                render: () => (
+                    <Tab.Pane attached={false}>
+                        <Item.Group divided>
+                            {this.getItems(this.props.manager_tasks).map(item => item)}
+                        </Item.Group>
+                    </Tab.Pane>
+                ),
             },
         ]
 
         return (
             <div>
-                <Icon name='refresh' title='Обновить' onClick={() => console.log(this.state.activeIndex)} />
+                <Dimmer active={this.props.isLoading} inverted>
+                    <Loader size='medium'>Loading</Loader>
+                </Dimmer>
+                <Button style={{ width: '50px', color: 'black' }}>
+                    <Icon
+                        name='refresh'
+                        title='Обновить'
+                        onClick={this.refresh}
+                    />
+                </Button>
                 <Tab
                     panes={panes}
-                    style={{ width: '50%' }}
+                    style={{ width: '50%', marginTop: '15px' }}
                     menu={{ pointing: true }}
                     onTabChange={(e, {activeIndex}) => this.setState({activeIndex})}o
                 />
@@ -69,12 +97,14 @@ class TaskList extends Component {
 const mapStateToProps = state => {
     return {
         tasks_to_execute: state.nemo.tasks_to_execute,
+        manager_tasks: state.nemo.manager_tasks,
+        isLoading: state.nemo.isLoading,
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        getTasksToExecute: () => dispatch(task.getTasksToExecute()),
+        getTaskList: (to_execute) => dispatch(task.getTaskList(to_execute)),
     };
 }
 

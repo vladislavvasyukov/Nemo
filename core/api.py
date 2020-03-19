@@ -60,7 +60,10 @@ class TaskListViewSet(ListModelMixin, viewsets.GenericViewSet):
     serializer_class = serializers.TaskSerializerShort
 
     def get_queryset(self):
-        return self.request.user.tasks_to_execute.filter(status__in=Task.WORK_STATUSES)
+        if 'to_execute' in self.request.query_params:
+            return self.request.user.tasks_to_execute.filter(status__in=Task.WORK_STATUSES)
+        else:
+            return self.request.user.manager_tasks.filter(status__in=Task.WORK_STATUSES)
 
 
 class TagListApi(generics.ListAPIView):
