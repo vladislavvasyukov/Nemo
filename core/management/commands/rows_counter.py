@@ -21,6 +21,8 @@ class Command(CoreCommandLocked):
         'Nemo/Nemo/core/migrations/',
         'Nemo/Nemo/core/static/core/js/apps/build/',
         'Nemo/Nemo/core/static/core/vendor/build/',
+        'Nemo/Nemo/core/static/core/img/',
+        'Nemo/Nemo/media/',
     )
 
     EXCLUDE_EXTENSIONS = ('coverage', 'pyc', 'lock', 'log')
