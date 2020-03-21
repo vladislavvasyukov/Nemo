@@ -5,6 +5,7 @@ import { task } from '../actions';
 import AddTask from './AddTask';
 import TaskList from './TaskList';
 import UserProfile from './UserProfile';
+import TaskDetail from './TaskDetail';
 import { Redirect } from "react-router-dom";
 import { Icon, Image, Menu, Segment, Sidebar, Button, Dimmer, Loader } from 'semantic-ui-react';
 
@@ -32,7 +33,6 @@ class TeamBase extends Component {
         if (!isAuthenticated) {
             return <Redirect to="/login" />
         }
-        console.log(isLoading)
 
         return (
             <div>
@@ -71,12 +71,18 @@ class TeamBase extends Component {
                                 Мои задачи
                             </Button>
                         </Menu.Item>
+                        { user && user.is_superuser &&
+                            <Menu.Item as='a'>
+                                <a href='/admin/'>Администрирование</a>
+                            </Menu.Item>
+                        }
                     </Sidebar>
 
                     <Sidebar.Pusher>
                         <Segment basic style={{ minHeight: '100vh', marginLeft: '170px' }}>
-                            <div>
+                            <div class='row'>
                                 <CurrentComponent component={this.state.component} />
+                                <TaskDetail task={this.props.task}/>
                             </div>
                         </Segment>
                     </Sidebar.Pusher>
@@ -91,6 +97,7 @@ const mapStateToProps = state => {
         isAuthenticated: state.auth.isAuthenticated,
         isLoading: state.nemo.isLoading,
         user: state.auth.user,
+        task: state.nemo.task,
         showModalAddTask: state.nemo.showModalAddTask,
     };
 }

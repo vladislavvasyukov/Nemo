@@ -101,3 +101,40 @@ export const getTaskList = (to_execute) => {
             });
     }
 }
+
+export const getTask = (task_id) => {
+    return (dispatch, getState) => {
+
+        let headers = {
+            "Content-Type": "application/json",
+        };
+        const token = getState().auth.token;
+
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+
+        return fetch(`/api/get_task/${task_id}/`, {headers})
+            .then((res) => {
+                if (res.status < 500) {
+                    return res.json().then(data => {
+                        return {status: res.status, data};
+                    });
+                } else {
+                    console.log(res)
+                }
+            })
+            .then(res => {
+                if (res.status == 200) {
+                    dispatch({type: C.GET_TASK_DETAIL_SUCCESSFUL, data: res.data});
+                    return res.data;
+                } else if (res.status == 403 || res.status == 401) {
+                    dispatch({type: C.GET_TASK_DETAIL_FAILED, data: res.data});
+                    throw res.data;
+                } else {
+                    dispatch({type: C.GET_TASK_DETAIL_FAILED, data: res.data});
+                    throw res.data;
+                }
+            });
+    }
+}

@@ -20,6 +20,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(_('Активный'), default=True)
     date_joined = models.DateTimeField(_('Дата регистрации'), default=timezone.now)
 
+    avatar = models.ImageField(verbose_name=_('Аватар'), upload_to='avatar', blank=True, null=True)
+
     companies = models.ManyToManyField(
         'core.Company', 
         related_name='users', 

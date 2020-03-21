@@ -6,6 +6,7 @@ const initialState = {
     tasks_to_execute: [],
     manager_tasks: [],
     isLoading: false,
+    task: {},
 };
 
 
@@ -53,6 +54,12 @@ export default function nemo(state=initialState, action) {
                 ...state,
                 ...action.data,
                 isLoading: false,
+            }
+
+        case C.GET_TASK_DETAIL_SUCCESSFUL:
+            return {
+                ...state,
+                task: action.data,
             }
 
         default:

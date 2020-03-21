@@ -1,10 +1,11 @@
 from knox.models import AuthToken
 from rest_framework import permissions, generics, viewsets
-from rest_framework.mixins import ListModelMixin
+from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 
 from core import serializers
 from core.models import Task, Tag, Project, User
+from core.serializers import TaskSerializer
 
 
 class RegistrationAPI(generics.GenericAPIView):
@@ -91,3 +92,10 @@ class UserListApi(generics.ListAPIView):
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
         return User.objects.filter(name__icontains=q)[:20]
+
+
+class TaskRetrieveView(RetrieveModelMixin, viewsets.GenericViewSet):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = TaskSerializer
+
+    queryset = Task.objects.all().select_related('executor', 'manager', 'author')

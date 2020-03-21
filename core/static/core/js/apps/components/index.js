@@ -8,6 +8,8 @@ import AddTask from "./AddTask";
 import Field from "./Field";
 import TaskList from "./TaskList";
 import UserProfile from "./UserProfile";
+import TaskDetail from "./TaskDetail";
+import Comments from "./Comments";
 
 
 export {
@@ -20,4 +22,6 @@ export {
     AddTask,
     TaskList,
     UserProfile,
+    TaskDetail,
+    Comments,
 }

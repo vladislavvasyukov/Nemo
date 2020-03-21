@@ -20,9 +20,15 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class UserSerializerShort(serializers.ModelSerializer):
+    avatar_url = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'is_superuser', 'avatar_url')
+
+    @staticmethod
+    def get_avatar_url(obj):
+        return obj.avatar.url if obj.avatar else ''
 
 
 class CommentSerializer(serializers.ModelSerializer):

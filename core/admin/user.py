@@ -11,7 +11,7 @@ class UserAdmin(BaseUserAdmin):
     ordering = ('id',)
     fieldsets = (
         (None, {'fields': ('password',)}),
-        (_('Personal info'), {'fields': ('email', 'skype', 'telegram')}),
+        (_('Personal info'), {'fields': ('email', 'skype', 'telegram', 'avatar')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )

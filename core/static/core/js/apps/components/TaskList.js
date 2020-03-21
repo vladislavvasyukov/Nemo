@@ -31,7 +31,7 @@ class TaskList extends Component {
             items.push(
                 <Item>
                     <Item.Content>
-                        <Item.Header as='a'>{task.title}</Item.Header>
+                        <Item.Header as='a' onClick={() => this.props.getTask(task.id)}>{task.title}</Item.Header>
                         <Item.Meta>
                             <span className='cinema'>{task.executor.name}</span>
                         </Item.Meta>
@@ -72,7 +72,7 @@ class TaskList extends Component {
         ]
 
         return (
-            <div>
+            <div  className='col-sm-6'>
                 <Dimmer active={this.props.isLoading} inverted>
                     <Loader size='medium'>Loading</Loader>
                 </Dimmer>
@@ -85,7 +85,7 @@ class TaskList extends Component {
                 </Button>
                 <Tab
                     panes={panes}
-                    style={{ width: '50%', marginTop: '15px' }}
+                    style={{ marginTop: '15px' }}
                     menu={{ pointing: true }}
                     onTabChange={(e, {activeIndex}) => this.setState({activeIndex})}o
                 />
@@ -105,6 +105,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getTaskList: (to_execute) => dispatch(task.getTaskList(to_execute)),
+        getTask: (task_id) => dispatch(task.getTask(task_id)),
     };
 }
 
