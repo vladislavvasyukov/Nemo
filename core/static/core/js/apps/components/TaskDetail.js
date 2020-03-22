@@ -11,7 +11,7 @@ export default class TaskDetail extends Component {
         return [
             {
                 menuItem: 'Комментарии',
-                render: () => <Tab.Pane attached={false}>
+                render: () => <Tab.Pane attached={false} style={{ maxHeight: '600px', overflowY: 'auto' }}>
                                   <Comments
                                       task_id={task.pk}
                                       comments={comments}

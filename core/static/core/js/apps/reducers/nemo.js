@@ -3,10 +3,16 @@ import C from '../constants';
 
 const initialState = {
     showModalAddTask: false,
-    tasks_to_execute: [],
-    manager_tasks: [],
     isLoading: false,
     task: {},
+
+    tasks_to_execute: [],
+    current_page_to_execute: 1,
+    num_pages_to_execute: 0,
+
+    manager_tasks: [],
+    current_page_manager: 1,
+    num_pages_manager: 0,
 };
 
 

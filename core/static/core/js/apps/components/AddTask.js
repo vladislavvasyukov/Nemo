@@ -111,7 +111,13 @@ export default class AddTask extends React.Component {
         } = this.state;
 
         let {deadline} = this.state;
-        deadline = moment(deadline).format('YYYY-MM-DD')
+        if (deadline) {
+            deadline = moment(deadline).format('YYYY-MM-DD');
+        } else {
+            let today = new Date();
+            let tomorrow = today.setDate(today.getDate() + 1);
+            deadline = moment(tomorrow).format('YYYY-MM-DD');
+        }
 
         this.props.addTask({
             tags, project, executor, manager, participants, description, deadline, planned_work_hours, title
@@ -142,7 +148,6 @@ export default class AddTask extends React.Component {
                                     maxLength='256'
                                     type='text'
                                     defaultValue={title}
-                                    required
                                     onChange={(e) => this.setState({title: e.target.value})}
                                 />
                             </Field>
@@ -192,7 +197,7 @@ export default class AddTask extends React.Component {
                                  />
                             </Field>
 
-                            <Field title='Участники задачи' name='participants' required={true}>
+                            <Field title='Участники задачи' name='participants'>
                                 <Dropdown
                                     options={participants_options}
                                     search
@@ -205,7 +210,7 @@ export default class AddTask extends React.Component {
                                 />
                             </Field>
 
-                            <Field title='Дедлайн' name='deadline' required={true}>
+                            <Field title='Дедлайн' name='deadline'>
                                 <DatePicker
                                     className="my-picker"
                                     selected={deadline}
@@ -214,7 +219,7 @@ export default class AddTask extends React.Component {
                                 />
                             </Field>
 
-                            <Field title='Теги' name='tags' required={true}>
+                            <Field title='Теги' name='tags'>
                                 <Dropdown
                                     options={tags_options}
                                     search

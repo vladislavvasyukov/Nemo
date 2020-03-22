@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { task } from '../actions';
 import { connect } from 'react-redux';
-import { Button, Tab, Icon, Image, Item, Label, Dimmer, Loader } from 'semantic-ui-react'
+import { Button, Tab, Icon, Item, Label, Dimmer, Loader, Pagination } from 'semantic-ui-react'
 
 class TaskList extends Component {
 
@@ -48,13 +48,27 @@ class TaskList extends Component {
     }
 
     render () {
+        const {
+            tasks_to_execute, num_pages_to_execute, manager_tasks, num_pages_manager, current_page_to_execute,
+            current_page_manager,
+        } = this.props;
+
         let panes = [
             {
                 menuItem: 'Задачи на мне',
                 render: () => (
                     <Tab.Pane attached={false}>
                         <Item.Group divided>
-                            {this.getItems(this.props.tasks_to_execute).map(item => item)}
+                            {this.getItems(tasks_to_execute).map(item => item)}
+                            {num_pages_to_execute > 1 &&
+                                <Item>
+                                    <Pagination
+                                        activePage={current_page_to_execute}
+                                        totalPages={num_pages_to_execute}
+                                        onPageChange={(e, {activePage}) => this.props.getTaskList(true, activePage)}
+                                    />
+                                </Item>
+                            }
                         </Item.Group>
                     </Tab.Pane>
                 ),
@@ -64,7 +78,16 @@ class TaskList extends Component {
                 render: () => (
                     <Tab.Pane attached={false}>
                         <Item.Group divided>
-                            {this.getItems(this.props.manager_tasks).map(item => item)}
+                            {this.getItems(manager_tasks).map(item => item)}
+                            {num_pages_manager > 1 &&
+                                <Item>
+                                    <Pagination
+                                        activePage={current_page_manager}
+                                        totalPages={num_pages_manager}
+                                        onPageChange={(e, {activePage}) => this.props.getTaskList(false, activePage)}
+                                    />
+                                </Item>
+                            }
                         </Item.Group>
                     </Tab.Pane>
                 ),
@@ -87,24 +110,36 @@ class TaskList extends Component {
                     panes={panes}
                     style={{ marginTop: '15px' }}
                     menu={{ pointing: true }}
-                    onTabChange={(e, {activeIndex}) => this.setState({activeIndex})}o
+                    onTabChange={(e, {activeIndex}) => this.setState({activeIndex})}
                 />
+
             </div>
         );
     }
 }
 
 const mapStateToProps = state => {
+    const {
+        tasks_to_execute, current_page_to_execute, manager_tasks, current_page_manager,
+        isLoading, num_pages_to_execute, num_pages_manager,
+    } = state.nemo;
+
     return {
-        tasks_to_execute: state.nemo.tasks_to_execute,
-        manager_tasks: state.nemo.manager_tasks,
-        isLoading: state.nemo.isLoading,
+        tasks_to_execute: tasks_to_execute,
+        current_page_to_execute: current_page_to_execute,
+        num_pages_to_execute: num_pages_to_execute,
+
+        manager_tasks: manager_tasks,
+        current_page_manager: current_page_manager,
+        num_pages_manager: num_pages_manager,
+
+        isLoading: isLoading,
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        getTaskList: (to_execute) => dispatch(task.getTaskList(to_execute)),
+        getTaskList: (to_execute, page) => dispatch(task.getTaskList(to_execute, page)),
         getTask: (task_id) => dispatch(task.getTask(task_id)),
     };
 }

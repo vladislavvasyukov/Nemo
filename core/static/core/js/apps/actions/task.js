@@ -1,4 +1,5 @@
 import C from '../constants';
+import { showErrorMessage, errorMessageToString } from '../utils';
 
 export function addTaskShowModal() {
     return (dispatch) => {
@@ -42,19 +43,18 @@ export const addTask = (data) => {
                 }
             })
             .then(res => {
-                console.log(res)
                 if (res.status === 200) {
                     dispatch({type: C.ADD_TASK_SUCCESSFUL, data: res.data });
                     return res.data;
                 } else {
                     dispatch({type: C.ADD_TASK_FAILED, data: res.data});
-                    throw res.data;
+                    showErrorMessage('Не удалось создать задачу', errorMessageToString(res.data));
                 }
             })
     }
 }
 
-export const getTaskList = (to_execute) => {
+export const getTaskList = (to_execute, page=1) => {
     return (dispatch, getState) => {
         dispatch({type: C.GET_TASKS_REQUEST});
         let headers = {
@@ -66,9 +66,9 @@ export const getTaskList = (to_execute) => {
             headers["Authorization"] = `Token ${token}`;
         }
 
-        let param = to_execute ? '?to_execute' : '';
+        let param = to_execute ? '&to_execute' : '';
 
-        return fetch(`/api/tasks/${param}`, {headers})
+        return fetch(`/api/tasks/?page=${page}${param}`, {headers})
             .then((res) => {
                 if (res.status < 500) {
                     return res.json().then(data => {
@@ -80,13 +80,20 @@ export const getTaskList = (to_execute) => {
             })
             .then(res => {
                 if (res.status == 200) {
+                    const {results, count, current_page, num_pages} = res.data;
                     let data = {};
+
                     if (to_execute) {
-                        data.tasks_to_execute = res.data;
-                        const task_id = res.data[0] && res.data[0].id;
+                        data.tasks_to_execute = results;
+                        data.current_page_to_execute = current_page;
+                        data.num_pages_to_execute = num_pages;
+
+                        const task_id = results[0] && results[0].id;
                         dispatch(getTask(task_id));
                     } else {
-                        data.manager_tasks = res.data;
+                        data.manager_tasks = results;
+                        data.current_page_manager = current_page;
+                        data.num_pages_manager = num_pages;
                     }
                     dispatch({type: C.GET_TASKS_SUCCESSFUL, data});
                     return res.data;

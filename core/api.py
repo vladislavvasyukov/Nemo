@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from core import serializers
 from core.models import Task, Tag, Project, User
+from core.paginators import TasksPagination
 from core.serializers import TaskSerializer
 
 
@@ -92,6 +93,7 @@ class UserAPI(generics.RetrieveAPIView):
 class TaskListViewSet(ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = serializers.TaskSerializerShort
+    pagination_class = TasksPagination
 
     def get_queryset(self):
         if 'to_execute' in self.request.query_params:
