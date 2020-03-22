@@ -23,7 +23,7 @@ def test_get_tasks_to_execute(client):
     response = client.get(reverse('tasks-list') + '?to_execute', HTTP_AUTHORIZATION=f'Token {token}')
 
     assert response.status_code == 200
-    assert len(response.data) == 2
+    assert len(response.data['results']) == 2
 
 
 @pytest.mark.django_db
@@ -43,4 +43,4 @@ def test_get_manager_tasks(client):
     response = client.get(reverse('tasks-list'), HTTP_AUTHORIZATION=f'Token {token}')
 
     assert response.status_code == 200
-    assert len(response.data) == 2
+    assert len(response.data['results']) == 2
