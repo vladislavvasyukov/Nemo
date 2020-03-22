@@ -107,7 +107,6 @@ class CreateTaskSerializer(serializers.ModelSerializer):
         model = Task
         fields = (
             'pk', 'title', 'description', 'project', 'executor', 'manager', 'author', 'deadline', 'planned_work_hours',
-            'participants', 'tags',
         )
 
 

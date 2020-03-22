@@ -22,24 +22,43 @@ class RegistrationAPI(generics.GenericAPIView):
 
 
 class CreateTaskApi(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = serializers.CreateTaskSerializer
 
     def post(self, request, *args, **kwargs):
-        data = request.data
+        data = {k: v for k, v in request.data.items()}
+        tag_ids = []
+        if 'tags' in data:
+            for tag_id in data['tags']:
+                if isinstance(tag_id, str):
+                    tag, _ = Tag.objects.get_or_create(title=tag_id)
+                    tag_ids.append(tag.pk)
+                else:
+                    tag_ids.append(tag_id)
+
+        data['tags'] = tag_ids
         data['author'] = request.user.pk
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         task = serializer.save()
+
+        for tag in Tag.objects.filter(pk__in=data['tags']):
+            task.tags.add(tag)
+
+        for user in User.objects.filter(pk__in=data.get('participants', [])):
+            task.participants.add(user)
+
         return Response({
             "task": serializers.TaskSerializerShort(task, context=self.get_serializer_context()).data,
         })
 
 
 class CreateCommentApi(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = serializers.CreateCommentSerializer
 
     def post(self, request, *args, **kwargs):
-        data = request.data
+        data = {k: v for k, v in request.data.items()}
         data['user'] = request.user.pk
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -82,7 +101,7 @@ class TaskListViewSet(ListModelMixin, viewsets.GenericViewSet):
 
 
 class TagListApi(generics.ListAPIView):
-
+    permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = serializers.TagSelectSerializer
 
     def get_queryset(self):
@@ -91,7 +110,7 @@ class TagListApi(generics.ListAPIView):
 
 
 class ProjectListApi(generics.ListAPIView):
-    permissions_classes = [permissions.IsAuthenticated, ]
+    permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = serializers.ProjectSelectSerializer
 
     def get_queryset(self):
@@ -100,7 +119,7 @@ class ProjectListApi(generics.ListAPIView):
 
 
 class UserListApi(generics.ListAPIView):
-    permissions_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = serializers.UserSelectSerializer
 
     def get_queryset(self):

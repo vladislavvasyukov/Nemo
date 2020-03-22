@@ -1,5 +1,10 @@
 function getOptions(input, href, callback) {
-    return fetch(`${href}?q=${input}`, {credentials: 'same-origin'})
+    const token = localStorage.getItem("token");
+    let headers = {
+        "Content-Type": "application/json",
+        "Authorization": `Token ${token}`,
+    }
+    return fetch(`${href}?q=${input}`, {headers, credentials: 'same-origin'})
         .then((response) => {
             return response.json()
         }).then((json) => {
