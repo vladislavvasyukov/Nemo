@@ -26,7 +26,7 @@ class TeamBase extends Component {
     render() {
         const {
             isAuthenticated, addTaskShowModal, addTaskHideModal, showModalAddTask, addTask, user,
-            getTasksToExecute, isLoading
+            getTasksToExecute, isLoading, createComment, task,
         } = this.props;
         let { CurrentComponent } = this;
 
@@ -82,7 +82,7 @@ class TeamBase extends Component {
                         <Segment basic style={{ minHeight: '100vh', marginLeft: '170px' }}>
                             <div class='row'>
                                 <CurrentComponent component={this.state.component} />
-                                <TaskDetail task={this.props.task}/>
+                                <TaskDetail task={task} createComment={createComment}/>
                             </div>
                         </Segment>
                     </Sidebar.Pusher>
@@ -107,6 +107,7 @@ const mapDispatchToProps = dispatch => {
         addTaskShowModal: () => dispatch(task.addTaskShowModal()),
         addTaskHideModal: () => dispatch(task.addTaskHideModal()),
         addTask: (data) => dispatch(task.addTask(data)),
+        createComment: (text, task_id) => dispatch(task.createComment(text, task_id)),
         getTasksToExecute: () => dispatch(task.getTasksToExecute()),
     };
 }

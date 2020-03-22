@@ -6,11 +6,18 @@ import Comments from "./Comments";
 export default class TaskDetail extends Component {
 
     getPanes() {
-        const comments = (this.props.task && this.props.task.comments) || [];
+        const {task, createComment} = this.props;
+        const comments = task.comments || [];
         return [
             {
                 menuItem: 'Комментарии',
-                render: () => <Tab.Pane attached={false}><Comments comments={comments}/></Tab.Pane>,
+                render: () => <Tab.Pane attached={false}>
+                                  <Comments
+                                      task_id={task.pk}
+                                      comments={comments}
+                                      createComment={createComment}
+                                  />
+                              </Tab.Pane>,
             },
             {
                 menuItem: 'Задача',

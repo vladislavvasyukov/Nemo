@@ -27,11 +27,25 @@ class CreateTaskApi(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         data = request.data
         data['author'] = request.user.pk
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         task = serializer.save()
         return Response({
             "task": serializers.TaskSerializerShort(task, context=self.get_serializer_context()).data,
+        })
+
+
+class CreateCommentApi(generics.GenericAPIView):
+    serializer_class = serializers.CreateCommentSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        data['user'] = request.user.pk
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        comment = serializer.save()
+        return Response({
+            'comment': serializers.CommentSerializer(comment, context=self.get_serializer_context()).data,
         })
 
 

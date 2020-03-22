@@ -33,10 +33,15 @@ class UserSerializerShort(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializerShort()
+    timestamp = serializers.SerializerMethodField()
 
     class Meta:
         model = Comment
         fields = ('pk', 'timestamp', 'text', 'user')
+
+    @staticmethod
+    def get_timestamp(obj):
+        return obj.timestamp.strftime('%d.%m.%Y %H:%M')
 
 
 class TaskSerializerShort(serializers.ModelSerializer):
@@ -104,6 +109,12 @@ class CreateTaskSerializer(serializers.ModelSerializer):
             'pk', 'title', 'description', 'project', 'executor', 'manager', 'author', 'deadline', 'planned_work_hours',
             'participants', 'tags',
         )
+
+
+class CreateCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ('pk', 'text', 'user', 'task')
 
 
 class LoginUserSerializer(serializers.Serializer):

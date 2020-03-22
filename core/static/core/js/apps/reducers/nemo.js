@@ -62,6 +62,18 @@ export default function nemo(state=initialState, action) {
                 task: action.data,
             }
 
+        case C.CREATE_COMMENT_SUCCESSFUL:
+            return {
+                ...state,
+                task: action.data,
+            }
+
+        case C.CREATE_COMMENT_FAILED:
+            return {
+                ...state,
+                ...action.data,
+            }
+
         default:
             return state;
     }
