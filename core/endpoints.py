@@ -18,4 +18,5 @@ urlpatterns = [
     path("users/", api.UserListApi.as_view(), name='api-users-select'),
     path("create_task/", api.CreateTaskApi.as_view(), name='create-task'),
     path("create_comment/", api.CreateCommentApi.as_view(), name='create-comment'),
+    path("save_description/", api.SaveDescription.as_view(), name='save-description'),
 ]

@@ -10,6 +10,7 @@ import TaskList from "./TaskList";
 import UserProfile from "./UserProfile";
 import TaskDetail from "./TaskDetail";
 import Comments from "./Comments";
+import Description from "./Description";
 
 
 export {
@@ -24,4 +25,5 @@ export {
     UserProfile,
     TaskDetail,
     Comments,
+    Description,
 }

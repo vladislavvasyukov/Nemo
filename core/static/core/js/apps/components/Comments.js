@@ -43,7 +43,11 @@ export default class Comments extends Component {
                 }
 
                 <Form reply>
-                    <Form.TextArea required value={this.state.text} onChange={e => this.setState({text: e.target.value})}/>
+                    <Form.TextArea
+                        onChange={e => this.setState({text: e.target.value})}
+                        value={this.state.text}
+                        required
+                    />
                     <Button
                         onClick={this.onCreate.bind(this)}
                         content='Добавить комментарий'

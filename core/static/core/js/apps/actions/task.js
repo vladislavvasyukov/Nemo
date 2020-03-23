@@ -17,6 +17,14 @@ export function addTaskHideModal() {
     }
 }
 
+export function toggleDescriptionMode() {
+    return (dispatch) => {
+        dispatch({
+            type: C.DESCRIPTION_EDIT_MODE_TOGGLE,
+        });
+    }
+}
+
 export const addTask = (data) => {
     return (dispatch, getState) => {
 
@@ -175,6 +183,47 @@ export const createComment = (text, task) => {
                     return res.data;
                 } else {
                     dispatch({type: C.CREATE_COMMENT_FAILED, data: res.data});
+                    throw res.data;
+                }
+            })
+    }
+}
+
+export const saveDescription = (description, task_id) => {
+    return (dispatch, getState) => {
+        let headers = {
+            "Content-Type": "application/json",
+        };
+        const token = getState().auth.token;
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+
+        let body = JSON.stringify({description, task_id});
+
+        return fetch("/api/save_description/", {headers, body, method: "POST"})
+            .then(res => {
+                if (res.status < 500) {
+                    return res.json().then(data => {
+                        return {status: res.status, data};
+                    })
+                } else {
+                    console.log("Server Error!");
+                    throw res;
+                }
+            })
+            .then(res => {
+                const task = getState().nemo.task;
+
+                let data = {
+                    ...task,
+                    description: res.data.description,
+                }
+                if (res.status === 200) {
+                    dispatch({type: C.SAVE_DESCRIPTION_SUCCESSFUL, data: data });
+                    return res.data;
+                } else {
+                    dispatch({type: C.SAVE_DESCRIPTION_FAILED, data: res.data});
                     throw res.data;
                 }
             })

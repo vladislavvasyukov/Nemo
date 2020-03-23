@@ -13,6 +13,8 @@ const initialState = {
     manager_tasks: [],
     current_page_manager: 1,
     num_pages_manager: 0,
+
+    descriptionMode: false,
 };
 
 
@@ -78,6 +80,19 @@ export default function nemo(state=initialState, action) {
             return {
                 ...state,
                 ...action.data,
+            }
+
+        case C.DESCRIPTION_EDIT_MODE_TOGGLE:
+            return {
+                ...state,
+                descriptionMode: !state.descriptionMode,
+            }
+
+        case C.SAVE_DESCRIPTION_SUCCESSFUL:
+            return {
+                ...state,
+                descriptionMode: false,
+                task: action.data,
             }
 
         default:

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Tab } from 'semantic-ui-react';
 import Comments from "./Comments";
+import Description from "./Description";
 
 
 export default class TaskDetail extends Component {
 
     getPanes() {
-        const {task, createComment} = this.props;
+        const { task, createComment, toggleDescriptionMode, descriptionMode, saveDescription } = this.props;
         const comments = task.comments || [];
         return [
             {
@@ -25,7 +26,14 @@ export default class TaskDetail extends Component {
             },
             {
                 menuItem: 'Описание',
-                render: () => <Tab.Pane attached={false}>Tab 3 Content</Tab.Pane>,
+                render: () => <Tab.Pane attached={false}>
+                                  <Description
+                                      task={task}
+                                      toggleDescriptionMode={toggleDescriptionMode}
+                                      descriptionMode={descriptionMode}
+                                      saveDescription={saveDescription}
+                                  />
+                              </Tab.Pane>,
             },
         ]
     }

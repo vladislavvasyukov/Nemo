@@ -134,3 +134,16 @@ class TaskRetrieveView(RetrieveModelMixin, viewsets.GenericViewSet):
     serializer_class = TaskSerializer
 
     queryset = Task.objects.all().select_related('executor', 'manager', 'author')
+
+
+class SaveDescription(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def post(self, request, *args, **kwargs):
+        task = Task.objects.get(pk=request.data['task_id'])
+        task.description = request.data['description']
+        task.save()
+
+        return Response({
+            "description": task.description,
+        })

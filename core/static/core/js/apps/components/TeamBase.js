@@ -25,8 +25,8 @@ class TeamBase extends Component {
 
     render() {
         const {
-            isAuthenticated, addTaskShowModal, addTaskHideModal, showModalAddTask, addTask, user,
-            getTasksToExecute, isLoading, createComment, task,
+            isAuthenticated, addTaskShowModal, addTaskHideModal, showModalAddTask, addTask, user, descriptionMode,
+            getTasksToExecute, isLoading, createComment, task, toggleDescriptionMode, saveDescription,
         } = this.props;
         let { CurrentComponent } = this;
 
@@ -82,7 +82,13 @@ class TeamBase extends Component {
                         <Segment basic style={{ minHeight: '100vh', marginLeft: '170px' }}>
                             <div class='row'>
                                 <CurrentComponent component={this.state.component} />
-                                <TaskDetail task={task} createComment={createComment}/>
+                                <TaskDetail
+                                    task={task}
+                                    createComment={createComment}
+                                    descriptionMode={descriptionMode}
+                                    toggleDescriptionMode={toggleDescriptionMode}
+                                    saveDescription={saveDescription}
+                                />
                             </div>
                         </Segment>
                     </Sidebar.Pusher>
@@ -99,6 +105,7 @@ const mapStateToProps = state => {
         user: state.auth.user,
         task: state.nemo.task,
         showModalAddTask: state.nemo.showModalAddTask,
+        descriptionMode: state.nemo.descriptionMode,
     };
 }
 
@@ -109,6 +116,8 @@ const mapDispatchToProps = dispatch => {
         addTask: (data) => dispatch(task.addTask(data)),
         createComment: (text, task_id) => dispatch(task.createComment(text, task_id)),
         getTasksToExecute: () => dispatch(task.getTasksToExecute()),
+        toggleDescriptionMode: () => dispatch(task.toggleDescriptionMode()),
+        saveDescription: (description, task_id) => dispatch(task.saveDescription(description, task_id)),
     };
 }
 
