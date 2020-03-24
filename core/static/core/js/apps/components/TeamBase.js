@@ -15,7 +15,7 @@ class TeamBase extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            component: TaskList,
+            component: UserProfile,
         };
     }
 
@@ -28,6 +28,7 @@ class TeamBase extends Component {
             isAuthenticated, addTaskShowModal, addTaskHideModal, showModalAddTask, addTask, user, descriptionMode,
             getTasksToExecute, isLoading, createComment, task, toggleDescriptionMode, saveDescription,
         } = this.props;
+        const { component } = this.state;
         let { CurrentComponent } = this;
 
         if (!isAuthenticated) {
@@ -49,7 +50,7 @@ class TeamBase extends Component {
                     >
                         <Menu.Item as='a'>
                             <span style={{ fontSize: '18px'}}>
-                                {user && user.name}
+                                {user.name}
                                 <Icon
                                     name='setting'
                                     className='icon-profile'
@@ -71,7 +72,7 @@ class TeamBase extends Component {
                                 Мои задачи
                             </Button>
                         </Menu.Item>
-                        { user && user.is_superuser &&
+                        { user.is_superuser &&
                             <Menu.Item as='a'>
                                 <a href='/admin/'>Администрирование</a>
                             </Menu.Item>
@@ -81,14 +82,16 @@ class TeamBase extends Component {
                     <Sidebar.Pusher>
                         <Segment basic style={{ minHeight: '100vh', marginLeft: '170px' }}>
                             <div class='row'>
-                                <CurrentComponent component={this.state.component} />
-                                <TaskDetail
-                                    task={task}
-                                    createComment={createComment}
-                                    descriptionMode={descriptionMode}
-                                    toggleDescriptionMode={toggleDescriptionMode}
-                                    saveDescription={saveDescription}
-                                />
+                                <CurrentComponent component={component} />
+                                {component == TaskList &&
+                                    <TaskDetail
+                                        task={task}
+                                        createComment={createComment}
+                                        descriptionMode={descriptionMode}
+                                        toggleDescriptionMode={toggleDescriptionMode}
+                                        saveDescription={saveDescription}
+                                    />
+                                }
                             </div>
                         </Segment>
                     </Sidebar.Pusher>

@@ -67,9 +67,8 @@ class Menu extends React.Component {
 }
 
 const mapStateToProps = state => {
-    const { user, isAuthenticated } = state.auth;
     return {
-        isAuthenticated: isAuthenticated,
+        isAuthenticated: state.auth.isAuthenticated,
     }
 }
 

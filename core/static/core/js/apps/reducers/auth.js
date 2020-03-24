@@ -5,7 +5,7 @@ const initialState = {
     token: localStorage.getItem("token"),
     isAuthenticated: false || Boolean(localStorage.getItem("token")),
     isLoading: true,
-    user: null,
+    user: {},
     login_errors: {},
     register_errors: [],
 };
@@ -50,7 +50,7 @@ export default function auth(state=initialState, action) {
                 ...state, 
                 ...action.data, 
                 token: null, 
-                user: null,
+                user: {},
                 isAuthenticated: false, 
                 isLoading: false
             };
