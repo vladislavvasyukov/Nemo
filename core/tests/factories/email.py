@@ -34,6 +34,5 @@ class EmailAttachmentFactory(factory.django.DjangoModelFactory):
     filename = factory.Faker("file_name")
     file = factory.django.FileField(data=b"test data")
 
-
     class Meta:
         model = EmailAttachment
