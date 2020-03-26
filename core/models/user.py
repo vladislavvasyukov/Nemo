@@ -34,3 +34,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta(AbstractBaseUser.Meta):
         verbose_name = _('Сотрудник')
         verbose_name_plural = _('Сотрудники')
+
+    @property
+    def avatar_url(self):
+        return self.avatar.url if self.avatar else ''

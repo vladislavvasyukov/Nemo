@@ -61,6 +61,20 @@ export default function auth(state=initialState, action) {
                 ...action.data,
             };
 
+        case C.AVATAR_UPLOAD_SUCCESSFUL:
+            return {
+                ...state,
+                user: {
+                    ...action.data
+                },
+            }
+
+        case C.AVATAR_UPLOAD_FAILED:
+            return {
+                ...state,
+                ...action.data,
+            }
+
         default:
             return state;
     }

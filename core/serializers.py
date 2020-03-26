@@ -28,7 +28,7 @@ class UserSerializerShort(serializers.ModelSerializer):
 
     @staticmethod
     def get_avatar_url(obj):
-        return obj.avatar.url if obj.avatar else ''
+        return obj.avatar_url
 
 
 class CommentSerializer(serializers.ModelSerializer):

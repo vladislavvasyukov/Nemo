@@ -229,3 +229,45 @@ export const saveDescription = (description, task_id) => {
             })
     }
 }
+
+export const avatarUpload = (form_data) => {
+    return (dispatch, getState) => {
+        const token = getState().auth.token;
+        let headers = {};
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+
+        fetch('/api/avatar_upload/', {
+            headers,
+            method: 'POST',
+            credentials: 'same-origin',
+            body: form_data
+        }).then(res => {
+            if (res.status < 500) {
+                return res.json().then(data => {
+                    return {status: res.status, data};
+                })
+            } else {
+                console.log("Server Error!");
+                throw res;
+            }
+        })
+        .then(res => {
+            const user = getState().auth.user;
+
+            let data = {
+                ...user,
+                avatar_url: res.data.avatar_url,
+            }
+
+            if (res.status === 200) {
+                dispatch({type: C.AVATAR_UPLOAD_SUCCESSFUL, data: data });
+                return res.data;
+            } else {
+                dispatch({type: C.AVATAR_UPLOAD_FAILED, data: res.data});
+                throw res.data;
+            }
+        })
+    }
+}

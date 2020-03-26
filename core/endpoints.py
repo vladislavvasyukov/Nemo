@@ -19,4 +19,5 @@ urlpatterns = [
     path("create_task/", api.CreateTaskApi.as_view(), name='create-task'),
     path("create_comment/", api.CreateCommentApi.as_view(), name='create-comment'),
     path("save_description/", api.SaveDescription.as_view(), name='save-description'),
+    path("avatar_upload/", api.AvatarUpload.as_view(), name='avatar-upload'),
 ]

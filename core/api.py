@@ -147,3 +147,18 @@ class SaveDescription(generics.GenericAPIView):
         return Response({
             "description": task.description,
         })
+
+
+class AvatarUpload(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def post(self, request, *args, **kwargs):
+        user = User.objects.get(pk=request.data['pk'])
+
+        for field_name in request.FILES:
+            user.avatar = request.FILES.get(field_name)
+            user.save()
+
+        return Response({
+            "avatar_url": user.avatar_url,
+        })

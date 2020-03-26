@@ -6,6 +6,18 @@ import { Card, Icon, Image } from 'semantic-ui-react';
 
 
 class UserProfile extends Component {
+    onFileUploadChange(event) {
+        const files = event.target.files;
+        const form_data = new FormData();
+        form_data.append('pk', this.props.user.id);
+
+        for (var i = 0; i < files.length; i++) {
+            form_data.append(files[i].name, files[i]);
+        }
+
+        this.props.avatarUpload(form_data);
+    }
+
     render () {
         const { user } = this.props;
 
@@ -13,7 +25,7 @@ class UserProfile extends Component {
             <Card className='user-profile'>
                 <Image src={user.avatar_url} wrapped ui={false} />
                 <form>
-                    <input type='file' onChange={(e) => console.log(e.target.form)} />
+                    <input type='file' onChange={(e) => this.onFileUploadChange(e)} />
                 </form>
                 <Card.Content>
                 <Card.Header>Matthew</Card.Header>
@@ -38,6 +50,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getTask: (task_id) => dispatch(task.getTask(task_id)),
+        avatarUpload: (form_data) => dispatch(task.avatarUpload(form_data)),
     };
 }
 
