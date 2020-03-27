@@ -9,6 +9,7 @@ class UserFactory(factory.DjangoModelFactory):
 
     is_staff = False
     is_active = True
+    avatar = None
 
     class Meta:
         model = User
