@@ -26,7 +26,7 @@ class Command(CoreCommandLocked):
 
             emails = Email.objects.filter(
                 sent_date__isnull=True
-            ).prefetch_related("attachments").order_by('created_at')[0:self.CHUNK_SIZE]
+            ).prefetch_related("attachments").order_by('created')[0:self.CHUNK_SIZE]
 
             if emails.count() > 0:
                 for email in emails:
