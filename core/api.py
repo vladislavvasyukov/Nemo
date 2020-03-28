@@ -17,7 +17,7 @@ class RegistrationAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         return Response({
-            "user": serializers.UserSerializerShort(user, context=self.get_serializer_context()).data,
+            "user": serializers.UserSerializer(user, context=self.get_serializer_context()).data,
             "token": AuthToken.objects.create(user)[1]
         })
 
@@ -54,6 +54,22 @@ class CreateTaskApi(generics.GenericAPIView):
         })
 
 
+class SaveProfile(generics.UpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = serializers.ProfileSerializer
+    queryset = User.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response({
+            "user": serializers.UserSerializer(instance, context=self.get_serializer_context()).data,
+        })
+
+
 class CreateCommentApi(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = serializers.CreateCommentSerializer
@@ -77,14 +93,14 @@ class LoginAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
         return Response({
-            "user": serializers.UserSerializerShort(user, context=self.get_serializer_context()).data,
+            "user": serializers.UserSerializer(user, context=self.get_serializer_context()).data,
             "token": AuthToken.objects.create(user)[1]
         })
 
 
 class UserAPI(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated, ]
-    serializer_class = serializers.UserSerializerShort
+    serializer_class = serializers.UserSerializer
 
     def get_object(self):
         return self.request.user

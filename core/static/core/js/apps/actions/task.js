@@ -271,3 +271,40 @@ export const avatarUpload = (form_data) => {
         })
     }
 }
+
+export const saveUserProfile = (data, user_id) => {
+    return (dispatch, getState) => {
+
+        let headers = {
+            "Content-Type": "application/json",
+        };
+        const token = getState().auth.token;
+
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+
+        let body = JSON.stringify({...data});
+
+        return fetch(`/api/save_profile/${user_id}/`, {headers, body, method: "POST"})
+            .then(res => {
+                if (res.status < 500) {
+                    return res.json().then(data => {
+                        return {status: res.status, data};
+                    })
+                } else {
+                    console.log("Server Error!");
+                    throw res;
+                }
+            })
+            .then(res => {
+                if (res.status === 200) {
+                    dispatch({type: C.SAVE_PROFILE_SUCCESSFUL, data: res.data.user });
+                    return res.data;
+                } else {
+                    dispatch({type: C.SAVE_PROFILE_FAILED, data: res.data});
+                    showErrorMessage('Не удалось сохранить данные', errorMessageToString(res.data));
+                }
+            })
+    }
+}

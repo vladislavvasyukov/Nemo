@@ -31,6 +31,24 @@ class UserSerializerShort(serializers.ModelSerializer):
         return obj.avatar_url
 
 
+class UserSerializer(serializers.ModelSerializer):
+    avatar_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'name', 'is_superuser', 'avatar_url', 'email', 'telegram', 'skype')
+
+    @staticmethod
+    def get_avatar_url(obj):
+        return obj.avatar_url
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'name', 'email', 'telegram', 'skype')
+
+
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializerShort()
     timestamp = serializers.SerializerMethodField()

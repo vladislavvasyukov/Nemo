@@ -95,7 +95,7 @@ class TaskList extends Component {
         ]
 
         return (
-            <div  className='col-sm-6'>
+            <div className='col-sm-6'>
                 <Dimmer active={this.props.isLoading} inverted>
                     <Loader size='medium'>Loading</Loader>
                 </Dimmer>
@@ -112,7 +112,6 @@ class TaskList extends Component {
                     menu={{ pointing: true }}
                     onTabChange={(e, {activeIndex}) => this.setState({activeIndex})}
                 />
-
             </div>
         );
     }
