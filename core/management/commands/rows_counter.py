@@ -23,6 +23,7 @@ class Command(CoreCommandLocked):
         'Nemo/Nemo/core/static/core/vendor/build/',
         'Nemo/Nemo/core/static/core/img/',
         'Nemo/Nemo/media/',
+        'Nemo/Nemo/core/tests/fixtures/test_avatar.png',
     )
 
     EXCLUDE_EXTENSIONS = ('coverage', 'pyc', 'lock', 'log')
