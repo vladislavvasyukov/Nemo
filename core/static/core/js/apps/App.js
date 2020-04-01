@@ -15,6 +15,7 @@ import {
     NotFound,
     MainPage,
     TeamBase,
+    RecoverPassword,
 } from "./components";
 
 
@@ -47,6 +48,7 @@ class RootContainerComponent extends Component {
                     <Route exact path="/team" component={TeamBase} />
                     <Route exact path="/register" component={SignUpForm} />
                     <Route exact path="/login" component={SignInForm} />
+                    <Route exact path="/recover" component={RecoverPassword} />
                     <Route component={NotFound} />
                 </Switch>
             </BrowserRouter>

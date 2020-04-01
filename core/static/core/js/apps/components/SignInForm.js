@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { auth } from '../actions';
 import {FormGroup, Form} from 'react-bootstrap'
-import { Redirect } from "react-router-dom";
+import { Redirect, NavLink } from "react-router-dom";
 import Menu from './Menu';
 
 
@@ -61,7 +61,9 @@ class SignInForm extends Component {
                                 </FormGroup>
                                 <FormGroup>
                                     <div className="col-form-label" style={{float: "right"}}>
-                                        <a href="/recover">Забыли пароль?</a>
+                                        <NavLink to="/recover" activeClassName="nav-link active" className="nav-link">
+                                            Забыли пароль?
+                                        </NavLink>
                                     </div>
                                     <label className="col-form-label required" for="password">Пароль</label>
                                     <input 
