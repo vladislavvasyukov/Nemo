@@ -15,7 +15,7 @@ class TeamBase extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            component: UserProfile,
+            component: TaskList,
         };
     }
 

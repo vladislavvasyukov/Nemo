@@ -79,13 +79,19 @@ class TaskSerializer(serializers.ModelSerializer):
     participants = UserSerializerShort(many=True)
     tags = TagSerializer(many=True)
     comments = CommentSerializer(many=True)
+    status_display = serializers.SerializerMethodField()
 
     class Meta:
         model = Task
         fields = (
             'pk', 'title', 'description', 'project', 'executor', 'manager', 'author', 'deadline',
             'planned_work_hours', 'participants', 'tags', 'status', 'work_hours', 'comments',
+            'status_display',
         )
+
+    @staticmethod
+    def get_status_display(obj):
+        return obj.get_status_display()
 
 
 class CreateUserSerializer(serializers.ModelSerializer):

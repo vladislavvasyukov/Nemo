@@ -11,6 +11,7 @@ import UserProfile from "./UserProfile";
 import TaskDetail from "./TaskDetail";
 import Comments from "./Comments";
 import Description from "./Description";
+import InfoTable from "./InfoTable";
 
 
 export {
@@ -26,4 +27,5 @@ export {
     TaskDetail,
     Comments,
     Description,
+    InfoTable,
 }

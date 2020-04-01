@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Tab } from 'semantic-ui-react';
 import Comments from "./Comments";
 import Description from "./Description";
+import InfoTable from "./InfoTable";
 
 
 export default class TaskDetail extends Component {
@@ -22,7 +23,11 @@ export default class TaskDetail extends Component {
             },
             {
                 menuItem: 'Задача',
-                render: () => <Tab.Pane attached={false}>Tab 2 Content</Tab.Pane>,
+                render: () => <Tab.Pane attached={false}>
+                                  <InfoTable
+                                      task={task}
+                                  />
+                              </Tab.Pane>,
             },
             {
                 menuItem: 'Описание',
