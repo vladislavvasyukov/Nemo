@@ -20,5 +20,6 @@ urlpatterns = [
     path("create_comment/", api.CreateCommentApi.as_view(), name='create-comment'),
     path("save_description/", api.SaveDescription.as_view(), name='save-description'),
     path("avatar_upload/", api.AvatarUpload.as_view(), name='avatar-upload'),
-    path("save_profile/<int:pk>/", api.SaveProfile.as_view(), name='save-profile',)
+    path("save_profile/<int:pk>/", api.SaveProfile.as_view(), name='save-profile'),
+    path("recover_password/", api.RecoverPassword.as_view(), name="recover-password"),
 ]

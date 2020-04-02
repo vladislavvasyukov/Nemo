@@ -1,9 +1,11 @@
+from django.utils.translation import ugettext_lazy as _
 from knox.models import AuthToken
 from rest_framework import permissions, generics, viewsets
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.response import Response
 
 from core import serializers
+from core.forms import PasswordRecoveryForm
 from core.models import Task, Tag, Project, User
 from core.paginators import TasksPagination
 from core.serializers import TaskSerializer
@@ -178,3 +180,20 @@ class AvatarUpload(generics.GenericAPIView):
         return Response({
             "avatar_url": user.avatar_url,
         })
+
+
+class RecoverPassword(generics.GenericAPIView):
+
+    def post(self, request, *args, **kwargs):
+        form = PasswordRecoveryForm(request.data)
+        if form.is_valid():
+            form.save(request=self.request)
+            return Response({
+                'success': True,
+                "message": "ALL OK",
+            })
+        else:
+            return Response({
+                'success': False,
+                "error": form.errors["email"][0],
+            })

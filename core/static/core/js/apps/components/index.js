@@ -12,6 +12,7 @@ import TaskDetail from "./TaskDetail";
 import Comments from "./Comments";
 import Description from "./Description";
 import InfoTable from "./InfoTable";
+import RecoverPassword from "./RecoverPassword";
 
 
 export {
@@ -28,4 +29,5 @@ export {
     Comments,
     Description,
     InfoTable,
+    RecoverPassword,
 }
