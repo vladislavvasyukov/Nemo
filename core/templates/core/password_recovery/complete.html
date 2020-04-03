@@ -1,0 +1,10 @@
+{% extends 'core/password_recovery/recovery_base.html' %}
+
+{% load i18n %}
+
+{% block main_content %}
+    <div class="alert alert-success" role="alert">
+        <p>{% trans "Вы успешно изменили пароль. Теперь вы можете авторизоваться." %}</p>
+        <p><a href="{% url 'core:login' %}" class="btn-blue rad full">{% trans "Войти в систему" %}</a></p>
+    </div>
+{% endblock %}

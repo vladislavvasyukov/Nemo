@@ -1,4 +1,8 @@
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.http import JsonResponse
+from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
+from django.views.generic import TemplateView
 from knox.models import AuthToken
 from rest_framework import permissions, generics, viewsets
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
@@ -197,3 +201,29 @@ class RecoverPassword(generics.GenericAPIView):
                 'success': False,
                 "error": form.errors["email"][0],
             })
+
+
+class PasswordResetView(PasswordResetConfirmView):
+    template_name = 'core/password_recovery/password_recovery_page.html'
+    success_url = reverse_lazy('password_reset_complete')
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            self.form_valid(form)
+            json_res = {
+                'status': True,
+                'data': {
+                    'redirect_url': self.success_url,
+                },
+            }
+        else:
+            json_res = {'status': False, 'form_errors': form.errors}
+
+        response = JsonResponse(json_res, status=200)
+        response['Vary'] = 'Accept'
+        return response
+
+
+class RecoverSuccessView(TemplateView):
+    template_name = 'core/password_recovery/complete.html'

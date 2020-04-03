@@ -1,5 +1,5 @@
 from django.conf.urls import include
-from django.urls import path
+from django.urls import path, re_path
 from rest_framework import routers
 
 from . import api
@@ -22,4 +22,10 @@ urlpatterns = [
     path("avatar_upload/", api.AvatarUpload.as_view(), name='avatar-upload'),
     path("save_profile/<int:pk>/", api.SaveProfile.as_view(), name='save-profile'),
     path("recover_password/", api.RecoverPassword.as_view(), name="recover-password"),
+    re_path(
+        r'^password_reset_confirm/(?P<uidb64>[0-9A-Za-z]{1,13})-(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        api.PasswordResetView.as_view(),
+        name='password_reset_confirm'
+    ),
+    path('password_reset/complete/', api.RecoverSuccessView.as_view(), name='password_reset_complete'),
 ]

@@ -31,9 +31,8 @@ class Command(CoreCommandLocked):
             if emails.count() > 0:
                 for email in emails:
                     self._send_email(email)
-                time.sleep(self.SLEEP_SEC)
-            else:
-                time.sleep(self.SLEEP_SEC)
+
+            time.sleep(self.SLEEP_SEC)
 
     def _send_email(self, email):
         self.logger.info('Send {} "{}" to="{}" ...'.format(email.id, email.subject, ",".join(email.to)))
