@@ -13,6 +13,7 @@ import Comments from "./Comments";
 import Description from "./Description";
 import InfoTable from "./InfoTable";
 import RecoverPassword from "./RecoverPassword";
+import Companies from "./Companies";
 
 
 export {
@@ -30,4 +31,5 @@ export {
     Description,
     InfoTable,
     RecoverPassword,
+    Companies,
 }

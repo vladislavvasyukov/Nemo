@@ -75,7 +75,15 @@ export default function auth(state=initialState, action) {
                 ...action.data,
             }
 
-          case C.SAVE_PROFILE_SUCCESSFUL:
+        case C.SAVE_PROFILE_SUCCESSFUL:
+            return {
+                ...state,
+                user: {
+                    ...action.data,
+                }
+            }
+
+        case C.CREATE_COMPANY_SUCCESSFUL:
             return {
                 ...state,
                 user: {

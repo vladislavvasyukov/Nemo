@@ -116,6 +116,14 @@ export const getTaskList = (to_execute, page=1) => {
 export const getTask = (task_id) => {
     return (dispatch, getState) => {
 
+        if (!task_id) {
+            const data = {
+                task: {},
+            }
+            dispatch({type: C.GET_TASK_DETAIL_SUCCESSFUL, data: data});
+            return data;
+        }
+
         let headers = {
             "Content-Type": "application/json",
         };
@@ -304,6 +312,47 @@ export const saveUserProfile = (data, user_id) => {
                 } else {
                     dispatch({type: C.SAVE_PROFILE_FAILED, data: res.data});
                     showErrorMessage('Не удалось сохранить данные', errorMessageToString(res.data));
+                }
+            })
+    }
+}
+
+export const createCompany = (name) => {
+return (dispatch, getState) => {
+    dispatch({type: C.USER_LOADING});
+
+        const token = getState().auth.token;
+
+        let headers = {
+            "Content-Type": "application/json",
+        };
+
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+        let body = JSON.stringify({name});
+
+        return fetch("/api/create_company/", {headers, body, method: "POST" })
+            .then(res => {
+                if (res.status < 500) {
+                    return res.json().then(data => {
+                        return {status: res.status, data};
+                    })
+                }
+            })
+            .then(res => {
+                const task = getState().auth.user;
+
+                let data = {
+                    ...user,
+                    companies: [...task.companies, res.data.company]
+                }
+
+                if (res.status === 200) {
+                    dispatch({type: C.CREATE_COMPANY_SUCCESSFUL, data: data });
+                    return res.data;
+                } else if (res.status >= 400 && res.status < 500) {
+                    dispatch({type: C.CREATE_COMPANY_FAILED, data: {}});
                 }
             })
     }

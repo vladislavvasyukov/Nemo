@@ -6,6 +6,7 @@ import AddTask from './AddTask';
 import TaskList from './TaskList';
 import UserProfile from './UserProfile';
 import TaskDetail from './TaskDetail';
+import Companies from './Companies';
 import { Redirect } from "react-router-dom";
 import { Icon, Image, Menu, Segment, Sidebar, Button, Dimmer, Loader } from 'semantic-ui-react';
 
@@ -70,6 +71,11 @@ class TeamBase extends Component {
                         <Menu.Item as='a'>
                             <Button onClick={() => this.setState({ component: TaskList })}>
                                 Мои задачи
+                            </Button>
+                        </Menu.Item>
+                        <Menu.Item as='a'>
+                            <Button onClick={() => this.setState({ component: Companies})}>
+                                Компании
                             </Button>
                         </Menu.Item>
                         { user.is_superuser &&

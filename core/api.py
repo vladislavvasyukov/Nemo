@@ -9,18 +9,27 @@ from rest_framework.response import Response
 
 from core import serializers
 from core.forms import PasswordRecoveryForm
-from core.models import Task, Tag, Project, User
+from core.models import Task, Tag, Project, User, Company
+from core.models.company import CompanyUser
 from core.paginators import TasksPagination
-from core.serializers import TaskSerializer
 
 
 class RegistrationAPI(generics.GenericAPIView):
     serializer_class = serializers.CreateUserSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        data = request.data
+        company_name = data.pop('company_name')
+
+        serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+
+        company, _ = Company.objects.get_or_create(name=company_name, creator=user)
+        user.companies.add(company)
+
+        request.session['current_company_id'] = company.pk
+
         return Response({
             "user": serializers.UserSerializer(user, context=self.get_serializer_context()).data,
             "token": AuthToken.objects.create(user)[1]
@@ -97,6 +106,10 @@ class LoginAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
+
+        company = user.companies.first()
+        request.session['current_company_id'] = company.pk if company else None
+
         return Response({
             "user": serializers.UserSerializer(user, context=self.get_serializer_context()).data,
             "token": AuthToken.objects.create(user)[1]
@@ -118,9 +131,11 @@ class TaskListViewSet(ListModelMixin, viewsets.GenericViewSet):
 
     def get_queryset(self):
         if 'to_execute' in self.request.query_params:
-            return self.request.user.tasks_to_execute.filter(status__in=Task.WORK_STATUSES)
+            tasks = self.request.user.tasks_to_execute.filter(status__in=Task.WORK_STATUSES)
         else:
-            return self.request.user.manager_tasks.filter(status__in=Task.WORK_STATUSES)
+            tasks = self.request.user.manager_tasks.filter(status__in=Task.WORK_STATUSES)
+
+        return tasks.filter(project__company_id=self.request.session['current_company_id'])
 
 
 class TagListApi(generics.ListAPIView):
@@ -138,7 +153,7 @@ class ProjectListApi(generics.ListAPIView):
 
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
-        return Project.objects.filter(name__icontains=q)[:20]
+        return Project.objects.filter(name__icontains=q, company_id=self.request.session['current_company_id'])[:20]
 
 
 class UserListApi(generics.ListAPIView):
@@ -147,12 +162,14 @@ class UserListApi(generics.ListAPIView):
 
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
-        return User.objects.filter(name__icontains=q)[:20]
+        return User.objects.filter(
+            name__icontains=q, companies=self.request.session['current_company_id'],
+        ).distinct()[:20]
 
 
 class TaskRetrieveView(RetrieveModelMixin, viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated, ]
-    serializer_class = TaskSerializer
+    serializer_class = serializers.TaskSerializer
 
     queryset = Task.objects.all().select_related('executor', 'manager', 'author')
 
@@ -226,3 +243,19 @@ class PasswordResetView(PasswordResetConfirmView):
 
 class RecoverSuccessView(TemplateView):
     template_name = 'core/password_recovery/complete.html'
+
+
+class CompanyApi(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializers = serializers.CompanySerializerShort
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        company = serializer.save()
+        user = request.user
+        CompanyUser.objects.create(company=company, user=user, is_admin=True)
+
+        return Response({
+            'comment': serializers.CompanySerializerShort(company, context=self.get_serializer_context()).data,
+        })

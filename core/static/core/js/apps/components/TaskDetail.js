@@ -44,6 +44,10 @@ export default class TaskDetail extends Component {
     }
 
     render() {
+        if (!(this.props.task && this.props.task.id)) {
+            return <div></div>
+        }
+
         return (
             <div className='col-sm-6'>
                 <Tab menu={{ pointing: true }} panes={this.getPanes()} style={{ marginTop: '52px' }} />

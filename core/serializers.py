@@ -3,6 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
 from core.models import Task, Tag, Project, Comment
+from core.models.company import CompanyUser, Company
 
 User = get_user_model()
 
@@ -31,16 +32,39 @@ class UserSerializerShort(serializers.ModelSerializer):
         return obj.avatar_url
 
 
+class CompanySerializerShort(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ('pk', 'name')
+
+
+class CompanyUserSerializer(serializers.ModelSerializer):
+    company_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CompanyUser
+        fields = ('company_id', 'company_name', 'is_admin')
+
+    @staticmethod
+    def get_company_name(obj):
+        return obj.company.name
+
+
 class UserSerializer(serializers.ModelSerializer):
     avatar_url = serializers.SerializerMethodField()
+    companies = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('id', 'name', 'is_superuser', 'avatar_url', 'email', 'telegram', 'skype')
+        fields = ('id', 'name', 'is_superuser', 'avatar_url', 'email', 'telegram', 'skype', 'companies')
 
     @staticmethod
     def get_avatar_url(obj):
         return obj.avatar_url
+
+    @staticmethod
+    def get_companies(obj):
+        return CompanyUserSerializer(obj.companyuser_set.all(), many=True).data
 
 
 class ProfileSerializer(serializers.ModelSerializer):

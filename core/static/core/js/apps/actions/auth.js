@@ -64,10 +64,10 @@ export const login = (email, password) => {
     }
 }
 
-export const register = (name, email, password, skype, telegram) => {
+export const register = (name, email, password, skype, telegram, company_name) => {
     return (dispatch, getState) => {
         let headers = {"Content-Type": "application/json"};
-        let body = JSON.stringify({name, email, password, skype, telegram});
+        let body = JSON.stringify({name, email, password, skype, telegram, company_name});
 
         return fetch("/api/auth/register/", {headers, body, method: "POST"})
             .then(res => {

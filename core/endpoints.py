@@ -7,6 +7,7 @@ from . import api
 router = routers.DefaultRouter()
 router.register('tasks', api.TaskListViewSet, 'tasks')
 router.register('get_task', api.TaskRetrieveView, basename='get-task')
+router.register('company', api.CompanyApi, 'company')
 
 urlpatterns = [
     path('', include(router.urls)),

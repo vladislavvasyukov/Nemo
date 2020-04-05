@@ -53,6 +53,10 @@ class TaskList extends Component {
             current_page_manager,
         } = this.props;
 
+        if (tasks_to_execute.length == 0 && manager_tasks.length == 0) {
+            return <div></div>
+        }
+
         let panes = [
             {
                 menuItem: 'Задачи на мне',

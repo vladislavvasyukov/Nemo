@@ -5,6 +5,7 @@ from model_utils.models import TimeStampedModel
 
 class Company(TimeStampedModel):
     name = models.CharField(max_length=255, verbose_name='Название')
+    creator = models.ForeignKey('core.User', models.CASCADE, verbose_name=_('Сотрудник'), null=True, blank=True)
 
     class Meta:
         verbose_name = _('Компания')

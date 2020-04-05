@@ -18,6 +18,7 @@ class SignUpForm extends Component {
             password_confirmation: "",
             skype: "",
             telegram: "",
+            company_name: "",
         };
     }
 
@@ -45,6 +46,7 @@ class SignUpForm extends Component {
             .then(() => {
                 this.props.register(
                     this.state.name, this.state.email, this.state.password, this.state.skype, this.state.telegram,
+                    this.state.company_name,
                 );
             })
             .catch(errors => {
@@ -129,6 +131,18 @@ class SignUpForm extends Component {
                                         className="form-control"
                                         onChange={this.handleInputChange} />
                                 </FormGroup>
+
+                                <FormGroup>
+                                    <label class="col-form-label" for="company_name">Название компании</label>
+                                    <input
+                                        type="text"
+                                        id="company_name"
+                                        name="company_name"
+                                        required="required"
+                                        className="form-control company_name"
+                                        onChange={this.handleInputChange}/>
+                                </FormGroup>
+
                                 <FormGroup>
                                     <label class="col-form-label" for="register_registrationData_skype">Skype</label>
                                     <input 
@@ -172,8 +186,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        register: (name, email, password, skype, telegram) => dispatch(
-            auth.register(name, email, password, skype, telegram)
+        register: (name, email, password, skype, telegram, company_name) => dispatch(
+            auth.register(name, email, password, skype, telegram, company_name)
         ),
         setErrors: (errors) => dispatch(auth.setErrors(errors))
     };
