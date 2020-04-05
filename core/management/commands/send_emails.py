@@ -15,24 +15,18 @@ class Command(CoreCommandLocked):
     """
 
     CHUNK_SIZE = 10
-    SLEEP_SEC = 3
-    SERVE_ATTEMPTS = 500
 
     def run(self, *args, **options):
 
         self.logger.info('Start serve emails')
 
-        for i in range(self.SERVE_ATTEMPTS):
+        emails = Email.objects.filter(
+            sent_date__isnull=True
+        ).prefetch_related("attachments").order_by('created')[0:self.CHUNK_SIZE]
 
-            emails = Email.objects.filter(
-                sent_date__isnull=True
-            ).prefetch_related("attachments").order_by('created')[0:self.CHUNK_SIZE]
-
-            if emails.count() > 0:
-                for email in emails:
-                    self._send_email(email)
-
-            time.sleep(self.SLEEP_SEC)
+        if emails.count() > 0:
+            for email in emails:
+                self._send_email(email)
 
     def _send_email(self, email):
         self.logger.info('Send {} "{}" to="{}" ...'.format(email.id, email.subject, ",".join(email.to)))
