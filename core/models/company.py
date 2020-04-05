@@ -17,6 +17,7 @@ class Company(TimeStampedModel):
 class CompanyUser(TimeStampedModel):
     user = models.ForeignKey('core.User', models.CASCADE, verbose_name=_('Сотрудник'), db_index=False)
     company = models.ForeignKey('core.Company', models.CASCADE, verbose_name=_('Компания'),  db_index=False)
+    is_admin = models.BooleanField(_('Администратор'), default=False)
 
     class Meta:
         verbose_name = _('Сотрудник компании')
