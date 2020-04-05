@@ -2,9 +2,15 @@
 
 {% load i18n %}
 
+{% block extra_style %}
+    #success {
+        margin-top: 50px;
+    }
+{% endblock %}
+
 {% block main_content %}
-    <div class="alert alert-success" role="alert">
+    <div class="alert alert-success" id="success" role="alert">
         <p>{% trans "Вы успешно изменили пароль. Теперь вы можете авторизоваться." %}</p>
-        <p><a href="{% url 'core:login' %}" class="btn-blue rad full">{% trans "Войти в систему" %}</a></p>
+        <p><a href="/login" class="btn-blue rad full">{% trans "Войти в систему" %}</a></p>
     </div>
 {% endblock %}

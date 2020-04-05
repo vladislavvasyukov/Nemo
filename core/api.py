@@ -1,7 +1,6 @@
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.http import JsonResponse
 from django.urls import reverse_lazy
-from django.utils.translation import ugettext_lazy as _
 from django.views.generic import TemplateView
 from knox.models import AuthToken
 from rest_framework import permissions, generics, viewsets
