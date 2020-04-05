@@ -1,7 +1,7 @@
 # Work Plan
 
 1) ~~User Profile~~
-2) Logout button 
+2) ~~Logout button~~
 3) ~~Task Info~~
 4) Changing Task Information
 5) Project Card (title, description and etc.)

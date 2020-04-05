@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { task } from '../actions';
+import { task, auth } from '../actions';
 import { Card, Icon, Image, Button, Form } from 'semantic-ui-react';
 
 
@@ -44,7 +44,7 @@ class UserProfile extends Component {
     handleChange = (e, { name, value }) => this.setState({ [name]: value })
 
     render () {
-        const { user } = this.props;
+        const { user, logout } = this.props;
         const { name, email, telegram, skype } = this.state;
 
         return (
@@ -56,6 +56,9 @@ class UserProfile extends Component {
                             <input type='file' onChange={(e) => this.onFileUploadChange(e)} />
                         </form>
                     </Card>
+                    <div style={{ marginLeft: '40px' }}>
+                        <Button onClick={logout}>Выход из аккаунта</Button>
+                    </div>
                 </div>
                 <div className='col-sm-6'>
                     <Form onSubmit={this.handleSubmit}>
@@ -109,6 +112,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
+        logout: () => dispatch(auth.logout()),
         getTask: (task_id) => dispatch(task.getTask(task_id)),
         avatarUpload: (form_data) => dispatch(task.avatarUpload(form_data)),
         saveUserProfile: (data, user_id) => dispatch(task.saveUserProfile(data, user_id)),
