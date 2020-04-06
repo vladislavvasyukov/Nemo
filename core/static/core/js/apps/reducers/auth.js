@@ -8,6 +8,7 @@ const initialState = {
     user: {},
     login_errors: {},
     register_errors: [],
+    current_company_id: null,
 };
 
 
@@ -23,10 +24,10 @@ export default function auth(state=initialState, action) {
 
         case C.USER_LOADED:
             return {
-                ...state, 
+                ...state,
+                ...action.data,
                 isAuthenticated: true, 
-                isLoading: false, 
-                user: action.user
+                isLoading: false,
             };
 
         case C.LOGIN_SUCCESSFUL:

@@ -28,8 +28,6 @@ class RegistrationAPI(generics.GenericAPIView):
         company, _ = Company.objects.get_or_create(name=company_name, creator=user)
         user.companies.add(company)
 
-        request.session['current_company_id'] = company.pk
-
         return Response({
             "user": serializers.UserSerializer(user, context=self.get_serializer_context()).data,
             "token": AuthToken.objects.create(user)[1]
@@ -107,9 +105,6 @@ class LoginAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
 
-        company = user.companies.first()
-        request.session['current_company_id'] = company.pk if company else None
-
         return Response({
             "user": serializers.UserSerializer(user, context=self.get_serializer_context()).data,
             "token": AuthToken.objects.create(user)[1]
@@ -123,6 +118,18 @@ class UserAPI(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
+    def retrieve(self, request, *args, **kwargs):
+        user = self.get_object()
+        if 'current_company_id' not in self.request.session:
+            company = user.companies.first()
+            self.request.session['current_company_id'] = company.pk if company else None
+
+        serializer = self.get_serializer(user)
+        return Response({
+            'user': serializer.data,
+            'current_company_id': self.request.session['current_company_id']
+        })
+
 
 class TaskListViewSet(ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated, ]
@@ -135,7 +142,7 @@ class TaskListViewSet(ListModelMixin, viewsets.GenericViewSet):
         else:
             tasks = self.request.user.manager_tasks.filter(status__in=Task.WORK_STATUSES)
 
-        return tasks.filter(project__company_id=self.request.session['current_company_id'])
+        return tasks.filter(project__company_id=self.request.session.get('current_company_id'))
 
 
 class TagListApi(generics.ListAPIView):
@@ -153,7 +160,7 @@ class ProjectListApi(generics.ListAPIView):
 
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
-        return Project.objects.filter(name__icontains=q, company_id=self.request.session['current_company_id'])[:20]
+        return Project.objects.filter(name__icontains=q, company_id=self.request.session.get('current_company_id'))[:20]
 
 
 class UserListApi(generics.ListAPIView):
@@ -163,7 +170,7 @@ class UserListApi(generics.ListAPIView):
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
         return User.objects.filter(
-            name__icontains=q, companies=self.request.session['current_company_id'],
+            name__icontains=q, companies=self.request.session('current_company_id'),
         ).distinct()[:20]
 
 
@@ -216,6 +223,25 @@ class RecoverPassword(generics.GenericAPIView):
             return Response({
                 'success': False,
                 "error": form.errors["email"][0],
+            })
+
+
+class ChangeCurrentCompanyView(generics.GenericAPIView):
+
+    def post(self, request, *args, **kwargs):
+        current_company_id = request.data['current_company_id']
+        user = request.user
+
+        try:
+            company = user.companies.get(pk=current_company_id)
+            request.session['current_company_id'] = company.pk
+            return Response({
+                'success': True,
+            })
+        except Company.DoesNotExist:
+            return Response({
+                'success': False,
+                "message": "Пользователь не числится в данной компании",
             })
 
 

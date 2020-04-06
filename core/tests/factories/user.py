@@ -14,3 +14,12 @@ class UserFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = User
+
+    @factory.post_generation
+    def companies(self, create, extracted):
+        if not create:
+            return
+
+        if extracted:
+            for i in extracted:
+                self.companies.add(i)

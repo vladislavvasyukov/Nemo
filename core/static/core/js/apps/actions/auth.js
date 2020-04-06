@@ -24,7 +24,7 @@ export const loadUser = () => {
             })
             .then(res => {
                 if (res.status === 200) {
-                    dispatch({type: C.USER_LOADED, user: res.data });
+                    dispatch({type: C.USER_LOADED, data: res.data });
                     return res.data;
                 } else if (res.status >= 400 && res.status < 500) {
                     dispatch({type: C.AUTHENTICATION_ERROR, data: {}});

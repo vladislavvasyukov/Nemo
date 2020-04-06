@@ -44,8 +44,8 @@ export default class TaskDetail extends Component {
     }
 
     render() {
-        if (!(this.props.task && this.props.task.id)) {
-            return <div></div>
+        if (!(this.props.task && this.props.task.pk)) {
+            return <div></div>;
         }
 
         return (

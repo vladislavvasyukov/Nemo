@@ -8,7 +8,8 @@ import UserProfile from './UserProfile';
 import TaskDetail from './TaskDetail';
 import Companies from './Companies';
 import { Redirect } from "react-router-dom";
-import { Icon, Image, Menu, Segment, Sidebar, Button, Dimmer, Loader } from 'semantic-ui-react';
+import { Icon, Image, Menu, Segment, Sidebar, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react';
+import { showErrorMessage, errorMessageToString } from '../utils';
 
 
 class TeamBase extends Component {
@@ -20,6 +21,57 @@ class TeamBase extends Component {
         };
     }
 
+    handleChange = (e, { value }) => {
+        const { token } = this.props;
+        let headers = {
+            "Content-Type": "application/json",
+        };
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+
+        let body = JSON.stringify({current_company_id: value});
+
+        return fetch("/api/change_current_company/", {headers, body, method: "POST"})
+            .then(res => {
+                if (res.status < 500) {
+                    return res.json().then(data => {
+                        return {status: res.status, data};
+                    })
+                } else {
+                    showErrorMessage('Ошибка', errorMessageToString(''));
+                }
+            })
+            .then(res => {
+                if (res.status === 200) {
+                    if (res.data.success) {
+                        this.setState({current_company_id: value});
+                        location.href = location.href;
+                    } else {
+                        showErrorMessage('Ошибка', errorMessageToString(res.data.message));
+                    }
+                } else if (res.status === 403 || res.status === 401) {
+                    showErrorMessage('Ошибка', errorMessageToString(''));
+                } else {
+                    showErrorMessage('Ошибка', errorMessageToString(''));
+                }
+            })
+    }
+
+    getOptions = () => {
+        const { user } = this.props;
+        const companies = user.companies || [];
+        let options = [];
+        for (let company of companies ) {
+            options.push({
+                key: company.company_id,
+                text: company.company_name,
+                value: company.company_id,
+            });
+        }
+        return options;
+    }
+
     CurrentComponent = ({component: ChildComponent}) => {
         return <ChildComponent />
     }
@@ -28,6 +80,7 @@ class TeamBase extends Component {
         const {
             isAuthenticated, addTaskShowModal, addTaskHideModal, showModalAddTask, addTask, user, descriptionMode,
             getTasksToExecute, isLoading, createComment, task, toggleDescriptionMode, saveDescription,
+            current_company_id,
         } = this.props;
         const { component } = this.state;
         let { CurrentComponent } = this;
@@ -59,6 +112,17 @@ class TeamBase extends Component {
                                     onClick={() => this.setState({component: UserProfile})}
                                 />
                             </span>
+                        </Menu.Item>
+                        <Menu.Item style={{ minHeight: '110px' }}>
+                            <div style={{ marginBottom: '10px' }}>Текущая компания</div>
+                            <Dropdown
+                                onChange={this.handleChange}
+                                options={this.getOptions()}
+                                placeholder='Choose an option'
+                                selection
+                                value={current_company_id}
+                                style={{ width: '150px', minWidth: '100px' }}
+                            />
                         </Menu.Item>
                         <Menu.Item as='a'>
                             <AddTask
@@ -115,6 +179,8 @@ const mapStateToProps = state => {
         task: state.nemo.task,
         showModalAddTask: state.nemo.showModalAddTask,
         descriptionMode: state.nemo.descriptionMode,
+        current_company_id: state.auth.current_company_id,
+        token: state.auth.token,
     };
 }
 

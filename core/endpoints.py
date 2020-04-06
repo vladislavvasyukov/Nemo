@@ -29,4 +29,5 @@ urlpatterns = [
         name='password_reset_confirm'
     ),
     path('password_reset/complete/', api.RecoverSuccessView.as_view(), name='password_reset_complete'),
+    path('change_current_company/', api.ChangeCurrentCompanyView.as_view(), name='change_current_company'),
 ]
