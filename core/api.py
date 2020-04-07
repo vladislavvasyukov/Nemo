@@ -19,14 +19,10 @@ class RegistrationAPI(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         data = request.data
-        company_name = data.pop('company_name')
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-
-        company, _ = Company.objects.get_or_create(name=company_name, creator=user)
-        user.companies.add(company)
 
         return Response({
             "user": serializers.UserSerializer(user, context=self.get_serializer_context()).data,
@@ -170,7 +166,7 @@ class UserListApi(generics.ListAPIView):
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
         return User.objects.filter(
-            name__icontains=q, companies=self.request.session('current_company_id'),
+            name__icontains=q, companies=self.request.session.get('current_company_id'),
         ).distinct()[:20]
 
 
