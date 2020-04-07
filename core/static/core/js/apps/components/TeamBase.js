@@ -6,7 +6,6 @@ import AddTask from './AddTask';
 import TaskList from './TaskList';
 import UserProfile from './UserProfile';
 import TaskDetail from './TaskDetail';
-import Companies from './Companies';
 import { Redirect } from "react-router-dom";
 import { Icon, Image, Menu, Segment, Sidebar, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react';
 import { showErrorMessage, errorMessageToString } from '../utils';
@@ -137,11 +136,6 @@ class TeamBase extends Component {
                                 Мои задачи
                             </Button>
                         </Menu.Item>
-                        <Menu.Item as='a'>
-                            <Button onClick={() => this.setState({ component: Companies})}>
-                                Компании
-                            </Button>
-                        </Menu.Item>
                         { user.is_superuser &&
                             <Menu.Item as='a'>
                                 <a href='/admin/'>Администрирование</a>
@@ -152,7 +146,9 @@ class TeamBase extends Component {
                     <Sidebar.Pusher>
                         <Segment basic style={{ minHeight: '100vh', marginLeft: '170px' }}>
                             <div class='row'>
-                                <CurrentComponent component={component} />
+                                <div className='col-sm-6'>
+                                    <CurrentComponent component={component} />
+                                </div>
                                 {component == TaskList &&
                                     <TaskDetail
                                         task={task}

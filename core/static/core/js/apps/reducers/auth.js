@@ -84,14 +84,6 @@ export default function auth(state=initialState, action) {
                 }
             }
 
-        case C.CREATE_COMPANY_SUCCESSFUL:
-            return {
-                ...state,
-                user: {
-                    ...action.data,
-                }
-            }
-
         default:
             return state;
     }

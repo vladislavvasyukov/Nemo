@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { task, auth } from '../actions';
+import Companies from './Companies';
 import { Card, Icon, Image, Button, Form } from 'semantic-ui-react';
 
 
@@ -48,57 +49,63 @@ class UserProfile extends Component {
         const { name, email, telegram, skype } = this.state;
 
         return (
-            <div className='row' style={{ width: '45%' }}>
-                <div className='col-sm-6'>
-                    <Card className='user-profile'>
-                        <Image src={user.avatar_url} wrapped ui={false} />
-                        <form>
-                            <input type='file' onChange={(e) => this.onFileUploadChange(e)} />
-                        </form>
-                    </Card>
-                    <div style={{ marginLeft: '40px' }}>
-                        <Button onClick={logout}>Выход из аккаунта</Button>
+            <div>
+                <div className="user-profile">
+                    <div><h2 style={{ marginBottom: '35px' }}>Профиль</h2></div>
+                    <div className='row'>
+                        <div className='col-sm-6'>
+                            <Card style={{ minHeight: '290px' }}>
+                                <Image src={user.avatar_url} wrapped ui={false} />
+                                <form>
+                                    <input type='file' onChange={(e) => this.onFileUploadChange(e)} />
+                                </form>
+                            </Card>
+                            <div style={{ marginLeft: '40px' }}>
+                                <Button onClick={logout}>Выход из аккаунта</Button>
+                            </div>
+                        </div>
+                        <div className='col-sm-6'>
+                            <Form onSubmit={this.handleSubmit}>
+                                <Form.Group>
+                                    <Form.Input
+                                        label='Name'
+                                        name='name'
+                                        value={name}
+                                        onChange={this.handleChange}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Input
+                                        label='Email'
+                                        name='email'
+                                        value={email}
+                                        onChange={this.handleChange}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Input
+                                        label='Telegram'
+                                        name='telegram'
+                                        value={telegram}
+                                        onChange={this.handleChange}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Input
+                                        label='Skype'
+                                        name='skype'
+                                        value={skype}
+                                        onChange={this.handleChange}
+                                    />
+                                </Form.Group>
+                                <Form.Group>
+                                    <Form.Button content='Submit' />
+                                </Form.Group>
+                            </Form>
+                        </div>
                     </div>
                 </div>
-                <div className='col-sm-6'>
-                    <Form onSubmit={this.handleSubmit}>
-                        <Form.Group>
-                            <Form.Input
-                                label='Name'
-                                name='name'
-                                value={name}
-                                onChange={this.handleChange}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Input
-                                label='Email'
-                                name='email'
-                                value={email}
-                                onChange={this.handleChange}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Input
-                                label='Telegram'
-                                name='telegram'
-                                value={telegram}
-                                onChange={this.handleChange}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Input
-                                label='Skype'
-                                name='skype'
-                                value={skype}
-                                onChange={this.handleChange}
-                            />
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Button content='Submit' />
-                        </Form.Group>
-                    </Form>
-                </div>
+                <Companies />
             </div>
         )
     }

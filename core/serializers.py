@@ -37,6 +37,18 @@ class CompanySerializerShort(serializers.ModelSerializer):
         model = Company
         fields = ('pk', 'name')
 
+    def create(self, validated_data):
+        company, _ = Company.objects.get_or_create(
+            name=validated_data.get('name'),
+            creator=self.context['request'].user,
+        )
+        CompanyUser.objects.create(
+            company=company,
+            user=company.creator,
+            is_admin=True,
+        )
+        return company
+
 
 class CompanyUserSerializer(serializers.ModelSerializer):
     company_name = serializers.SerializerMethodField()

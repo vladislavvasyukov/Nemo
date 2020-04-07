@@ -7,7 +7,7 @@ from . import api
 router = routers.DefaultRouter()
 router.register('tasks', api.TaskListViewSet, 'tasks')
 router.register('get_task', api.TaskRetrieveView, basename='get-task')
-router.register('company', api.CompanyApi, 'company')
+
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -30,4 +30,5 @@ urlpatterns = [
     ),
     path('password_reset/complete/', api.RecoverSuccessView.as_view(), name='password_reset_complete'),
     path('change_current_company/', api.ChangeCurrentCompanyView.as_view(), name='change_current_company'),
+    path('create_company/', api.CompanyApi.as_view(), name='create-company')
 ]

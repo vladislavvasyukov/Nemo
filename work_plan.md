@@ -12,3 +12,4 @@
 10) Think about XLSX-reports
 11) Some pages with statistics
 12) Companies Companent
+13) Clear session during logout

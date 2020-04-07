@@ -116,7 +116,7 @@ class UserAPI(generics.RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         user = self.get_object()
-        if 'current_company_id' not in self.request.session:
+        if not self.request.session.get('current_company_id'):
             company = user.companies.first()
             self.request.session['current_company_id'] = company.pk if company else None
 
@@ -267,17 +267,15 @@ class RecoverSuccessView(TemplateView):
     template_name = 'core/password_recovery/complete.html'
 
 
-class CompanyApi(viewsets.ModelViewSet):
+class CompanyApi(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated, ]
-    serializers = serializers.CompanySerializerShort
+    serializer_class = serializers.CompanySerializerShort
 
-    def create(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         company = serializer.save()
-        user = request.user
-        CompanyUser.objects.create(company=company, user=user, is_admin=True)
-
+        request.session['current_company_id'] = company.pk
         return Response({
-            'comment': serializers.CompanySerializerShort(company, context=self.get_serializer_context()).data,
+            'success': True,
         })

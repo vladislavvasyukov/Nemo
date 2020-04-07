@@ -2,6 +2,7 @@ import pytest
 from django.urls import reverse
 from knox.models import AuthToken
 
+from core.models import Company
 from core.tests.factories import UserFactory, TaskFactory, ProjectFactory
 
 
@@ -35,8 +36,8 @@ def test_create_comment(client):
     Тест создания комментария
     """
 
-    user1 = UserFactory()
-    token = AuthToken.objects.create(user1)[1]
+    user = UserFactory()
+    token = AuthToken.objects.create(user)[1]
     task = TaskFactory()
 
     data = {
@@ -47,3 +48,25 @@ def test_create_comment(client):
 
     assert response.status_code == 200
     assert task.comments.count() == 1
+
+
+@pytest.mark.django_db
+def test_create_company(client):
+    """
+    Тест создания компании
+    """
+
+    user = UserFactory()
+    token = AuthToken.objects.create(user)[1]
+    data = {
+        'name': 'Google',
+    }
+
+    response = client.post(reverse('create-company'), data=data, HTTP_AUTHORIZATION=f'Token {token}')
+
+    assert response.status_code == 200
+
+    company = Company.objects.get(name=data['name'], creator=user)
+    assert company.name == data['name']
+    assert company.creator_id == user.pk
+    assert user.companies.filter(pk=company.pk).exists()

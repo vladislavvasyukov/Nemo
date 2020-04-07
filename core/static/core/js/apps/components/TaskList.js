@@ -99,7 +99,7 @@ class TaskList extends Component {
         ]
 
         return (
-            <div className='col-sm-6'>
+            <div>
                 <Dimmer active={this.props.isLoading} inverted>
                     <Loader size='medium'>Loading</Loader>
                 </Dimmer>
