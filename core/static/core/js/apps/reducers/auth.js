@@ -84,6 +84,12 @@ export default function auth(state=initialState, action) {
                 }
             }
 
+        case C.LEAVE_COMPANY_SUCCESSFUL:
+            return {
+                ...state,
+                ...action.data,
+            }
+
         default:
             return state;
     }

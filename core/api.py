@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from core import serializers
 from core.forms import PasswordRecoveryForm
 from core.models import Task, Tag, Project, User, Company
-from core.models.company import CompanyUser
 from core.paginators import TasksPagination
 
 
@@ -24,9 +23,13 @@ class RegistrationAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
+        company = user.companies.first()
+        self.request.session['current_company_id'] = company.pk if company else None
+
         return Response({
             "user": serializers.UserSerializer(user, context=self.get_serializer_context()).data,
-            "token": AuthToken.objects.create(user)[1]
+            "token": AuthToken.objects.create(user)[1],
+            'current_company_id': self.request.session['current_company_id'],
         })
 
 
@@ -101,9 +104,13 @@ class LoginAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
 
+        company = user.companies.first()
+        self.request.session['current_company_id'] = company.pk if company else None
+
         return Response({
             "user": serializers.UserSerializer(user, context=self.get_serializer_context()).data,
-            "token": AuthToken.objects.create(user)[1]
+            "token": AuthToken.objects.create(user)[1],
+            'current_company_id': self.request.session['current_company_id']
         })
 
 
@@ -278,4 +285,21 @@ class CompanyApi(generics.GenericAPIView):
         request.session['current_company_id'] = company.pk
         return Response({
             'success': True,
+        })
+
+
+class LeaveCompanyApi(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def post(self, request, *args, **kwarg):
+        company_id = request.data['company_id']
+        user = request.user
+        user.companies.remove(company_id)
+        if request.session.get('current_company_id') == company_id:
+            company = user.companies.first()
+            request.session['current_company_id'] = company.pk if company else None
+
+        return Response({
+            "user": serializers.UserSerializer(user, context=self.get_serializer_context()).data,
+            'current_company_id': request.session.get('current_company_id'),
         })

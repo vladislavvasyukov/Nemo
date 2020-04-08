@@ -1,5 +1,5 @@
 import C from '../constants';
-import { showErrorMessage, errorMessageToString } from '../utils';
+import { showSuccessMessage, showErrorMessage, errorMessageToString } from '../utils';
 
 export function addTaskShowModal() {
     return (dispatch) => {
@@ -312,6 +312,51 @@ export const saveUserProfile = (data, user_id) => {
                 } else {
                     dispatch({type: C.SAVE_PROFILE_FAILED, data: res.data});
                     showErrorMessage('Не удалось сохранить данные', errorMessageToString(res.data));
+                }
+            })
+    }
+}
+
+export const leaveCompany = (company_id) => {
+    return (dispatch, getState) => {
+        let headers = {
+            "Content-Type": "application/json",
+        };
+        const token = getState().auth.token;
+        console.log(token, company_id)
+
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+
+        let body = JSON.stringify({company_id});
+
+        return fetch('/api/leave_company/', {headers, body, method: "POST"})
+            .then(res => {
+                if (res.status < 500) {
+                    return res.json().then(data => {
+                        return {status: res.status, data};
+                    })
+                } else {
+                    console.log("Server Error!");
+                    throw res;
+                }
+            })
+            .then(res => {
+                if (res.status === 200) {
+                    console.log(res.data)
+                    let data = {
+                        current_company_id: res.data.current_company_id,
+                        user: {
+                            ...res.data.user
+                        }
+                    }
+                    dispatch({type: C.LEAVE_COMPANY_SUCCESSFUL, data: data });
+                    showSuccessMessage('Успешно!', 'Вы покинули компанию!');
+                    return res.data;
+                } else {
+                    dispatch({type: C.LEAVE_COMPANY_FAILED, data: res.data});
+                    showErrorMessage('Что-то пошло не так', errorMessageToString(res.data));
                 }
             })
     }

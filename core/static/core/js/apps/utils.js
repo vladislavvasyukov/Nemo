@@ -35,8 +35,12 @@ function showMessage(title, text, type) {
     })
 }
 
+export function showSuccessMessage(title, text) {
+    showMessage(title, text, 'success')
+}
+
 export function showErrorMessage(title, text) {
-    showMessage(title, text, 'error')
+    showMessage(title, text, 'error');
 }
 
 export function errorMessageToString(errors) {

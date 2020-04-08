@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, List, Icon } from 'semantic-ui-react';
 import swal from 'sweetalert2';
+import { task } from '../actions';
 import { errorMessageToString } from '../utils';
 
 
@@ -69,15 +70,9 @@ class Companies extends React.Component {
                     <List.Content floated='right'>
                         <Icon
                             style={{ cursor: 'pointer' }}
-                            name='edit'
-                            title='Редактировать'
-                            onClick={() => console.log(company.company_id)}
-                        />
-                        <Icon
-                            style={{ cursor: 'pointer' }}
                             name='delete'
                             title='Выйти из компании'
-                            onClick={() => console.log(company.company_id)}
+                            onClick={() => this.props.leaveCompany(company.company_id)}
                         />
                     </List.Content>
                     <List.Content style={{ fontSize: '18px', marginBottom: '10px' }}>
@@ -125,7 +120,9 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-    return {};
+    return {
+        leaveCompany: (company_id) => dispatch(task.leaveCompany(company_id))
+    };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Companies);
