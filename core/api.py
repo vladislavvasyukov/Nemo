@@ -1,4 +1,7 @@
+import json
+
 from django.contrib.auth.views import PasswordResetConfirmView
+from django.db.models import Q
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
@@ -172,9 +175,14 @@ class UserListApi(generics.ListAPIView):
 
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
-        return User.objects.filter(
-            name__icontains=q, companies=self.request.session.get('current_company_id'),
-        ).distinct()[:20]
+        with_limit = json.loads(self.request.query_params.get('with_limit', 'true'))
+
+        filters = Q(name__icontains=q, companies=self.request.session.get('current_company_id'),)
+
+        if with_limit:
+            return User.objects.filter(filters).distinct()[:20]
+        else:
+            return User.objects.filter(filters).distinct()
 
 
 class TaskRetrieveView(RetrieveModelMixin, viewsets.GenericViewSet):

@@ -64,6 +64,20 @@ class Companies extends React.Component {
         const { user} = this.props;
 
         let items = [];
+
+        items.push(
+            <List.Item>
+                <Button
+                    onClick={this.onCreateCompany}
+                    style={{ marginBottom: '15px' }}
+                    content='Добавить компанию'
+                    labelPosition='left'
+                    icon='edit'
+                    primary
+                />
+            </List.Item>
+        );
+
         user.companies.forEach((company) => {
             items.push(
                 <List.Item>
@@ -82,25 +96,10 @@ class Companies extends React.Component {
             )
         });
 
-        items.push(
-            <List.Item>
-                <Button
-                    onClick={this.onCreateCompany}
-                    style={{ marginTop: '15px' }}
-                    content='Добавить компанию'
-                    labelPosition='left'
-                    icon='edit'
-                    primary
-                />
-            </List.Item>
-        );
-
         return items;
     }
 
     render() {
-        const { user } = this.props;
-
         return (
             <div className="companies">
                 <h2>Компании</h2>

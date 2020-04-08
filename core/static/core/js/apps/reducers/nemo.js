@@ -11,6 +11,7 @@ const initialState = {
     num_pages_to_execute: 0,
 
     manager_tasks: [],
+    company_users: [],
     current_page_manager: 1,
     num_pages_manager: 0,
 

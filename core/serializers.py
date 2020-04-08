@@ -219,11 +219,16 @@ class ProjectSelectSerializer(BaseSelectSerializer):
 
 
 class UserSelectSerializer(BaseSelectSerializer):
+    avatar_url = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('key', 'text')
+        fields = ('key', 'text', 'avatar_url')
 
     @staticmethod
     def get_text(obj):
         return obj.name
+
+    @staticmethod
+    def get_avatar_url(obj):
+        return obj.avatar_url

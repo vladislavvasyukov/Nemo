@@ -6,6 +6,7 @@ import AddTask from './AddTask';
 import TaskList from './TaskList';
 import UserProfile from './UserProfile';
 import TaskDetail from './TaskDetail';
+import CompanyCard from './CompanyCard';
 import { Redirect } from "react-router-dom";
 import { Icon, Image, Menu, Segment, Sidebar, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react';
 import { showErrorMessage, errorMessageToString } from '../utils';
@@ -75,6 +76,16 @@ class TeamBase extends Component {
         return <ChildComponent />
     }
 
+    getCurrentCompanyName = () => {
+        const { user, current_company_id } = this.props;
+        let name = '';
+
+        if (user.companies) {
+            name = user.companies.find(company => company.company_id == current_company_id).company_name;
+        }
+        return name;
+    }
+
     render() {
         const {
             isAuthenticated, addTaskShowModal, addTaskHideModal, showModalAddTask, addTask, user, descriptionMode,
@@ -87,6 +98,7 @@ class TeamBase extends Component {
         if (!isAuthenticated) {
             return <Redirect to="/login" />
         }
+        const current_company_name = this.getCurrentCompanyName();
 
         return (
             <div>
@@ -136,6 +148,13 @@ class TeamBase extends Component {
                                 Мои задачи
                             </Button>
                         </Menu.Item>
+                        { current_company_name &&
+                            <Menu.Item as='a'>
+                                <Button onClick={() => this.setState({ component: CompanyCard })}>
+                                    { current_company_name }
+                                </Button>
+                            </Menu.Item>
+                        }
                         { user.is_superuser &&
                             <Menu.Item as='a'>
                                 <a href='/admin/'>Администрирование</a>

@@ -14,6 +14,7 @@ import Description from "./Description";
 import InfoTable from "./InfoTable";
 import RecoverPassword from "./RecoverPassword";
 import Companies from "./Companies";
+import CompanyCard from "./CompanyCard";
 
 
 export {
@@ -32,4 +33,5 @@ export {
     InfoTable,
     RecoverPassword,
     Companies,
+    CompanyCard,
 }

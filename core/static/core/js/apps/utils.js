@@ -1,13 +1,16 @@
 import swal from 'sweetalert2';
 
 
-function getOptions(input, href, callback) {
+function getOptions(input, href, callback, with_limit=true) {
     const token = localStorage.getItem("token");
     let headers = {
         "Content-Type": "application/json",
         "Authorization": `Token ${token}`,
     }
-    return fetch(`${href}?q=${input}`, {headers, credentials: 'same-origin'})
+
+    let url = `${href}?q=${input}`;
+
+    return fetch(`${href}?q=${input}&with_limit=${with_limit}`, {headers, credentials: 'same-origin'})
         .then((response) => {
             return response.json()
         }).then((json) => {
@@ -17,6 +20,7 @@ function getOptions(input, href, callback) {
                     key: j.key,
                     value: j.key,
                     text: j.text,
+                    avatar_url: j.avatar_url,
                 })
             }
             callback(data);
@@ -25,7 +29,7 @@ function getOptions(input, href, callback) {
 
 export const getTagOptions = (input, callback) => getOptions(input, '/api/tags/', callback);
 export const getProjectOptions = (input, callback) => getOptions(input, '/api/projects/', callback);
-export const getUserOptions = (input, callback) => getOptions(input, '/api/users/', callback);
+export const getUserOptions = (input, callback, with_limit=true) => getOptions(input, '/api/users/', callback, with_limit);
 
 function showMessage(title, text, type) {
     swal.fire({
