@@ -223,3 +223,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SITE_DISPLAY_NAME = 'NEMO'
+DEFAULT_AVATAR_URL = f'{MEDIA_URL}default_avatar.png'

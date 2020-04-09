@@ -12,7 +12,6 @@
 10) Think about XLSX-reports
 11) Some pages with statistics
 12) ~~Companies Component~~
-13) Clear session during logout
-14) Pagination and search in employee list
-15) Default avatar
-16) Popover with employee contacts
+13) Pagination and search in employee list
+14) ~~Default avatar~~
+15) ~~Modal with employee contacts~~

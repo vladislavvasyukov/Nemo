@@ -175,14 +175,9 @@ class UserListApi(generics.ListAPIView):
 
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
-        with_limit = json.loads(self.request.query_params.get('with_limit', 'true'))
 
         filters = Q(name__icontains=q, companies=self.request.session.get('current_company_id'),)
-
-        if with_limit:
-            return User.objects.filter(filters).distinct()[:20]
-        else:
-            return User.objects.filter(filters).distinct()
+        return User.objects.filter(filters).distinct()[:20]
 
 
 class TaskRetrieveView(RetrieveModelMixin, viewsets.GenericViewSet):
@@ -311,3 +306,11 @@ class LeaveCompanyApi(generics.GenericAPIView):
             "user": serializers.UserSerializer(user, context=self.get_serializer_context()).data,
             'current_company_id': request.session.get('current_company_id'),
         })
+
+
+class CompanyUserListApi(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializers.UserSerializer
+
+    def get_queryset(self):
+        return User.objects.filter(companies=self.request.session.get('current_company_id')).distinct()

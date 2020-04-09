@@ -5,4 +5,3 @@ test_settings.py
 node_modules/
 .coverage
 htmlcov
-media

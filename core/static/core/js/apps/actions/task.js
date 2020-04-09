@@ -344,7 +344,6 @@ export const leaveCompany = (company_id) => {
             })
             .then(res => {
                 if (res.status === 200) {
-                    console.log(res.data)
                     let data = {
                         current_company_id: res.data.current_company_id,
                         user: {

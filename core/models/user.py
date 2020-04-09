@@ -1,8 +1,8 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
-from django.core.validators import RegexValidator
 
 from core.managers import UserManager
 
@@ -37,4 +37,4 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def avatar_url(self):
-        return self.avatar.url if self.avatar else ''
+        return self.avatar.url if self.avatar else settings.DEFAULT_AVATAR_URL
