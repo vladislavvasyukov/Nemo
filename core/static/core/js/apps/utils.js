@@ -63,3 +63,55 @@ export function errorMessageToString(errors) {
     }
     return errorMessage
 }
+
+export function swalRequest(title, input_type, confirmButtonText, url, field_name, user, token, callback) {
+    swal.fire({
+        title: title,
+        input: input_type,
+        inputAttributes: {
+            autocapitalize: 'off'
+        },
+        showCancelButton: true,
+        confirmButtonText: confirmButtonText,
+        cancelButtonText: 'Отмена',
+        showLoaderOnConfirm: true,
+        preConfirm: (value) => {
+            let headers = {
+                "Content-Type": "application/json",
+            };
+
+            if (token) {
+                headers["Authorization"] = `Token ${token}`;
+            }
+            let body = JSON.stringify({[field_name]: value, creator_id: user.pk});
+
+            return fetch(url, {headers, body, method: "POST" })
+                .then(res => {
+                    if (res.status < 500) {
+                        return res.json().then(data => {
+                            return {status: res.status, data};
+                        })
+                    } else {
+                        swal.showValidationMessage('Ошибка');
+                    }
+                })
+                .then(res => {
+                    if (res.status === 200) {
+                        if (res.data.success) {
+                            callback();
+                        } else {
+                            swal.showValidationMessage(`Ошибка: ${errorMessageToString(res.data.message)}`);
+                        }
+                    } else {
+                        swal.showValidationMessage('Ошибка');
+                    }
+                })
+                .catch(error => {
+                    swal.showValidationMessage(`Ошибка: ${error}`);
+                })
+        },
+        allowOutsideClick: () => !swal.isLoading()
+    }).then((result) => {
+        showSuccessMessage('Успешо!', '');
+    })
+}

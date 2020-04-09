@@ -12,7 +12,7 @@ from rest_framework.response import Response
 
 from core import serializers
 from core.forms import PasswordRecoveryForm
-from core.models import Task, Tag, Project, User, Company
+from core.models import Task, Tag, Project, User, Company, Email
 from core.paginators import TasksPagination
 
 
@@ -289,6 +289,33 @@ class CompanyApi(generics.GenericAPIView):
         return Response({
             'success': True,
         })
+
+
+class InviteUserView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def post(self, request, *args, **kwargs):
+        email = request.data['email']
+        try:
+            user = User.objects.get(email__iexact=email, is_active=True)
+            company = Company.objects.get(pk=request.session['current_company_id'])
+            user.companies.add(company)
+            Email.objects.create_from_tpl(
+                "core/emails/invitation.html",
+                {
+                    'company': company
+                },
+                f"Приглашение в компанию {company.name}",
+                [email]
+            )
+            return Response({
+                'success': True,
+            })
+        except User.DoesNotExist:
+            return Response({
+                'success': False,
+                'message': "Извините, пользователь с указанным email-ом не обнаружен."
+            })
 
 
 class LeaveCompanyApi(generics.GenericAPIView):

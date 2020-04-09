@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { task, auth } from '../actions';
 import { Button, Image, List, Modal, Icon } from 'semantic-ui-react';
-import {getUserOptions} from '../utils';
+import swal from 'sweetalert2';
+import {swalRequest} from '../utils';
 
 
 class ModalUserCard extends Component {
@@ -56,30 +57,49 @@ class CompanyCard extends Component {
         }
 
         return fetch('/api/get_company_users/', {headers})
-        .then((response) => {
-            return response.json()
-        }).then((company_users) => {
-            this.setState({company_users});
-        });
+            .then((response) => {
+                return response.json()
+            }).then((company_users) => {
+                this.setState({company_users});
+            });
+    }
+
+    onInviteUser = () => {
+        const { token, user, current_company_id } = this.props;
+        swalRequest(
+            'Введите email пользователя',
+            'email',
+            'Пригласить',
+            "/api/invite_user/",
+            'email',
+            user,
+            token,
+            (() => console.log()),
+        )
     }
 
     getItems = () => {
         const { company_users} = this.state;
+        const { user, current_company_id } = this.props;
 
         let items = [];
 
-        items.push(
-            <List.Item>
-                <Button
-                    onClick={() => console.log('welcome')}
-                    style={{ marginBottom: '15px' }}
-                    content='Пригласить пользователей'
-                    labelPosition='left'
-                    icon='edit'
-                    primary
-                />
-            </List.Item>
-        );
+        const current_company = user.companies.find(company => company.company_id == current_company_id);
+
+        if (current_company.is_admin) {
+            items.push(
+                <List.Item>
+                    <Button
+                        onClick={this.onInviteUser}
+                        style={{ marginBottom: '15px' }}
+                        content='Пригласить пользователей'
+                        labelPosition='left'
+                        icon='edit'
+                        primary
+                    />
+                </List.Item>
+            );
+        }
 
         company_users.forEach((user) => {
             items.push(<ModalUserCard user={user} />)
@@ -103,6 +123,8 @@ class CompanyCard extends Component {
 const mapStateToProps = state => {
     return {
         token: state.auth.token,
+        user: state.auth.user,
+        current_company_id: state.auth.current_company_id,
     };
 }
 

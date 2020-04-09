@@ -3,61 +3,23 @@ import { connect } from 'react-redux';
 import { Button, List, Icon } from 'semantic-ui-react';
 import swal from 'sweetalert2';
 import { task } from '../actions';
-import { errorMessageToString } from '../utils';
+import { swalRequest } from '../utils';
 
 
 class Companies extends React.Component {
 
     onCreateCompany = () => {
         const { token, user } = this.props;
-
-        swal.fire({
-            title: 'Введите название компании',
-            input: 'text',
-            inputAttributes: {
-                autocapitalize: 'off'
-            },
-            showCancelButton: true,
-            confirmButtonText: 'Добавить',
-            cancelButtonText: 'Отмена',
-            showLoaderOnConfirm: true,
-            preConfirm: (name) => {
-                let headers = {
-                    "Content-Type": "application/json",
-                };
-
-                if (token) {
-                    headers["Authorization"] = `Token ${token}`;
-                }
-                let body = JSON.stringify({name: name, creator_id: user.pk});
-
-                return fetch("/api/create_company/", {headers, body, method: "POST" })
-                    .then(res => {
-                        if (res.status < 500) {
-                            return res.json().then(data => {
-                                return {status: res.status, data};
-                            })
-                        } else {
-                            swal.showValidationMessage('Ошибка');
-                        }
-                    })
-                    .then(res => {
-                        if (res.status === 200) {
-                            if (res.data.success) {
-                                location.href = location.href;
-                            } else {
-                                swal.showValidationMessage(`Ошибка: ${errorMessageToString(res.data.message)}`);
-                            }
-                        } else {
-                            swal.showValidationMessage('Ошибка');
-                        }
-                    })
-                    .catch(error => {
-                        swal.showValidationMessage(`Ошибка: ${error}`);
-                    })
-            },
-            allowOutsideClick: () => !swal.isLoading()
-        })
+        swalRequest(
+            'Введите название компании',
+            'text',
+            'Создать',
+            "/api/create_company/",
+            'name',
+            user,
+            token,
+            (() => location.href = location.href),
+        )
     }
 
     getItems = () => {

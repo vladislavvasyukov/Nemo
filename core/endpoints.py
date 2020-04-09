@@ -31,6 +31,7 @@ urlpatterns = [
     path('password_reset/complete/', api.RecoverSuccessView.as_view(), name='password_reset_complete'),
     path('change_current_company/', api.ChangeCurrentCompanyView.as_view(), name='change_current_company'),
     path('create_company/', api.CompanyApi.as_view(), name='create-company'),
+    path('invite_user/', api.InviteUserView.as_view(), name='invite-user'),
     path('leave_company/', api.LeaveCompanyApi.as_view(), name='leave_company'),
     path('get_company_users/', api.CompanyUserListApi.as_view(), name='get_company_users'),
 ]
