@@ -16,3 +16,5 @@
 14) ~~Default avatar~~
 15) ~~Modal with employee contacts~~
 16) Changing company name
+17) ~~WorkTimeEditModal~~
+18) Individual task url

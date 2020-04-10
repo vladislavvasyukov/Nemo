@@ -34,4 +34,5 @@ urlpatterns = [
     path('invite_user/', api.InviteUserView.as_view(), name='invite-user'),
     path('leave_company/', api.LeaveCompanyApi.as_view(), name='leave_company'),
     path('get_company_users/', api.CompanyUserListApi.as_view(), name='get_company_users'),
+    path('add_work_hours/', api.WorkHoursView.as_view(), name='add_work_hours'),
 ]

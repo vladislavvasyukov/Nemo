@@ -98,6 +98,14 @@ export default function nemo(state=initialState, action) {
                 task: action.data,
             }
 
+        case C.ADD_WORK_HOURS_SUCCESSFUL:
+            return {
+                ...state,
+                task: {
+                    ...action.data.task,
+                }
+            }
+
         default:
             return state;
     }

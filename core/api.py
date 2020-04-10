@@ -1,9 +1,10 @@
-import json
+from datetime import timedelta, datetime
 
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.db.models import Q
 from django.http import JsonResponse
 from django.urls import reverse_lazy
+from django.utils.dateparse import parse_datetime
 from django.views.generic import TemplateView
 from knox.models import AuthToken
 from rest_framework import permissions, generics, viewsets
@@ -13,7 +14,9 @@ from rest_framework.response import Response
 from core import serializers
 from core.forms import PasswordRecoveryForm
 from core.models import Task, Tag, Project, User, Company, Email
+from core.models.task import TaskNegativeTotalWorkTimeError
 from core.paginators import TasksPagination
+from core.utils import get_real_true_false
 
 
 class RegistrationAPI(generics.GenericAPIView):
@@ -341,3 +344,29 @@ class CompanyUserListApi(generics.ListAPIView):
 
     def get_queryset(self):
         return User.objects.filter(companies=self.request.session.get('current_company_id')).distinct()
+
+
+class WorkHoursView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def post(self, request, *args, **kwarg):
+        h = int(request.data['hours'])
+        m = int(request.data['minutes'])
+        text = request.data['comment']
+
+        work_date = request.data.get('work_date')
+        work_date = parse_datetime(work_date) if work_date else datetime.today()
+
+        minus_work_time = get_real_true_false(request.data['minus_work_time'])
+
+        work_time = timedelta(hours=h, minutes=m)
+
+        task = Task.objects.get(pk=request.data['task_id'])
+
+        try:
+            task.add_work_time(request.user, work_date, text, work_time, minus_work_time=minus_work_time)
+            return Response({
+                'task': serializers.TaskSerializer(task, context=self.get_serializer_context()).data,
+            })
+        except TaskNegativeTotalWorkTimeError as e:
+            return Response({'message': str(e)}, status=400)

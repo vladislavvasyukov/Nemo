@@ -8,7 +8,9 @@ import InfoTable from "./InfoTable";
 export default class TaskDetail extends Component {
 
     getPanes() {
-        const { task, createComment, toggleDescriptionMode, descriptionMode, saveDescription } = this.props;
+        const {
+            task, createComment, toggleDescriptionMode, descriptionMode, saveDescription, addWorkHours,
+        } = this.props;
         const comments = task.comments || [];
         return [
             {
@@ -26,6 +28,7 @@ export default class TaskDetail extends Component {
                 render: () => <Tab.Pane attached={false}>
                                   <InfoTable
                                       task={task}
+                                      addWorkHours={addWorkHours}
                                   />
                               </Tab.Pane>,
             },

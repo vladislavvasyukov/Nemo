@@ -90,7 +90,7 @@ class TeamBase extends Component {
         const {
             isAuthenticated, addTaskShowModal, addTaskHideModal, showModalAddTask, addTask, user, descriptionMode,
             getTasksToExecute, isLoading, createComment, task, toggleDescriptionMode, saveDescription,
-            current_company_id,
+            current_company_id, addWorkHours,
         } = this.props;
         const { component } = this.state;
         let { CurrentComponent } = this;
@@ -175,6 +175,7 @@ class TeamBase extends Component {
                                         descriptionMode={descriptionMode}
                                         toggleDescriptionMode={toggleDescriptionMode}
                                         saveDescription={saveDescription}
+                                        addWorkHours={addWorkHours}
                                     />
                                 }
                             </div>
@@ -208,6 +209,7 @@ const mapDispatchToProps = dispatch => {
         getTasksToExecute: () => dispatch(task.getTasksToExecute()),
         toggleDescriptionMode: () => dispatch(task.toggleDescriptionMode()),
         saveDescription: (description, task_id) => dispatch(task.saveDescription(description, task_id)),
+        addWorkHours: (data) => dispatch(task.addWorkHours(data)),
     };
 }
 

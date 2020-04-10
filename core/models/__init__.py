@@ -6,3 +6,4 @@ from .email import Email, EmailAttachment
 from .task import Task
 from .comment import Comment
 from .notification import Notification
+from .work_time_history import WorkTimeHistory

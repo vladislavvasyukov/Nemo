@@ -37,3 +37,11 @@ def get_uniq_filename(filename):
     if ext:
         new_name += f".{ext}"
     return new_name
+
+def get_real_true_false(value):
+    if value == 'False':
+        return False
+    elif value == 'True':
+        return True
+    else:
+        return value

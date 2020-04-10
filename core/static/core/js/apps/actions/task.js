@@ -323,7 +323,6 @@ export const leaveCompany = (company_id) => {
             "Content-Type": "application/json",
         };
         const token = getState().auth.token;
-        console.log(token, company_id)
 
         if (token) {
             headers["Authorization"] = `Token ${token}`;
@@ -356,6 +355,43 @@ export const leaveCompany = (company_id) => {
                 } else {
                     dispatch({type: C.LEAVE_COMPANY_FAILED, data: res.data});
                     showErrorMessage('Что-то пошло не так', errorMessageToString(res.data));
+                }
+            })
+    }
+}
+
+export const addWorkHours = (data) => {
+    return (dispatch, getState) => {
+        let headers = {
+            "Content-Type": "application/json",
+        };
+        const token = getState().auth.token;
+
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+
+        let body = JSON.stringify({...data});
+
+        return fetch('/api/add_work_hours/', {headers, body, method: "POST"})
+            .then(res => {
+                if (res.status < 500) {
+                    return res.json().then(data => {
+                        return {status: res.status, data};
+                    })
+                } else {
+                    console.log("Server Error!");
+                    throw res;
+                }
+            })
+            .then(res => {
+                if (res.status === 200) {
+                    dispatch({type: C.ADD_WORK_HOURS_SUCCESSFUL, data: res.data });
+                    showSuccessMessage('Успешно!', '');
+                    return res.data;
+                } else {
+                    dispatch({type: C.ADD_WORK_HOURS_FAILED, data: res.data});
+                    showErrorMessage('Что-то пошло не так', errorMessageToString(res.data.message));
                 }
             })
     }

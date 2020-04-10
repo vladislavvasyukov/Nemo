@@ -1,8 +1,32 @@
-from django.db import models
+from django.db import models, transaction
+from django.db.models import Sum
 from django.utils.translation import ugettext_lazy as _
 from djchoices import DjangoChoices, ChoiceItem
 
 from model_utils.models import TimeStampedModel
+
+
+class TaskNegativeTotalWorkTimeError(Exception):
+    def __init__(self, work_hours=None):
+        total_seconds = (work_hours or 0.0)*3600.0
+        negative = total_seconds < 0
+        if negative:
+            total_seconds = -total_seconds
+        seconds = total_seconds % 60
+        minutes = total_seconds // 60 % 60
+        hours = total_seconds // 3600
+
+        time_str = " минус" if negative else ""
+        if hours > 0:
+            time_str += " {:.0f} ч".format(hours)
+        if minutes > 0:
+            time_str += " {:.0f} мин".format(minutes)
+        if not hours and not minutes:
+            time_str += " {:.0f} с".format(seconds)
+
+        message = 'Суммарное время сотрудника не может быть отрицательным:{}'.format(time_str)
+
+        super(TaskNegativeTotalWorkTimeError, self).__init__(message)
 
 
 class Task(TimeStampedModel):
@@ -55,3 +79,27 @@ class Task(TimeStampedModel):
 
     def __str__(self):
         return self.title
+
+    def add_work_time(self, user, work_date, text, work_time, minus_work_time=False):
+        work_hours = work_time.total_seconds() / 3600.0 * (-1.0 if minus_work_time else 1.0)
+
+        with transaction.atomic():
+            self.work_time_history.create(
+                user=user,
+                work_date=work_date,
+                text=text,
+                work_hours=work_hours,
+                minus_work_time=minus_work_time
+            )
+            self.ensure_non_negative_work_time(user)
+            self.work_hours = self.work_time_history.aggregate(work_hours=Sum('work_hours'))['work_hours'] or 0
+            self.save()
+
+    def ensure_non_negative_work_time(self, user):
+        user_work_hours = self.work_time_history.filter(
+            user=user,
+        ).aggregate(
+            work_hours=Sum('work_hours')
+        )['work_hours'] or 0
+        if user_work_hours < 0 < round(abs(user_work_hours * 3600.0)):
+            raise TaskNegativeTotalWorkTimeError(user_work_hours)
