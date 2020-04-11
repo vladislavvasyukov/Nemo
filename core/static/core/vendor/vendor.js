@@ -9,3 +9,4 @@ import 'react-redux';
 import 'redux';
 import 'redux-thunk';
 import 'react-bootstrap';
+import 'tinymce';

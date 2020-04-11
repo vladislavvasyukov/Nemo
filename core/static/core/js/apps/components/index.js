@@ -15,6 +15,7 @@ import InfoTable from "./InfoTable";
 import RecoverPassword from "./RecoverPassword";
 import Companies from "./Companies";
 import CompanyCard from "./CompanyCard";
+import TinyEditorComponent from "./TinyEditorComponent";
 
 
 export {
@@ -34,4 +35,5 @@ export {
     RecoverPassword,
     Companies,
     CompanyCard,
+    TinyEditorComponent,
 }

@@ -18,3 +18,4 @@
 16) Changing company name
 17) ~~WorkTimeEditModal~~
 18) Individual task url
+19) Tag Modal Window

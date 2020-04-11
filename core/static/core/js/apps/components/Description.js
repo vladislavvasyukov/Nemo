@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Form } from 'semantic-ui-react';
+import TinyEditorComponent from "./TinyEditorComponent";
 
 export default class Description extends Component {
     constructor(props) {
@@ -37,11 +38,12 @@ export default class Description extends Component {
                     descriptionMode
                         ?
                         <Form reply>
-                            <Form.TextArea
-                                onChange={e => this.setState({text: e.target.value})}
+                            <TinyEditorComponent
+                                id={'id' + (new Date()).getTime()}
+                                className='quill-max-height-50vh'
+                                name='description'
                                 value={text}
-                                style={{ minHeight: 300 }}
-                                required
+                                onChange={text => this.setState({text})}
                             />
                             <Button
                                 onClick={this.onSaveDescription.bind(this)}
@@ -52,9 +54,7 @@ export default class Description extends Component {
                             />
                         </Form>
                         :
-                        <div>
-                            {this.props.task.description}
-                        </div>
+                        <div dangerouslySetInnerHTML={{__html: this.props.task.description}}/>
                 }
                 </div>
             </div>
