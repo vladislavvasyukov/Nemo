@@ -16,6 +16,8 @@ import {
     MainPage,
     TeamBase,
     RecoverPassword,
+    TaskList,
+    ProjectList,
 } from "./components";
 
 
@@ -38,14 +40,22 @@ class RootContainerComponent extends Component {
         }} />
     }
 
+    MyRoute = ({component: ChildComponent, ...props}) => {
+        return <ChildComponent {...props} />
+    }
+
     render() {
-        let { LoadingRoute } = this;
+        let { LoadingRoute, MyRoute } = this;
 
         return (
             <BrowserRouter>
                 <Switch>
                     <LoadingRoute exact path="/" component={MainPage} />
+
                     <Route exact path="/team" component={TeamBase} />
+                    <MyRoute exact path="/team/tasks" component={TeamBase} initial={TaskList} />
+                    <MyRoute exact path="/team/projects" component={TeamBase} initial={ProjectList} />
+
                     <Route exact path="/register" component={SignUpForm} />
                     <Route exact path="/login" component={SignInForm} />
                     <Route exact path="/recover" component={RecoverPassword} />

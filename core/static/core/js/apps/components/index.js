@@ -18,6 +18,7 @@ import CompanyCard from "./CompanyCard";
 import TinyEditorComponent from "./TinyEditorComponent";
 import WorkTimeEditModal from "./WorkTimeEditModal";
 import TaskAddForm from "./TaskAddForm";
+import ProjectList from "./ProjectList";
 
 export {
     Menu, 
@@ -39,4 +40,5 @@ export {
     TinyEditorComponent,
     WorkTimeEditModal,
     TaskAddForm,
+    ProjectList,
 }

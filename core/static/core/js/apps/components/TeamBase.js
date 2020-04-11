@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { task } from '../actions';
 import AddTask from './AddTask';
 import TaskList from './TaskList';
+import ProjectList from './ProjectList';
 import UserProfile from './UserProfile';
 import TaskDetail from './TaskDetail';
 import CompanyCard from './CompanyCard';
@@ -17,7 +18,7 @@ class TeamBase extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            component: TaskList,
+            component: this.props.initial || TaskList,
         };
     }
 
@@ -143,7 +144,12 @@ class TeamBase extends Component {
                         </Menu.Item>
                         <Menu.Item as='a'>
                             <Button onClick={() => this.setState({ component: TaskList })}>
-                                Мои задачи
+                                Задачи
+                            </Button>
+                        </Menu.Item>
+                        <Menu.Item as='a'>
+                            <Button onClick={() => this.setState({ component: ProjectList })}>
+                                Проекты
                             </Button>
                         </Menu.Item>
                         { current_company_name &&
