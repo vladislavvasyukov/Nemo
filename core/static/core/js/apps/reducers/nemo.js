@@ -29,7 +29,6 @@ export default function nemo(state=initialState, action) {
             };
 
         case C.ADD_TASK_SUCCESSFUL:
-            console.log(action.data.task)
             return {
                 ...state,
                 task: {

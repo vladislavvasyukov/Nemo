@@ -81,7 +81,6 @@ export const register = (name, email, password, skype, telegram) => {
                 }
             })
             .then(res => {
-                console.log(res)
                 if (res.status === 200) {
                     dispatch({type: C.REGISTRATION_SUCCESSFUL, data: res.data });
                     return res.data;

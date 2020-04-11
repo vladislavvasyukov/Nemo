@@ -32,7 +32,6 @@ export default class RecoverPassword extends Component {
             })
             .then(res => {
                 if (res.status === 200) {
-                    console.log(res)
                     if (res.data.success) {
                         this.setState({success: true});
                     } else {

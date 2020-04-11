@@ -37,6 +37,7 @@ export const addTask = (data) => {
             headers["Authorization"] = `Token ${token}`;
         }
 
+        const task_id = data.task_id;
         let body = JSON.stringify({...data});
 
         return fetch("/api/create_task/", {headers, body, method: "POST"})
@@ -53,7 +54,7 @@ export const addTask = (data) => {
             .then(res => {
                 if (res.status === 200) {
                     dispatch({type: C.ADD_TASK_SUCCESSFUL, data: res.data });
-                    showSuccessMessage('Успешно!', 'Задача создана');
+                    showSuccessMessage('Успешно!', task_id ? 'Изменения сохранены' : 'Задача создана');
                     return res.data;
                 } else {
                     dispatch({type: C.ADD_TASK_FAILED, data: res.data});
