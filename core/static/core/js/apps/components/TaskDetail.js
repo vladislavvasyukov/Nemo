@@ -3,13 +3,16 @@ import { Tab } from 'semantic-ui-react';
 import Comments from "./Comments";
 import Description from "./Description";
 import InfoTable from "./InfoTable";
+import { connect } from 'react-redux';
+import { task } from '../actions';
 
 
-export default class TaskDetail extends Component {
+class TaskDetail extends Component {
 
     getPanes() {
         const {
             task, createComment, toggleDescriptionMode, descriptionMode, saveDescription, addWorkHours,
+            addTaskShowToggle, taskEditMode, toggleTaskEditMode, addTask
         } = this.props;
         const comments = task.comments || [];
         return [
@@ -29,6 +32,10 @@ export default class TaskDetail extends Component {
                                   <InfoTable
                                       task={task}
                                       addWorkHours={addWorkHours}
+                                      addTaskShowToggle={addTaskShowToggle}
+                                      taskEditMode={taskEditMode}
+                                      toggleTaskEditMode={toggleTaskEditMode}
+                                      addTask={addTask}
                                   />
                               </Tab.Pane>,
             },
@@ -58,3 +65,25 @@ export default class TaskDetail extends Component {
         )
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        task: state.nemo.task,
+        descriptionMode: state.nemo.descriptionMode,
+        taskEditMode: state.nemo.taskEditMode,
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        createComment: (text, task_id) => dispatch(task.createComment(text, task_id)),
+        toggleDescriptionMode: () => dispatch(task.toggleDescriptionMode()),
+        toggleTaskEditMode: () => dispatch(task.toggleTaskEditMode()),
+        saveDescription: (description, task_id) => dispatch(task.saveDescription(description, task_id)),
+        addWorkHours: (data) => dispatch(task.addWorkHours(data)),
+        addTaskShowToggle: () => dispatch(task.addTaskShowToggle()),
+        addTask: (data) => dispatch(task.addTask(data)),
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TaskDetail);

@@ -1,7 +1,7 @@
 import swal from 'sweetalert2';
 
 
-function getOptions(input, href, callback) {
+function getOptions(input, href, callback, task_id=undefined) {
     const token = localStorage.getItem("token");
     let headers = {
         "Content-Type": "application/json",
@@ -9,8 +9,11 @@ function getOptions(input, href, callback) {
     }
 
     let url = `${href}?q=${input}`;
+    if (task_id) {
+        url += `&task_id=${task_id}`;
+    }
 
-    return fetch(`${href}?q=${input}`, {headers, credentials: 'same-origin'})
+    return fetch(url, {headers, credentials: 'same-origin'})
         .then((response) => {
             return response.json()
         }).then((json) => {
@@ -28,7 +31,7 @@ function getOptions(input, href, callback) {
 
 export const getTagOptions = (input, callback) => getOptions(input, '/api/tags/', callback);
 export const getProjectOptions = (input, callback) => getOptions(input, '/api/projects/', callback);
-export const getUserOptions = (input, callback) => getOptions(input, '/api/users/', callback);
+export const getUserOptions = (input, callback, task_id=undefined) => getOptions(input, '/api/users/', callback, task_id);
 
 function showMessage(title, text, type) {
     swal.fire({

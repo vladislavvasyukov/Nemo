@@ -31,6 +31,33 @@ def test_create_task(client):
 
 
 @pytest.mark.django_db
+def test_update_task(client):
+    """
+    Тест изменения задачи
+    """
+
+    user1 = UserFactory()
+    token = AuthToken.objects.create(user1)[1]
+    task = TaskFactory()
+
+    data = {
+        'executor': task.executor.pk,
+        'manager': task.manager.pk,
+        'author': task.pk,
+        'title': 'text-task',
+        'project': task.project.pk,
+        'description': task.description,
+        'task_id': task.pk,
+    }
+
+    response = client.post(reverse('create-task'), data=data, HTTP_AUTHORIZATION=f'Token {token}')
+    task.refresh_from_db()
+
+    assert response.status_code == 200
+    assert task.title == data['title']
+
+
+@pytest.mark.django_db
 def test_create_comment(client):
     """
     Тест создания комментария

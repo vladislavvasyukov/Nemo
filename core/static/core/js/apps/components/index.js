@@ -16,7 +16,8 @@ import RecoverPassword from "./RecoverPassword";
 import Companies from "./Companies";
 import CompanyCard from "./CompanyCard";
 import TinyEditorComponent from "./TinyEditorComponent";
-
+import WorkTimeEditModal from "./WorkTimeEditModal";
+import TaskAddForm from "./TaskAddForm";
 
 export {
     Menu, 
@@ -36,4 +37,6 @@ export {
     Companies,
     CompanyCard,
     TinyEditorComponent,
+    WorkTimeEditModal,
+    TaskAddForm,
 }

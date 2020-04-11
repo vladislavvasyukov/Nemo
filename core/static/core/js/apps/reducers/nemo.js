@@ -16,27 +16,28 @@ const initialState = {
     num_pages_manager: 0,
 
     descriptionMode: false,
+    taskEditMode: false,
 };
 
 
 export default function nemo(state=initialState, action) {
     switch (action.type) {
-        case C.ADD_TASK_SHOW_MODAL:
+        case C.ADD_TASK_SHOW_TOGGLE:
             return {
                 ...state,
-                showModalAddTask: true,
-            };
-
-        case C.ADD_TASK_HIDE_MODAL:
-            return {
-                ...state,
-                showModalAddTask: false,
+                showModalAddTask: !state.showModalAddTask,
             };
 
         case C.ADD_TASK_SUCCESSFUL:
+            console.log(action.data.task)
             return {
                 ...state,
-                ...action.data,
+                task: {
+                    ...action.data.task,
+                },
+                showModalAddTask: false,
+                taskEditMode: false,
+                descriptionMode: false,
             }
 
         case C.ADD_TASK_FAILED:
@@ -89,6 +90,12 @@ export default function nemo(state=initialState, action) {
             return {
                 ...state,
                 descriptionMode: !state.descriptionMode,
+            }
+
+        case C.TASK_EDIT_MODE_TOGGLE:
+            return {
+                ...state,
+                taskEditMode: !state.taskEditMode,
             }
 
         case C.SAVE_DESCRIPTION_SUCCESSFUL:

@@ -1,7 +1,7 @@
 from datetime import timedelta, datetime
 
 from django.contrib.auth.views import PasswordResetConfirmView
-from django.db.models import Q
+from django.db.models import Q, Case, When, IntegerField
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.utils.dateparse import parse_datetime
@@ -56,18 +56,26 @@ class CreateTaskApi(generics.GenericAPIView):
 
         data['tags'] = tag_ids
         data['author'] = request.user.pk
-        serializer = self.get_serializer(data=data)
+        task_id = data.get('task_id')
+        if task_id:
+            task = Task.objects.get(pk=task_id)
+            serializer = self.get_serializer(task, data=data)
+        else:
+            serializer = self.get_serializer(data=data)
+
         serializer.is_valid(raise_exception=True)
         task = serializer.save()
 
+        task.tags.clear()
         for tag in Tag.objects.filter(pk__in=data['tags']):
             task.tags.add(tag)
 
+        task.participants.clear()
         for user in User.objects.filter(pk__in=data.get('participants', [])):
             task.participants.add(user)
 
         return Response({
-            "task": serializers.TaskSerializerShort(task, context=self.get_serializer_context()).data,
+            "task": serializers.TaskSerializer(task, context=self.get_serializer_context()).data,
         })
 
 
@@ -180,7 +188,21 @@ class UserListApi(generics.ListAPIView):
         q = self.request.query_params.get('q', '')
 
         filters = Q(name__icontains=q, companies=self.request.session.get('current_company_id'),)
-        return User.objects.filter(filters).distinct()[:20]
+        users = User.objects.filter(filters).distinct()
+
+        task_id = self.request.query_params.get('task_id')
+        if task_id:
+            try:
+                task = Task.objects.get(pk=task_id)
+                task_user_ids = task.members_pks
+                users = users.annotate(
+                    is_member=Case(When(pk__in=task_user_ids, then=0), default=1, output_field=IntegerField())
+                )
+                users = users.order_by('is_member')
+            except Task.DoesNotExist:
+                pass
+
+        return users[:20]
 
 
 class TaskRetrieveView(RetrieveModelMixin, viewsets.GenericViewSet):

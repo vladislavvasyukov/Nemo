@@ -80,6 +80,12 @@ class Task(TimeStampedModel):
     def __str__(self):
         return self.title
 
+    @property
+    def members_pks(self):
+        participant_pks = self.participants.values_list('pk', flat=True)
+        all_user_ids = set(participant_pks) | {self.author_id, self.manager_id, self.executor_id} - {None}
+        return all_user_ids
+
     def add_work_time(self, user, work_date, text, work_time, minus_work_time=False):
         work_hours = work_time.total_seconds() / 3600.0 * (-1.0 if minus_work_time else 1.0)
 

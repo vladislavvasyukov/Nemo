@@ -88,9 +88,8 @@ class TeamBase extends Component {
 
     render() {
         const {
-            isAuthenticated, addTaskShowModal, addTaskHideModal, showModalAddTask, addTask, user, descriptionMode,
-            getTasksToExecute, isLoading, createComment, task, toggleDescriptionMode, saveDescription,
-            current_company_id, addWorkHours,
+            isAuthenticated, addTaskShowToggle, showModalAddTask, addTask, user, getTasksToExecute, isLoading,
+            current_company_id
         } = this.props;
         const { component } = this.state;
         let { CurrentComponent } = this;
@@ -137,8 +136,7 @@ class TeamBase extends Component {
                         </Menu.Item>
                         <Menu.Item as='a'>
                             <AddTask
-                                addTaskShowModal={addTaskShowModal}
-                                addTaskHideModal={addTaskHideModal}
+                                addTaskShowToggle={addTaskShowToggle}
                                 showModalAddTask={showModalAddTask}
                                 addTask={addTask}
                             />
@@ -169,14 +167,7 @@ class TeamBase extends Component {
                                     <CurrentComponent component={component} />
                                 </div>
                                 {component == TaskList &&
-                                    <TaskDetail
-                                        task={task}
-                                        createComment={createComment}
-                                        descriptionMode={descriptionMode}
-                                        toggleDescriptionMode={toggleDescriptionMode}
-                                        saveDescription={saveDescription}
-                                        addWorkHours={addWorkHours}
-                                    />
+                                    <TaskDetail />
                                 }
                             </div>
                         </Segment>
@@ -192,9 +183,7 @@ const mapStateToProps = state => {
         isAuthenticated: state.auth.isAuthenticated,
         isLoading: state.nemo.isLoading,
         user: state.auth.user,
-        task: state.nemo.task,
         showModalAddTask: state.nemo.showModalAddTask,
-        descriptionMode: state.nemo.descriptionMode,
         current_company_id: state.auth.current_company_id,
         token: state.auth.token,
     };
@@ -202,14 +191,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        addTaskShowModal: () => dispatch(task.addTaskShowModal()),
-        addTaskHideModal: () => dispatch(task.addTaskHideModal()),
+        addTaskShowToggle: () => dispatch(task.addTaskShowToggle()),
         addTask: (data) => dispatch(task.addTask(data)),
-        createComment: (text, task_id) => dispatch(task.createComment(text, task_id)),
         getTasksToExecute: () => dispatch(task.getTasksToExecute()),
-        toggleDescriptionMode: () => dispatch(task.toggleDescriptionMode()),
-        saveDescription: (description, task_id) => dispatch(task.saveDescription(description, task_id)),
-        addWorkHours: (data) => dispatch(task.addWorkHours(data)),
+
     };
 }
 

@@ -1,18 +1,10 @@
 import C from '../constants';
 import { showSuccessMessage, showErrorMessage, errorMessageToString } from '../utils';
 
-export function addTaskShowModal() {
+export function addTaskShowToggle() {
     return (dispatch) => {
         dispatch({
-            type: C.ADD_TASK_SHOW_MODAL
-        });
-    }
-}
-
-export function addTaskHideModal() {
-    return (dispatch) => {
-        dispatch({
-            type: C.ADD_TASK_HIDE_MODAL
+            type: C.ADD_TASK_SHOW_TOGGLE
         });
     }
 }
@@ -21,6 +13,14 @@ export function toggleDescriptionMode() {
     return (dispatch) => {
         dispatch({
             type: C.DESCRIPTION_EDIT_MODE_TOGGLE,
+        });
+    }
+}
+
+export function toggleTaskEditMode() {
+    return (dispatch) => {
+        dispatch({
+            type: C.TASK_EDIT_MODE_TOGGLE,
         });
     }
 }
@@ -53,6 +53,7 @@ export const addTask = (data) => {
             .then(res => {
                 if (res.status === 200) {
                     dispatch({type: C.ADD_TASK_SUCCESSFUL, data: res.data });
+                    showSuccessMessage('Успешно!', 'Задача создана');
                     return res.data;
                 } else {
                     dispatch({type: C.ADD_TASK_FAILED, data: res.data});
