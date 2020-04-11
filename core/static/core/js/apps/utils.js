@@ -118,3 +118,13 @@ export function swalRequest(title, input_type, confirmButtonText, url, field_nam
         showSuccessMessage('Успешо!', '');
     })
 }
+
+export function setLocation(curLoc) {
+    curLoc = location.origin + curLoc;
+    try {
+        history.pushState(null, null, curLoc);
+        return;
+    } catch (e) {
+
+    }
+}

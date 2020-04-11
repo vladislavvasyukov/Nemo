@@ -10,7 +10,7 @@ import TaskDetail from './TaskDetail';
 import CompanyCard from './CompanyCard';
 import { Redirect } from "react-router-dom";
 import { Icon, Image, Menu, Segment, Sidebar, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react';
-import { showErrorMessage, errorMessageToString } from '../utils';
+import { showErrorMessage, errorMessageToString, setLocation } from '../utils';
 
 
 class TeamBase extends Component {
@@ -120,7 +120,10 @@ class TeamBase extends Component {
                                     name='setting'
                                     className='icon-profile'
                                     title='Настройки'
-                                    onClick={() => this.setState({component: UserProfile})}
+                                    onClick={() => {
+                                        setLocation('/team/user_profile/');
+                                        this.setState({ component: UserProfile });
+                                    }}
                                 />
                             </span>
                         </Menu.Item>
@@ -143,12 +146,22 @@ class TeamBase extends Component {
                             />
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <Button onClick={() => this.setState({ component: TaskList })}>
+                            <Button
+                                onClick={() => {
+                                    setLocation('/team/tasks/');
+                                    this.setState({ component: TaskList });
+                                }}
+                            >
                                 Задачи
                             </Button>
                         </Menu.Item>
                         <Menu.Item as='a'>
-                            <Button onClick={() => this.setState({ component: ProjectList })}>
+                            <Button
+                                onClick={() => {
+                                    setLocation('/team/projects/');
+                                    this.setState({ component: ProjectList });
+                                }}
+                            >
                                 Проекты
                             </Button>
                         </Menu.Item>
