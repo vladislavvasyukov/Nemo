@@ -54,7 +54,9 @@ class RootContainerComponent extends Component {
                     <LoadingRoute exact path="/" component={MainPage} />
 
                     <Route exact path="/team" component={TeamBase} />
+                    <MyRoute exact path="/team/tasks/:task_id" component={TeamBase} initial={TaskList} />
                     <MyRoute exact path="/team/tasks/" component={TeamBase} initial={TaskList} />
+                    <MyRoute exact path="/team/projects/:project_id" component={TeamBase} initial={ProjectList} />
                     <MyRoute exact path="/team/projects/" component={TeamBase} initial={ProjectList} />
                     <MyRoute exact path="/team/user_profile/" component={TeamBase} initial={UserProfile} />
 

@@ -120,7 +120,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         logout: () => dispatch(auth.logout()),
-        getTask: (task_id) => dispatch(task.getTask(task_id)),
         avatarUpload: (form_data) => dispatch(task.avatarUpload(form_data)),
         saveUserProfile: (data, user_id) => dispatch(task.saveUserProfile(data, user_id)),
     };

@@ -28,10 +28,10 @@ export default class Description extends Component {
         return (
             <div>
                 <div>
-                        <Button
-                            content={descriptionMode ? 'Вернуться к просмотру' : 'Редактировать'}
-                            onClick={toggleDescriptionMode}
-                        />
+                    <Button
+                        content={descriptionMode ? 'Вернуться к просмотру' : 'Редактировать'}
+                        onClick={toggleDescriptionMode}
+                    />
                 </div>
                 <div style={{marginTop: '25px'}}>
                 {

@@ -9,6 +9,13 @@ import { task } from '../actions';
 
 class TaskDetail extends Component {
 
+    componentDidMount() {
+        const { task_id, getTask } = this.props;
+        if (task_id) {
+            getTask(task_id);
+        }
+    }
+
     getPanes() {
         const {
             task, createComment, toggleDescriptionMode, descriptionMode, saveDescription, addWorkHours,
@@ -83,6 +90,7 @@ const mapDispatchToProps = dispatch => {
         addWorkHours: (data) => dispatch(task.addWorkHours(data)),
         addTaskShowToggle: () => dispatch(task.addTaskShowToggle()),
         addTask: (data) => dispatch(task.addTask(data)),
+        getTask: (task_id) => dispatch(task.getTask(task_id)),
     };
 }
 

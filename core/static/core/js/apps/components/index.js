@@ -19,6 +19,9 @@ import TinyEditorComponent from "./TinyEditorComponent";
 import WorkTimeEditModal from "./WorkTimeEditModal";
 import TaskAddForm from "./TaskAddForm";
 import ProjectList from "./ProjectList";
+import ProjectDetail from "./ProjectDetail";
+import AddProject from "./AddProject";
+import ProjectEditForm from "./ProjectEditForm";
 
 export {
     Menu, 
@@ -41,4 +44,7 @@ export {
     WorkTimeEditModal,
     TaskAddForm,
     ProjectList,
+    ProjectDetail,
+    AddProject,
+    ProjectEditForm,
 }

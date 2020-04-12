@@ -5,6 +5,7 @@ import { task } from '../actions';
 import AddTask from './AddTask';
 import TaskList from './TaskList';
 import ProjectList from './ProjectList';
+import ProjectDetail from './ProjectDetail';
 import UserProfile from './UserProfile';
 import TaskDetail from './TaskDetail';
 import CompanyCard from './CompanyCard';
@@ -90,8 +91,10 @@ class TeamBase extends Component {
     render() {
         const {
             isAuthenticated, addTaskShowToggle, showModalAddTask, addTask, user, getTasksToExecute, isLoading,
-            current_company_id
+            current_company_id, computedMatch
         } = this.props;
+        const { task_id, project_id } = computedMatch ? computedMatch.params : {};
+
         const { component } = this.state;
         let { CurrentComponent } = this;
 
@@ -186,7 +189,10 @@ class TeamBase extends Component {
                                     <CurrentComponent component={component} />
                                 </div>
                                 {component == TaskList &&
-                                    <TaskDetail />
+                                    <TaskDetail task_id={task_id} />
+                                }
+                                {component == ProjectList &&
+                                    <ProjectDetail project_id={project_id} />
                                 }
                             </div>
                         </Segment>

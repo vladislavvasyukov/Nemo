@@ -8,12 +8,6 @@ from core.models.company import CompanyUser, Company
 User = get_user_model()
 
 
-class ProjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Project
-        fields = ('pk', 'name')
-
-
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
@@ -32,6 +26,14 @@ class UserSerializerShort(serializers.ModelSerializer):
         return obj.avatar_url
 
 
+class ProjectSerializerShort(serializers.ModelSerializer):
+    creator = UserSerializerShort()
+
+    class Meta:
+        model = Project
+        fields = ('pk', 'name', 'creator')
+
+
 class CompanySerializerShort(serializers.ModelSerializer):
     class Meta:
         model = Company
@@ -48,6 +50,16 @@ class CompanySerializerShort(serializers.ModelSerializer):
             is_admin=True,
         )
         return company
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    creator = UserSerializerShort()
+    company = CompanySerializerShort()
+    participants = UserSerializerShort(many=True)
+
+    class Meta:
+        model = Project
+        fields = ('pk', 'name', 'creator', 'participants', 'description', 'company')
 
 
 class CompanyUserSerializer(serializers.ModelSerializer):
@@ -108,7 +120,7 @@ class TaskSerializerShort(serializers.ModelSerializer):
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    project = ProjectSerializer()
+    project = ProjectSerializerShort()
     executor = UserSerializerShort()
     manager = UserSerializerShort()
     author = UserSerializerShort()
@@ -167,6 +179,14 @@ class CreateTaskSerializer(serializers.ModelSerializer):
         model = Task
         fields = (
             'pk', 'title', 'description', 'project', 'executor', 'manager', 'author', 'deadline', 'planned_work_hours',
+        )
+
+
+class CreateProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = (
+            'pk', 'name', 'description', 'company', 'creator',
         )
 
 

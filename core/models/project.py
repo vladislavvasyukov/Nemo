@@ -12,6 +12,19 @@ class Project(TimeStampedModel):
         null=True,
         blank=True,
     )
+    creator = models.ForeignKey(
+        'core.User',
+        verbose_name=_('Создатель'),
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+    )
+    description = models.TextField(_('Описание'), default='')
+    participants = models.ManyToManyField(
+        'core.User',
+        related_name='participate_projects',
+        verbose_name=_('Участники проекта'),
+    )
 
     class Meta:
         verbose_name = _('Проект')

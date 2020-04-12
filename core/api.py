@@ -15,7 +15,7 @@ from core import serializers
 from core.forms import PasswordRecoveryForm
 from core.models import Task, Tag, Project, User, Company, Email
 from core.models.task import TaskNegativeTotalWorkTimeError
-from core.paginators import TasksPagination
+from core.paginators import BasePagination
 from core.utils import get_real_true_false
 
 
@@ -76,6 +76,34 @@ class CreateTaskApi(generics.GenericAPIView):
 
         return Response({
             "task": serializers.TaskSerializer(task, context=self.get_serializer_context()).data,
+        })
+
+
+class CreateProjectApi(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = serializers.CreateProjectSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = {k: v for k, v in request.data.items()}
+        data['company'] = request.session.get('current_company_id')
+        data['creator'] = request.user.pk
+
+        project_id = data.get('project_id')
+        if project_id:
+            project = Project.objects.get(pk=project_id)
+            serializer = self.get_serializer(project, data=data)
+        else:
+            serializer = self.get_serializer(data=data)
+
+        serializer.is_valid(raise_exception=True)
+        project = serializer.save()
+
+        project.participants.clear()
+        for user in User.objects.filter(pk__in=data.get('participants', [])):
+            project.participants.add(user)
+
+        return Response({
+            "project": serializers.ProjectSerializer(project, context=self.get_serializer_context()).data,
         })
 
 
@@ -151,7 +179,7 @@ class UserAPI(generics.RetrieveAPIView):
 class TaskListViewSet(ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated, ]
     serializer_class = serializers.TaskSerializerShort
-    pagination_class = TasksPagination
+    pagination_class = BasePagination
 
     def get_queryset(self):
         if 'to_execute' in self.request.query_params:
@@ -160,6 +188,15 @@ class TaskListViewSet(ListModelMixin, viewsets.GenericViewSet):
             tasks = self.request.user.manager_tasks.filter(status__in=Task.WORK_STATUSES)
 
         return tasks.filter(project__company_id=self.request.session.get('current_company_id'))
+
+
+class ProjectListViewSet(ListModelMixin, viewsets.GenericViewSet):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = serializers.ProjectSerializerShort
+    pagination_class = BasePagination
+
+    def get_queryset(self):
+        return self.request.user.get_projects(self.request.session.get('current_company_id'))
 
 
 class TagListApi(generics.ListAPIView):
@@ -177,7 +214,8 @@ class ProjectListApi(generics.ListAPIView):
 
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
-        return Project.objects.filter(name__icontains=q, company_id=self.request.session.get('current_company_id'))[:20]
+        projects = self.request.user.get_projects(self.request.session.get('current_company_id'))
+        return projects.filter(name__icontains=q)[:20]
 
 
 class UserListApi(generics.ListAPIView):
@@ -210,6 +248,14 @@ class TaskRetrieveView(RetrieveModelMixin, viewsets.GenericViewSet):
     serializer_class = serializers.TaskSerializer
 
     queryset = Task.objects.all().select_related('executor', 'manager', 'author')
+
+
+class ProjectRetrieveView(RetrieveModelMixin, viewsets.GenericViewSet):
+    permission_classes = [permissions.IsAuthenticated, ]
+    serializer_class = serializers.ProjectSerializer
+
+    def get_queryset(self):
+        return self.request.user.get_projects(self.request.session.get('current_company_id'))
 
 
 class SaveDescription(generics.GenericAPIView):

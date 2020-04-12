@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
@@ -38,3 +39,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def avatar_url(self):
         return self.avatar.url if self.avatar else settings.DEFAULT_AVATAR_URL
+
+    def get_projects(self, company_id=None):
+        from core.models import Project
+        filters = Q(creator=self) | Q(participants=self)
+        if company_id:
+            filters &= Q(company_id=company_id)
+
+        return Project.objects.filter(filters).distinct()

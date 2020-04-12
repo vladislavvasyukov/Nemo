@@ -7,6 +7,8 @@ from . import api
 router = routers.DefaultRouter()
 router.register('tasks', api.TaskListViewSet, 'tasks')
 router.register('get_task', api.TaskRetrieveView, basename='get-task')
+router.register('projects', api.ProjectListViewSet, 'projects')
+router.register('get_project', api.ProjectRetrieveView, basename='get-project')
 
 
 urlpatterns = [
@@ -18,6 +20,7 @@ urlpatterns = [
     path("projects/", api.ProjectListApi.as_view(), name='api-projects-select'),
     path("users/", api.UserListApi.as_view(), name='api-users-select'),
     path("create_task/", api.CreateTaskApi.as_view(), name='create-task'),
+    path("create_project/", api.CreateProjectApi.as_view(), name='create-project'),
     path("create_comment/", api.CreateCommentApi.as_view(), name='create-comment'),
     path("save_description/", api.SaveDescription.as_view(), name='save-description'),
     path("avatar_upload/", api.AvatarUpload.as_view(), name='avatar-upload'),

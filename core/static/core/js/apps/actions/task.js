@@ -1,10 +1,18 @@
 import C from '../constants';
-import { showSuccessMessage, showErrorMessage, errorMessageToString } from '../utils';
+import { showSuccessMessage, showErrorMessage, errorMessageToString, setLocation } from '../utils';
 
 export function addTaskShowToggle() {
     return (dispatch) => {
         dispatch({
             type: C.ADD_TASK_SHOW_TOGGLE
+        });
+    }
+}
+
+export function addProjectShowToggle() {
+    return (dispatch) => {
+        dispatch({
+            type: C.ADD_PROJECT_SHOW_TOGGLE
         });
     }
 }
@@ -22,6 +30,53 @@ export function toggleTaskEditMode() {
         dispatch({
             type: C.TASK_EDIT_MODE_TOGGLE,
         });
+    }
+}
+
+export function toggleProjectEditMode() {
+    return (dispatch) => {
+        dispatch({
+            type: C.PROJECT_EDIT_MODE_TOGGLE,
+        });
+    }
+}
+
+export const saveProject = (data) => {
+    return (dispatch, getState) => {
+        let headers = {
+            "Content-Type": "application/json",
+        };
+        const token = getState().auth.token;
+
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+
+        const project_id = data.project_id;
+        let body = JSON.stringify({...data});
+
+        return fetch("/api/create_project/", {headers, body, method: "POST"})
+            .then(res => {
+                if (res.status < 500) {
+                    return res.json().then(data => {
+                        return {status: res.status, data};
+                    })
+                } else {
+                    console.log("Server Error!");
+                    throw res;
+                }
+            })
+            .then(res => {
+                if (res.status === 200) {
+                    dispatch({type: C.ADD_PROJECT_SUCCESSFUL, data: res.data });
+                    setLocation(`/team/projects/${res.data.project.pk}`);
+                    showSuccessMessage('Успешно!', project_id ? 'Изменения сохранены' : 'Проект создан');
+                    return res.data;
+                } else {
+                    dispatch({type: C.ADD_PROJECT_FAILED, data: res.data});
+                    showErrorMessage('Не удалось создать проект', errorMessageToString(res.data));
+                }
+            })
     }
 }
 
@@ -54,6 +109,7 @@ export const addTask = (data) => {
             .then(res => {
                 if (res.status === 200) {
                     dispatch({type: C.ADD_TASK_SUCCESSFUL, data: res.data });
+                    setLocation(`/team/tasks/${res.data.task.pk}`);
                     showSuccessMessage('Успешно!', task_id ? 'Изменения сохранены' : 'Задача создана');
                     return res.data;
                 } else {
@@ -97,9 +153,6 @@ export const getTaskList = (to_execute, page=1) => {
                         data.tasks_to_execute = results;
                         data.current_page_to_execute = current_page;
                         data.num_pages_to_execute = num_pages;
-
-                        const task_id = results[0] && results[0].id;
-                        dispatch(getTask(task_id));
                     } else {
                         data.manager_tasks = results;
                         data.current_page_manager = current_page;
@@ -109,6 +162,46 @@ export const getTaskList = (to_execute, page=1) => {
                     return res.data;
                 } else {
                     dispatch({type: C.GET_TASKS_FAILED, data: res.data});
+                    throw res.data;
+                }
+            });
+    }
+}
+
+export const getProjectList = (page=1) => {
+    return (dispatch, getState) => {
+        dispatch({type: C.GET_PROJECTS_REQUEST});
+        let headers = {
+            "Content-Type": "application/json",
+        };
+        const token = getState().auth.token;
+
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+
+        return fetch(`/api/projects/?page=${page}`, {headers})
+            .then((res) => {
+                if (res.status < 500) {
+                    return res.json().then(data => {
+                        return {status: res.status, data};
+                    });
+                } else {
+                    console.log(res)
+                }
+            })
+            .then(res => {
+                if (res.status == 200) {
+                    const {results, count, current_page, num_pages} = res.data;
+                    let data = {
+                        projects: results,
+                        current_project_page: current_page,
+                        projects_pages_number: num_pages,
+                    };
+                    dispatch({type: C.GET_PROJECTS_SUCCESSFUL, data});
+                    return res.data;
+                } else {
+                    dispatch({type: C.GET_PROJECTS_FAILED, data: res.data});
                     throw res.data;
                 }
             });
@@ -147,10 +240,54 @@ export const getTask = (task_id) => {
             })
             .then(res => {
                 if (res.status == 200) {
+                    setLocation(`/team/tasks/${task_id}`);
                     dispatch({type: C.GET_TASK_DETAIL_SUCCESSFUL, data: res.data});
                     return res.data;
                 } else {
                     dispatch({type: C.GET_TASK_DETAIL_FAILED, data: res.data});
+                    throw res.data;
+                }
+            });
+    }
+}
+
+export const getProject = (project_id) => {
+    return (dispatch, getState) => {
+
+        if (!project_id) {
+            const data = {
+                project: {},
+            }
+            dispatch({type: C.GET_PROJECT_DETAIL_SUCCESSFUL, data: data});
+            return data;
+        }
+
+        let headers = {
+            "Content-Type": "application/json",
+        };
+        const token = getState().auth.token;
+
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+
+        return fetch(`/api/get_project/${project_id}/`, {headers})
+            .then((res) => {
+                if (res.status < 500) {
+                    return res.json().then(data => {
+                        return {status: res.status, data};
+                    });
+                } else {
+                    console.log(res)
+                }
+            })
+            .then(res => {
+                if (res.status == 200) {
+                    setLocation(`/team/projects/${project_id}`);
+                    dispatch({type: C.GET_PROJECT_DETAIL_SUCCESSFUL, data: res.data});
+                    return res.data;
+                } else {
+                    dispatch({type: C.GET_PROJECT_DETAIL_FAILED, data: res.data});
                     throw res.data;
                 }
             });
