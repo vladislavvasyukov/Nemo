@@ -5,6 +5,7 @@ import {Form, FormGroup, Col} from 'react-bootstrap';
 import DatePicker from "react-datepicker";
 import Field from './Field';
 import {getTagOptions, getProjectOptions, getUserOptions} from '../utils';
+import TinyEditorComponent from './TinyEditorComponent';
 import "react-datepicker/dist/react-datepicker.css"
 
 
@@ -183,11 +184,12 @@ export default class TaskAddForm extends React.Component {
 
                 {isNew &&
                     <Field title='Описание' name='description' required={true}>
-                        <TextArea
-                            placeholder='...'
-                            style={{ minHeight: 300, width: '100%' }}
+                        <TinyEditorComponent
+                            id={'id' + (new Date()).getTime()}
+                            className='quill-max-height-50vh'
+                            name='description'
                             value={description}
-                            onChange={(e, {value}) => this.setState({description: value}) }
+                            onChange={description => this.setState({description})}
                         />
                     </Field>
                 }

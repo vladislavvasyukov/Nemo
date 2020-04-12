@@ -40,7 +40,9 @@ class Companies extends React.Component {
             </List.Item>
         );
 
-        user.companies.forEach((company) => {
+        const companies = user.companies || [];
+
+        companies.forEach((company) => {
             items.push(
                 <List.Item>
                     <List.Content floated='right'>

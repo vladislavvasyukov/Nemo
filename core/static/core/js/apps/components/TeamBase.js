@@ -20,6 +20,7 @@ class TeamBase extends Component {
         super(props);
         this.state = {
             component: this.props.initial || TaskList,
+            current_company_name: this.getCurrentCompanyName(),
         };
     }
 
@@ -78,6 +79,12 @@ class TeamBase extends Component {
         return <ChildComponent />
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.current_company_name != this.getCurrentCompanyName()) {
+            this.setState({current_company_name: this.getCurrentCompanyName()});
+        }
+    }
+
     getCurrentCompanyName = () => {
         const { user, current_company_id } = this.props;
         let name = '';
@@ -95,13 +102,12 @@ class TeamBase extends Component {
         } = this.props;
         const { task_id, project_id } = computedMatch ? computedMatch.params : {};
 
-        const { component } = this.state;
+        const { component, current_company_name } = this.state;
         let { CurrentComponent } = this;
 
         if (!isAuthenticated) {
             return <Redirect to="/login" />
         }
-        const current_company_name = this.getCurrentCompanyName();
 
         return (
             <div>

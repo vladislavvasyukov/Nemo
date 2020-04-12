@@ -32,3 +32,9 @@ class Project(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    @property
+    def members_pks(self):
+        participant_pks = self.participants.values_list('pk', flat=True)
+        all_user_ids = set(participant_pks) | {self.creator_id} - {None}
+        return all_user_ids

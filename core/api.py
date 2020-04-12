@@ -240,6 +240,18 @@ class UserListApi(generics.ListAPIView):
             except Task.DoesNotExist:
                 pass
 
+        project_id = self.request.query_params.get('project_id')
+        if project_id:
+            try:
+                project = Project.objects.get(pk=project_id)
+                project_user_ids = project.members_pks
+                users = users.annotate(
+                    is_member=Case(When(pk__in=project_user_ids, then=0), default=1, output_field=IntegerField())
+                )
+                users = users.order_by('is_member')
+            except Project.DoesNotExist:
+                pass
+
         return users[:20]
 
 
@@ -268,6 +280,19 @@ class SaveDescription(generics.GenericAPIView):
 
         return Response({
             "description": task.description,
+        })
+
+
+class SaveCompanyName(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def post(self, request, *args, **kwargs):
+        company = Company.objects.get(pk=request.session['current_company_id'])
+        company.name = request.data['name']
+        company.save()
+
+        return Response({
+            "user": serializers.UserSerializer(request.user, context=self.get_serializer_context()).data,
         })
 
 

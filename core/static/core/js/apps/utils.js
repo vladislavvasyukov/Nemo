@@ -33,7 +33,7 @@ function getOptions(input, href, callback, task_id=undefined, project_id=undefin
 }
 
 export const getTagOptions = (input, callback) => getOptions(input, '/api/tags/', callback);
-export const getProjectOptions = (input, callback) => getOptions(input, '/api/projects/', callback);
+export const getProjectOptions = (input, callback) => getOptions(input, '/api/projects_for_select/', callback);
 export const getUserOptions = (input, callback, task_id=undefined, project_id=undefined) => {
     getOptions(input, '/api/users/', callback, task_id, project_id);
 }

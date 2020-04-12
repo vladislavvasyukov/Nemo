@@ -90,6 +90,15 @@ export default function auth(state=initialState, action) {
                 ...action.data,
             }
 
+        case C.SAVE_COMPANY_NAME_SUCCESSFUL:
+            console.log(action.data.user)
+            return {
+                ...state,
+                user: {
+                    ...action.data.user
+                }
+            }
+
         default:
             return state;
     }

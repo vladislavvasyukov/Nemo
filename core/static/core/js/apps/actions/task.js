@@ -377,6 +377,41 @@ export const saveDescription = (description, task_id) => {
     }
 }
 
+export const saveCompanyName = (name) => {
+    return (dispatch, getState) => {
+        let headers = {
+            "Content-Type": "application/json",
+        };
+        const token = getState().auth.token;
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+
+        let body = JSON.stringify({name});
+
+        return fetch("/api/save_company_name/", {headers, body, method: "POST"})
+            .then(res => {
+                if (res.status < 500) {
+                    return res.json().then(data => {
+                        return {status: res.status, data};
+                    })
+                } else {
+                    console.log("Server Error!");
+                    throw res;
+                }
+            })
+            .then(res => {
+                if (res.status === 200) {
+                    dispatch({type: C.SAVE_COMPANY_NAME_SUCCESSFUL, data: res.data });
+                    return res.data;
+                } else {
+                    dispatch({type: C.SAVE_COMPANY_NAME_FAILED, data: res.data});
+                    throw res.data;
+                }
+            })
+    }
+}
+
 export const avatarUpload = (form_data) => {
     return (dispatch, getState) => {
         const token = getState().auth.token;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { task, auth } from '../actions';
+import { task } from '../actions';
 import { Button, Image, List, Modal, Icon } from 'semantic-ui-react';
 import swal from 'sweetalert2';
 import {swalRequest} from '../utils';
@@ -41,8 +41,13 @@ class ModalUserCard extends Component {
 class CompanyCard extends Component {
     constructor(props) {
         super(props);
+
+        const current_company = this.getCurrentCompany();
         this.state = {
             company_users: [],
+            current_company: current_company,
+            name: current_company.company_name,
+            edit_name: false,
         }
     }
 
@@ -78,13 +83,15 @@ class CompanyCard extends Component {
         )
     }
 
+    getCurrentCompany = () => {
+        return this.props.user.companies.find(company => company.company_id == this.props.current_company_id)
+    }
+
     getItems = () => {
-        const { company_users} = this.state;
+        const { company_users, current_company } = this.state;
         const { user, current_company_id } = this.props;
 
         let items = [];
-
-        const current_company = user.companies.find(company => company.company_id == current_company_id);
 
         if (current_company.is_admin) {
             items.push(
@@ -108,9 +115,40 @@ class CompanyCard extends Component {
         return items;
     }
 
+    onSave = () => {
+        const { edit_name } = this.state;
+        this.setState({edit_name: !edit_name});
+        this.props.saveCompanyName(this.state.name);
+    }
+
     render () {
+        const { edit_name, name } = this.state;
+
         return (
             <div className="employees">
+                <div className='toggle-content_title'>
+                    {edit_name ? <div className='toggle-content_title-input'>
+                        <input
+                            type='text'
+                            className='textinput textInput form-control'
+                            value={name}
+                            onChange={(e) => this.setState({name: e.target.value})}
+                            onBlur={this.onSave}
+                        />
+                        </div>
+                        :
+                        <div>
+                            <span style={{ fontSize: '18px', weight: 'bold' }}>{name}&nbsp;&nbsp;</span>
+                            <Icon
+                                style={{ cursor: 'pointer' }}
+                                name='edit'
+                                title='Редактировать'
+                                onClick={() => this.setState({edit_name: !edit_name})}
+                            />
+                        </div>
+                    }
+                    <div/>
+                </div>
                 <h2>Сотрудники компании</h2>
                 <List divided verticalAlign='middle'>
                     {this.getItems().map(item => item)}
@@ -130,7 +168,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        logout: () => dispatch(auth.logout()),
+        saveCompanyName: (name) => dispatch(task.saveCompanyName(name)),
     };
 }
 
