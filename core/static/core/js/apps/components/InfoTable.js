@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Table, Header, Image, Label, Button, Form } from 'semantic-ui-react';
+import { Table, Header, Image, Label, Button, Form, Dropdown } from 'semantic-ui-react';
 import WorkTimeEditModal from "./WorkTimeEditModal";
 import TaskAddForm from "./TaskAddForm";
+import { showErrorMessage, errorMessageToString, showSuccessMessage } from '../utils';
 
 
 export default class InfoTable extends Component {
@@ -9,6 +10,49 @@ export default class InfoTable extends Component {
         super(props);
         this.state = {
             edit: false,
+            status: this.props.task && this.props.task.status,
+        }
+    }
+
+    handleChange = (e, { value }) => {
+        const { token } = this.props;
+        let headers = {
+            "Content-Type": "application/json",
+        };
+        if (token) {
+            headers["Authorization"] = `Token ${token}`;
+        }
+
+        let body = JSON.stringify({status: value, task_id: this.props.task.pk});
+
+        return fetch("/api/change_status/", {headers, body, method: "POST"})
+            .then(res => {
+                if (res.status < 500) {
+                    return res.json().then(data => {
+                        return {status: res.status, data};
+                    })
+                } else {
+                    showErrorMessage('Ошибка', errorMessageToString(''));
+                }
+            })
+            .then(res => {
+                if (res.status === 200) {
+                    if (res.data.success) {
+                        this.setState({status: value}, () => showSuccessMessage('Успешо!', ''));
+                    } else {
+                        showErrorMessage('Ошибка', errorMessageToString(res.data.message));
+                    }
+                } else if (res.status === 403 || res.status === 401) {
+                    showErrorMessage('Ошибка', errorMessageToString(''));
+                } else {
+                    showErrorMessage('Ошибка', errorMessageToString(''));
+                }
+            })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.status != this.props.task.status) {
+            this.setState({status: this.props.task.status});
         }
     }
 
@@ -110,7 +154,16 @@ export default class InfoTable extends Component {
                                         </Header.Content>
                                     </Header>
                                 </Table.Cell>
-                                <Table.Cell>{task.status_display}</Table.Cell>
+                                <Table.Cell>
+                                    <Dropdown
+                                        onChange={this.handleChange}
+                                        options={task.status_options}
+                                        placeholder='Choose an option'
+                                        selection
+                                        value={this.state.status}
+                                        style={{ width: '150px', minWidth: '100px' }}
+                                    />
+                                </Table.Cell>
                             </Table.Row>
 
                             <Table.Row>

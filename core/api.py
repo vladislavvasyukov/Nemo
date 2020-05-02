@@ -347,6 +347,26 @@ class ChangeCurrentCompanyView(generics.GenericAPIView):
             })
 
 
+class ChangeTaskStatusView(generics.GenericAPIView):
+    def post(self, request, *args, **kwargs):
+        task_id = request.data['task_id']
+        status = request.data['status']
+
+        try:
+            task = Task.objects.get(pk=task_id)
+            task.status = status
+            task.save()
+
+            return Response({
+                'success': True,
+            })
+        except Task.DoesNotExist:
+            return Response({
+                'success': False,
+                "message": "Данной задачи не существует",
+            })
+
+
 class PasswordResetView(PasswordResetConfirmView):
     template_name = 'core/password_recovery/password_recovery_page.html'
     success_url = reverse_lazy('password_reset_complete')
