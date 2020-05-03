@@ -205,7 +205,7 @@ class TagListApi(generics.ListAPIView):
 
     def get_queryset(self):
         q = self.request.query_params.get('q', '')
-        return Tag.objects.filter(title__icontains=q)[:20]
+        return Tag.objects.filter(title__icontains=q).order_by('pk')[:20]
 
 
 class ProjectListApi(generics.ListAPIView):
