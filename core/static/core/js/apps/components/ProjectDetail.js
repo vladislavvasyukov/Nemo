@@ -54,7 +54,7 @@ class ProjectDetail extends Component {
                                     <Table.Cell>
                                         <Header as='h4'>
                                             <Header.Content>
-                                                Исполнитель
+                                                Создатель
                                             </Header.Content>
                                         </Header>
                                     </Table.Cell>
