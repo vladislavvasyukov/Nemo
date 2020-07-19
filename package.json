@@ -25,7 +25,7 @@
     "history": "^4.10.1",
     "immutability-helper": "^3.0.1",
     "indicative": "^7.4.4",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mdbreact": "^4.25.3",
     "minimist": "^1.2.3",
     "moment": "^2.24.0",
